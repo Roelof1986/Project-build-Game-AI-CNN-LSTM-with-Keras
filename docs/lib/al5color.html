@@ -1,0 +1,811 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<title>Allegro.pas 5.2.b.1: al5color</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="generator" content="PasDoc 0.15.0">
+<meta http-equiv="content-type" content="text/html; charset=utf-8">
+<link rel="stylesheet" type="text/css" href="tipuesearch/tipuesearch.css">
+
+<link rel="StyleSheet" type="text/css" href="pasdoc.css">
+</head>
+<body>
+<table class="container"><tr><td class="navigation">
+<h2>Allegro.pas 5.2.b.1</h2><p><a href="introduction.html" class="navigation">Introduction</a></p><p><a href="AllUnits.html" class="navigation">Units</a></p><p><a href="ClassHierarchy.html" class="navigation">Class Hierarchy</a></p><p><a href="AllClasses.html" class="navigation">Classes, Interfaces, Objects and Records</a></p><p><a href="AllTypes.html" class="navigation">Types</a></p><p><a href="AllVariables.html" class="navigation">Variables</a></p><p><a href="AllConstants.html" class="navigation">Constants</a></p><p><a href="AllFunctions.html" class="navigation">Functions and Procedures</a></p><p><a href="AllIdentifiers.html" class="navigation">Identifiers</a></p><form class="search-form" action="_tipue_results.html"><div class="search-input"><input type="text" name="q" id="tipue_search_input"></div><div class="search-button"><input type="button" id="tipue_search_button" onclick="this.form.submit();"></div></form>
+<div style="clear: both"></div>
+
+<script type="text/javascript">
+$(document).ready(function() {
+    $('#tipue_search_input').tipuesearch({
+        /* 10 items to display seems standard */
+        'show': 10,
+        /* For PasDoc docs, showing urls is not very useful,
+           since the page title already shows the unit and identifier. */
+        'showURL': false
+    });
+});
+</script>
+</td><td class="content">
+<h1 class="unit">Unit al5color</h1>
+<div class="sections">
+<div class="one_section"><a class="section" href="#PasDoc-Description">Description</a></div><div class="one_section">Uses</div><div class="one_section">Classes, Interfaces, Objects and Records</div><div class="one_section"><a class="section" href="#PasDoc-FuncsProcs">Functions and Procedures</a></div><div class="one_section">Types</div><div class="one_section">Constants</div><div class="one_section">Variables</div></div>
+<span id="PasDoc-Description"></span><h2 class="description">Description</h2>
+<p>
+Color management.
+
+<p>When converting between certain color spaces, RGB colors are implicitly assumed to mean sRGB.
+
+<p>sRGB is a standard which maps RGB colors to absolute colors. sRGB is very close to RGB values on a monitor which has a gamma value of 2.2. For example when the red component of a color is 0.5, the monitor will use a brightness of pow(0.5, 2.2) or about 22% - and not 50%. The reason is that human eyes can distinguish better between dark colors than between bright colors, and so if a pixel of the monitor is lit up to 22% of its maximum power it already will appear at half brightness to a human eye.
+
+<p>sRGB improves upon simple gamma correction by taking differences between the three color channels into account as well. In general, most monitors nowadays try to be close to the sRGB specification. And so if in an Allegro game you display something with color </p>
+
+<pre class="longcode">
+al_map_rgb_f (<span class="pascal_float">0.5</span>, <span class="pascal_float">0.5</span>, <span class="pascal_float">0.5</span>);</pre>
+
+<p> then it will appear at about half brightness (even though the actual brightness output of the monitor will be less than half). </p>
+<span id="PasDoc-Uses"></span><h2 class="overview">Overview</h2>
+<span id="PasDoc-FuncsProcs"></span><h3 class="summary">Functions and Procedures</h3>
+<table class="summary wide_list">
+<tr class="list">
+<td class="itemcode"><code>FUNCTION <b><a  href="al5color.html#al_get_allegro_color_version">al_get_allegro_color_version</a></b>: <a  href="al5Base.html#AL_UINT32">AL_UINT32</a>; CDECL; EXTERNAL ALLEGRO_COLOR_LIB_NAME;</code></td>
+</tr>
+<tr class="list2">
+<td class="itemcode"><code>PROCEDURE <b><a  href="al5color.html#al_color_hsv_to_rgb">al_color_hsv_to_rgb</a></b> (h, s, v: <a  href="al5Base.html#AL_FLOAT">AL_FLOAT</a>; OUT r, g, b: <a  href="al5Base.html#AL_FLOAT">AL_FLOAT</a>); CDECL; EXTERNAL ALLEGRO_COLOR_LIB_NAME;</code></td>
+</tr>
+<tr class="list">
+<td class="itemcode"><code>PROCEDURE <b><a  href="al5color.html#al_color_rgb_to_hsl">al_color_rgb_to_hsl</a></b> (r, g, b: <a  href="al5Base.html#AL_FLOAT">AL_FLOAT</a>; OUT h, s, l: <a  href="al5Base.html#AL_FLOAT">AL_FLOAT</a>); CDECL; EXTERNAL ALLEGRO_COLOR_LIB_NAME;</code></td>
+</tr>
+<tr class="list2">
+<td class="itemcode"><code>PROCEDURE <b><a  href="al5color.html#al_color_rgb_to_hsv">al_color_rgb_to_hsv</a></b> (r, g, b: <a  href="al5Base.html#AL_FLOAT">AL_FLOAT</a>; OUT h, s, v: <a  href="al5Base.html#AL_FLOAT">AL_FLOAT</a>); CDECL; EXTERNAL ALLEGRO_COLOR_LIB_NAME;</code></td>
+</tr>
+<tr class="list">
+<td class="itemcode"><code>PROCEDURE <b><a  href="al5color.html#al_color_hsl_to_rgb">al_color_hsl_to_rgb</a></b> (h, s, l: <a  href="al5Base.html#AL_FLOAT">AL_FLOAT</a>; OUT r, g, b: <a  href="al5Base.html#AL_FLOAT">AL_FLOAT</a>); CDECL; EXTERNAL ALLEGRO_COLOR_LIB_NAME;</code></td>
+</tr>
+<tr class="list2">
+<td class="itemcode"><code>FUNCTION <b><a  href="al5color.html#al_color_name_to_rgb">al_color_name_to_rgb</a></b> (CONST name: <a  href="al5Base.html#AL_STR">AL_STR</a>; OUT r, g, b: <a  href="al5Base.html#AL_FLOAT">AL_FLOAT</a>): <a  href="al5Base.html#AL_BOOL">AL_BOOL</a>; CDECL; EXTERNAL ALLEGRO_COLOR_LIB_NAME;</code></td>
+</tr>
+<tr class="list">
+<td class="itemcode"><code>FUNCTION <b><a  href="al5color.html#al_color_rgb_to_name">al_color_rgb_to_name</a></b> (r, g, b: <a  href="al5Base.html#AL_FLOAT">AL_FLOAT</a>): <a  href="al5Base.html#AL_STRptr">AL_STRptr</a>; CDECL; EXTERNAL ALLEGRO_COLOR_LIB_NAME;</code></td>
+</tr>
+<tr class="list2">
+<td class="itemcode"><code>PROCEDURE <b><a  href="al5color.html#al_color_cmyk_to_rgb">al_color_cmyk_to_rgb</a></b> (c, m, y, k: <a  href="al5Base.html#AL_FLOAT">AL_FLOAT</a>; OUT r, g, b: <a  href="al5Base.html#AL_FLOAT">AL_FLOAT</a>); CDECL; EXTERNAL ALLEGRO_COLOR_LIB_NAME;</code></td>
+</tr>
+<tr class="list">
+<td class="itemcode"><code>PROCEDURE <b><a  href="al5color.html#al_color_rgb_to_cmyk">al_color_rgb_to_cmyk</a></b> (r, g, b: <a  href="al5Base.html#AL_FLOAT">AL_FLOAT</a>; OUT c, m, y, k: <a  href="al5Base.html#AL_FLOAT">AL_FLOAT</a>); CDECL; EXTERNAL ALLEGRO_COLOR_LIB_NAME;</code></td>
+</tr>
+<tr class="list2">
+<td class="itemcode"><code>PROCEDURE <b><a  href="al5color.html#al_color_yuv_to_rgb">al_color_yuv_to_rgb</a></b> (y, u, v: <a  href="al5Base.html#AL_FLOAT">AL_FLOAT</a>; OUT r, g, b: <a  href="al5Base.html#AL_FLOAT">AL_FLOAT</a>); CDECL; EXTERNAL ALLEGRO_COLOR_LIB_NAME;</code></td>
+</tr>
+<tr class="list">
+<td class="itemcode"><code>PROCEDURE <b><a  href="al5color.html#al_color_rgb_to_yuv">al_color_rgb_to_yuv</a></b> (r, g, b: <a  href="al5Base.html#AL_FLOAT">AL_FLOAT</a>; OUT y, u, v: <a  href="al5Base.html#AL_FLOAT">AL_FLOAT</a>); CDECL; EXTERNAL ALLEGRO_COLOR_LIB_NAME;</code></td>
+</tr>
+<tr class="list2">
+<td class="itemcode"><code>FUNCTION <b><a  href="al5color.html#al_color_rgb_to_html">al_color_rgb_to_html</a></b> (r, g, b: <a  href="al5Base.html#AL_FLOAT">AL_FLOAT</a>): <a  href="al5Base.html#AL_STRptr">AL_STRptr</a>; INLINE;</code></td>
+</tr>
+<tr class="list">
+<td class="itemcode"><code>PROCEDURE <b><a  href="al5color.html#al_color_html_to_rgb">al_color_html_to_rgb</a></b> (CONST str: <a  href="al5Base.html#AL_STR">AL_STR</a>; OUT r, g, b: <a  href="al5Base.html#AL_FLOAT">AL_FLOAT</a>); CDECL; EXTERNAL ALLEGRO_COLOR_LIB_NAME;</code></td>
+</tr>
+<tr class="list2">
+<td class="itemcode"><code>FUNCTION <b><a  href="al5color.html#al_color_yuv">al_color_yuv</a></b> (y, u, v: <a  href="al5Base.html#AL_FLOAT">AL_FLOAT</a>): <a  href="Allegro5.ALLEGRO_COLOR.html">ALLEGRO_COLOR</a>; CDECL; EXTERNAL ALLEGRO_COLOR_LIB_NAME;</code></td>
+</tr>
+<tr class="list">
+<td class="itemcode"><code>FUNCTION <b><a  href="al5color.html#al_color_cmyk">al_color_cmyk</a></b> (c, m, y, k: <a  href="al5Base.html#AL_FLOAT">AL_FLOAT</a>): <a  href="Allegro5.ALLEGRO_COLOR.html">ALLEGRO_COLOR</a>; CDECL; EXTERNAL ALLEGRO_COLOR_LIB_NAME;</code></td>
+</tr>
+<tr class="list2">
+<td class="itemcode"><code>FUNCTION <b><a  href="al5color.html#al_color_hsl">al_color_hsl</a></b> (h, s, l: <a  href="al5Base.html#AL_FLOAT">AL_FLOAT</a>): <a  href="Allegro5.ALLEGRO_COLOR.html">ALLEGRO_COLOR</a>; CDECL; EXTERNAL ALLEGRO_COLOR_LIB_NAME;</code></td>
+</tr>
+<tr class="list">
+<td class="itemcode"><code>FUNCTION <b><a  href="al5color.html#al_color_hsv">al_color_hsv</a></b> (h, s, v: <a  href="al5Base.html#AL_FLOAT">AL_FLOAT</a>): <a  href="Allegro5.ALLEGRO_COLOR.html">ALLEGRO_COLOR</a>; CDECL; EXTERNAL ALLEGRO_COLOR_LIB_NAME;</code></td>
+</tr>
+<tr class="list2">
+<td class="itemcode"><code>FUNCTION <b><a  href="al5color.html#al_color_name">al_color_name</a></b> (CONST name: <a  href="al5Base.html#AL_STR">AL_STR</a>): <a  href="Allegro5.ALLEGRO_COLOR.html">ALLEGRO_COLOR</a>; CDECL; EXTERNAL ALLEGRO_COLOR_LIB_NAME;</code></td>
+</tr>
+<tr class="list">
+<td class="itemcode"><code>FUNCTION <b><a  href="al5color.html#al_color_html">al_color_html</a></b> (CONST str: <a  href="al5Base.html#AL_STR">al_STR</a>): <a  href="Allegro5.ALLEGRO_COLOR.html">ALLEGRO_COLOR</a>; CDECL; EXTERNAL ALLEGRO_COLOR_LIB_NAME;</code></td>
+</tr>
+<tr class="list2">
+<td class="itemcode"><code>PROCEDURE <b><a  href="al5color.html#al_color_xyz_to_rgb">al_color_xyz_to_rgb</a></b> (x, y, z: <a  href="al5Base.html#AL_FLOAT">AL_FLOAT</a>; OUT red, green, blue: <a  href="al5Base.html#AL_FLOAT">AL_FLOAT</a>); CDECL; EXTERNAL ALLEGRO_COLOR_LIB_NAME;</code></td>
+</tr>
+<tr class="list">
+<td class="itemcode"><code>PROCEDURE <b><a  href="al5color.html#al_color_rgb_to_xyz">al_color_rgb_to_xyz</a></b> (red, green, blue: <a  href="al5Base.html#AL_FLOAT">AL_FLOAT</a>; OUT x, y, z: <a  href="al5Base.html#AL_FLOAT">AL_FLOAT</a>); CDECL; EXTERNAL ALLEGRO_COLOR_LIB_NAME;</code></td>
+</tr>
+<tr class="list2">
+<td class="itemcode"><code>FUNCTION <b><a  href="al5color.html#al_color_xyz">al_color_xyz</a></b> (x, y, z:<a  href="al5Base.html#AL_FLOAT">AL_FLOAT</a>): <a  href="Allegro5.ALLEGRO_COLOR.html">ALLEGRO_COLOR</a>; CDECL; EXTERNAL ALLEGRO_COLOR_LIB_NAME;</code></td>
+</tr>
+<tr class="list">
+<td class="itemcode"><code>PROCEDURE <b><a  href="al5color.html#al_color_lab_to_rgb">al_color_lab_to_rgb</a></b> (l, a, b: <a  href="al5Base.html#AL_FLOAT">AL_FLOAT</a>; OUT red, green, blue: <a  href="al5Base.html#AL_FLOAT">AL_FLOAT</a>); CDECL; EXTERNAL ALLEGRO_COLOR_LIB_NAME;</code></td>
+</tr>
+<tr class="list2">
+<td class="itemcode"><code>PROCEDURE <b><a  href="al5color.html#al_color_rgb_to_lab">al_color_rgb_to_lab</a></b> (red, green, blue: <a  href="al5Base.html#AL_FLOAT">AL_FLOAT</a>; OUT l, a, b: <a  href="al5Base.html#AL_FLOAT">AL_FLOAT</a>); CDECL; EXTERNAL ALLEGRO_COLOR_LIB_NAME;</code></td>
+</tr>
+<tr class="list">
+<td class="itemcode"><code>FUNCTION <b><a  href="al5color.html#al_color_lab">al_color_lab</a></b> (l, a, b: <a  href="al5Base.html#AL_FLOAT">AL_FLOAT</a>): <a  href="Allegro5.ALLEGRO_COLOR.html">ALLEGRO_COLOR</a>; CDECL; EXTERNAL ALLEGRO_COLOR_LIB_NAME;</code></td>
+</tr>
+<tr class="list2">
+<td class="itemcode"><code>PROCEDURE <b><a  href="al5color.html#al_color_xyy_to_rgb">al_color_xyy_to_rgb</a></b> (x, y, y2: <a  href="al5Base.html#AL_FLOAT">AL_FLOAT</a>; OUT red, green, blue: <a  href="al5Base.html#AL_FLOAT">AL_FLOAT</a>); CDECL; EXTERNAL ALLEGRO_COLOR_LIB_NAME;</code></td>
+</tr>
+<tr class="list">
+<td class="itemcode"><code>PROCEDURE <b><a  href="al5color.html#al_color_rgb_to_xyy">al_color_rgb_to_xyy</a></b> (red, green, blue: <a  href="al5Base.html#AL_FLOAT">AL_FLOAT</a>; OUT x, y, y2: <a  href="al5Base.html#AL_FLOAT">AL_FLOAT</a>); CDECL; EXTERNAL ALLEGRO_COLOR_LIB_NAME;</code></td>
+</tr>
+<tr class="list2">
+<td class="itemcode"><code>FUNCTION <b><a  href="al5color.html#al_color_xyy">al_color_xyy</a></b> (x, y, y2: <a  href="al5Base.html#AL_FLOAT">AL_FLOAT</a>): <a  href="Allegro5.ALLEGRO_COLOR.html">ALLEGRO_COLOR</a>; CDECL; EXTERNAL ALLEGRO_COLOR_LIB_NAME;</code></td>
+</tr>
+<tr class="list">
+<td class="itemcode"><code>FUNCTION <b><a  href="al5color.html#al_color_distance_ciede2000">al_color_distance_ciede2000</a></b> (c1, c2: <a  href="Allegro5.ALLEGRO_COLOR.html">ALLEGRO_COLOR</a>): <a  href="al5Base.html#AL_DOUBLE">AL_DOUBLE</a>; CDECL; EXTERNAL ALLEGRO_COLOR_LIB_NAME;</code></td>
+</tr>
+<tr class="list2">
+<td class="itemcode"><code>PROCEDURE <b><a  href="al5color.html#al_color_lch_to_rgb">al_color_lch_to_rgb</a></b> (l, c, h: <a  href="al5Base.html#AL_FLOAT">AL_FLOAT</a>; OUT red, green, blue); CDECL; EXTERNAL ALLEGRO_COLOR_LIB_NAME;</code></td>
+</tr>
+<tr class="list">
+<td class="itemcode"><code>PROCEDURE <b><a  href="al5color.html#al_color_rgb_to_lch">al_color_rgb_to_lch</a></b> (red, green, blue: <a  href="al5Base.html#AL_FLOAT">AL_FLOAT</a>; OUT l, c, h: <a  href="al5Base.html#AL_FLOAT">AL_FLOAT</a>); CDECL; EXTERNAL ALLEGRO_COLOR_LIB_NAME;</code></td>
+</tr>
+<tr class="list2">
+<td class="itemcode"><code>FUNCTION <b><a  href="al5color.html#al_color_lch">al_color_lch</a></b> (l, c, h: <a  href="al5Base.html#AL_FLOAT">AL_FLOAT</a>): <a  href="Allegro5.ALLEGRO_COLOR.html">ALLEGRO_COLOR</a>; CDECL; EXTERNAL ALLEGRO_COLOR_LIB_NAME;</code></td>
+</tr>
+<tr class="list">
+<td class="itemcode"><code>FUNCTION <b><a  href="al5color.html#al_is_color_valid">al_is_color_valid</a></b> (color: <a  href="Allegro5.ALLEGRO_COLOR.html">ALLEGRO_COLOR</a>): <a  href="al5Base.html#AL_BOOL">AL_BOOL</a>; CDECL; EXTERNAL ALLEGRO_COLOR_LIB_NAME;</code></td>
+</tr>
+</table>
+<h2 class="description">Description</h2>
+<h3 class="detail">Functions and Procedures</h3>
+<table class="detail wide_list">
+<tr class="list">
+<td class="itemcode"><span id="al_get_allegro_color_version"></span><code>FUNCTION <b>al_get_allegro_color_version</b>: <a  href="al5Base.html#AL_UINT32">AL_UINT32</a>; CDECL; EXTERNAL ALLEGRO_COLOR_LIB_NAME;</code></td>
+</tr>
+<tr><td colspan="1">
+<p>
+Returns the (compiled) version of the addon, in the same format as <a class="normal" href="Allegro5.html#al_get_allegro_version">al_get_allegro_version</a>.</p>
+</td></tr>
+</table>
+<table class="detail wide_list">
+<tr class="list">
+<td class="itemcode"><span id="al_color_hsv_to_rgb"></span><code>PROCEDURE <b>al_color_hsv_to_rgb</b> (h, s, v: <a  href="al5Base.html#AL_FLOAT">AL_FLOAT</a>; OUT r, g, b: <a  href="al5Base.html#AL_FLOAT">AL_FLOAT</a>); CDECL; EXTERNAL ALLEGRO_COLOR_LIB_NAME;</code></td>
+</tr>
+<tr><td colspan="1">
+<p>
+Converts values in HSV color model to RGB color model.         </p>
+<h6 class="description_section">Parameters</h6>
+<dl class="parameters">
+<dt>h</dt>
+<dd>Color hue angle in the range 0..360.</dd>
+<dt>s</dt>
+<dd>Color saturation in the range 0..1.</dd>
+<dt>v</dt>
+<dd>Color value in the range 0..1.</dd>
+<dt>r</dt>
+<dd>Returns the R (red) value in the range 0..1.</dd>
+<dt>g</dt>
+<dd>Returns the G (green) value in the range 0..1.</dd>
+<dt>b</dt>
+<dd>Returns the B (blue) value in the range 0..1.</dd>
+</dl>
+<h6 class="description_section">See also</h6>
+<dl class="see_also">
+  <dt><a class="normal" href="al5color.html#al_color_rgb_to_hsv">al_color_rgb_to_hsv</a></dt>
+  <dd>Given an RGB triplet with components in the range 0..1, returns the hue in degrees from 0..360 and saturation and value in the range 0..1.</dd>
+  <dt><a class="normal" href="al5color.html#al_color_hsv">al_color_hsv</a></dt>
+  <dd>Returns an <a class="normal" href="Allegro5.ALLEGRO_COLOR.html">ALLEGRO_COLOR</a> structure from HSV (hue, saturation, value) values.</dd>
+  <dt><a class="normal" href="al5color.html#al_color_hsl_to_rgb">al_color_hsl_to_rgb</a></dt>
+  <dd>Converts values in HSL color model to RGB color model.</dd>
+</dl>
+</td></tr>
+</table>
+<table class="detail wide_list">
+<tr class="list">
+<td class="itemcode"><span id="al_color_rgb_to_hsl"></span><code>PROCEDURE <b>al_color_rgb_to_hsl</b> (r, g, b: <a  href="al5Base.html#AL_FLOAT">AL_FLOAT</a>; OUT h, s, l: <a  href="al5Base.html#AL_FLOAT">AL_FLOAT</a>); CDECL; EXTERNAL ALLEGRO_COLOR_LIB_NAME;</code></td>
+</tr>
+<tr><td colspan="1">
+<p>
+Given an RGB triplet with components in the range 0..1, returns the hue in degrees from 0..360 and saturation and lightness in the range 0..1.  </p>
+<h6 class="description_section">See also</h6>
+<dl class="see_also">
+  <dt><a class="normal" href="al5color.html#al_color_hsl_to_rgb">al_color_hsl_to_rgb</a></dt>
+  <dd>Converts values in HSL color model to RGB color model.</dd>
+  <dt><a class="normal" href="al5color.html#al_color_hsl">al_color_hsl</a></dt>
+  <dd>Returns an <a class="normal" href="Allegro5.ALLEGRO_COLOR.html">ALLEGRO_COLOR</a> structure from HSL (hue, saturation, lightness) values.</dd>
+</dl>
+</td></tr>
+</table>
+<table class="detail wide_list">
+<tr class="list">
+<td class="itemcode"><span id="al_color_rgb_to_hsv"></span><code>PROCEDURE <b>al_color_rgb_to_hsv</b> (r, g, b: <a  href="al5Base.html#AL_FLOAT">AL_FLOAT</a>; OUT h, s, v: <a  href="al5Base.html#AL_FLOAT">AL_FLOAT</a>); CDECL; EXTERNAL ALLEGRO_COLOR_LIB_NAME;</code></td>
+</tr>
+<tr><td colspan="1">
+<p>
+Given an RGB triplet with components in the range 0..1, returns the hue in degrees from 0..360 and saturation and value in the range 0..1.  </p>
+<h6 class="description_section">See also</h6>
+<dl class="see_also">
+  <dt><a class="normal" href="al5color.html#al_color_hsv_to_rgb">al_color_hsv_to_rgb</a></dt>
+  <dd>Converts values in HSV color model to RGB color model.</dd>
+  <dt><a class="normal" href="al5color.html#al_color_hsv">al_color_hsv</a></dt>
+  <dd>Returns an <a class="normal" href="Allegro5.ALLEGRO_COLOR.html">ALLEGRO_COLOR</a> structure from HSV (hue, saturation, value) values.</dd>
+</dl>
+</td></tr>
+</table>
+<table class="detail wide_list">
+<tr class="list">
+<td class="itemcode"><span id="al_color_hsl_to_rgb"></span><code>PROCEDURE <b>al_color_hsl_to_rgb</b> (h, s, l: <a  href="al5Base.html#AL_FLOAT">AL_FLOAT</a>; OUT r, g, b: <a  href="al5Base.html#AL_FLOAT">AL_FLOAT</a>); CDECL; EXTERNAL ALLEGRO_COLOR_LIB_NAME;</code></td>
+</tr>
+<tr><td colspan="1">
+<p>
+Converts values in HSL color model to RGB color model.         </p>
+<h6 class="description_section">Parameters</h6>
+<dl class="parameters">
+<dt>h</dt>
+<dd>Color hue angle in the range 0..360.</dd>
+<dt>s</dt>
+<dd>Color saturation in the range 0..1.</dd>
+<dt>l</dt>
+<dd>Color lightness in the range 0..1.</dd>
+<dt>r</dt>
+<dd>Returns the R (red) value in the range 0..1.</dd>
+<dt>g</dt>
+<dd>Returns the G (green) value in the range 0..1.</dd>
+<dt>b</dt>
+<dd>Returns the B (blue) value in the range 0..1.</dd>
+</dl>
+<h6 class="description_section">See also</h6>
+<dl class="see_also">
+  <dt><a class="normal" href="al5color.html#al_color_rgb_to_hsl">al_color_rgb_to_hsl</a></dt>
+  <dd>Given an RGB triplet with components in the range 0..1, returns the hue in degrees from 0..360 and saturation and lightness in the range 0..1.</dd>
+  <dt><a class="normal" href="al5color.html#al_color_hsl">al_color_hsl</a></dt>
+  <dd>Returns an <a class="normal" href="Allegro5.ALLEGRO_COLOR.html">ALLEGRO_COLOR</a> structure from HSL (hue, saturation, lightness) values.</dd>
+  <dt><a class="normal" href="al5color.html#al_color_hsv_to_rgb">al_color_hsv_to_rgb</a></dt>
+  <dd>Converts values in HSV color model to RGB color model.</dd>
+</dl>
+</td></tr>
+</table>
+<table class="detail wide_list">
+<tr class="list">
+<td class="itemcode"><span id="al_color_name_to_rgb"></span><code>FUNCTION <b>al_color_name_to_rgb</b> (CONST name: <a  href="al5Base.html#AL_STR">AL_STR</a>; OUT r, g, b: <a  href="al5Base.html#AL_FLOAT">AL_FLOAT</a>): <a  href="al5Base.html#AL_BOOL">AL_BOOL</a>; CDECL; EXTERNAL ALLEGRO_COLOR_LIB_NAME;</code></td>
+</tr>
+<tr><td colspan="1">
+<p>
+Given a name, returns the RGB triplet.
+
+<p>The 148 recognized names are:
+
+<p>aliceblue, antiquewhite, aqua, aquamarine, azure, beige, bisque, black, blanchedalmond, blue, blueviolet, brown, burlywood, cadetblue, chartreuse, chocolate, coral, cornflowerblue, cornsilk, crimson, cyan, darkblue, darkcyan, darkgoldenrod, darkgray, darkgreen, darkkhaki, darkmagenta, darkolivegreen, darkorange, darkorchid, darkred, darksalmon, darkseagreen, darkslateblue, darkslategray, darkturquoise, darkviolet, deeppink, deepskyblue, dimgray, dodgerblue, firebrick, floralwhite, forestgreen, fuchsia, gainsboro, ghostwhite, goldenrod, gold, gray, green, greenyellow, honeydew, hotpink, indianred, indigo, ivory, khaki, lavenderblush, lavender, lawngreen, lemonchiffon, lightblue, lightcoral, lightcyan, lightgoldenrodyellow, lightgreen, lightgrey, lightpink, lightsalmon, lightseagreen, lightskyblue, lightslategray, lightsteelblue, lightyellow, lime, limegreen, linen, magenta, maroon, mediumaquamarine, mediumblue, mediumorchid, mediumpurple, mediumseagreen, mediumslateblue, mediumspringgreen, mediumturquoise, mediumvioletred, midnightblue, mintcream, mistyrose, moccasin, avajowhite, navy, oldlace, olive, olivedrab, orange, orangered, orchid, palegoldenrod, palegreen, paleturquoise, palevioletred, papayawhip, peachpuff, peru, pink, plum, powderblue, purple, rebeccapurple, red, rosybrown, royalblue, saddlebrown, salmon, sandybrown, seagreen, seashell, sienna, silver, skyblue, slateblue, slategray, snow, springgreen, steelblue, tan, teal, thistle, tomato, turquoise, violet, wheat, white, whitesmoke, yellow, yellowgreen
+
+<p>They are taken from CSS: <a href="https://www.w3.org/TR/css-color-4/">https://www.w3.org/TR/css-color-4/</a>.
+
+<p>Note that these 9 colors have two names and so there are only 139 distinct colors: aqua = cyan, darkgray = darkgrey, darkslategray = darkslategrey, dimgray = dimgrey, fuchsia = purple, gray = grey, lightgray = lightgrey, lightslategray = lightslategrey, slategray = slategrey       </p>
+<h6 class="description_section">Parameters</h6>
+<dl class="parameters">
+<dt>name</dt>
+<dd>The lowercase name of the color.</dd>
+<dt>r</dt>
+<dd>Returns the R (red) value in the range 0..1.</dd>
+<dt>g</dt>
+<dd>Returns the G (green) value in the range 0..1.</dd>
+<dt>b</dt>
+<dd>Returns the B (blue) value in the range 0..1.</dd>
+</dl>
+<h6 class="description_section">Returns</h6>
+<p class="return"><code>True</code> if a name from the list above was passed, else <code>False</code>.</p><h6 class="description_section">See also</h6>
+<dl class="see_also">
+  <dt><a class="normal" href="al5color.html#al_color_name">al_color_name</a></dt>
+  <dd>Returns an <a class="normal" href="Allegro5.ALLEGRO_COLOR.html">ALLEGRO_COLOR</a> with the given name.</dd>
+  <dt><a class="normal" href="al5color.html#al_color_rgb_to_name">al_color_rgb_to_name</a></dt>
+  <dd>Given an RGB triplet with components in the range 0..1, find a color name describing it approximately.</dd>
+</dl>
+</td></tr>
+</table>
+<table class="detail wide_list">
+<tr class="list">
+<td class="itemcode"><span id="al_color_rgb_to_name"></span><code>FUNCTION <b>al_color_rgb_to_name</b> (r, g, b: <a  href="al5Base.html#AL_FLOAT">AL_FLOAT</a>): <a  href="al5Base.html#AL_STRptr">AL_STRptr</a>; CDECL; EXTERNAL ALLEGRO_COLOR_LIB_NAME;</code></td>
+</tr>
+<tr><td colspan="1">
+<p>
+Given an RGB triplet with components in the range 0..1, find a color name describing it approximately.  </p>
+<h6 class="description_section">See also</h6>
+<dl class="see_also">
+  <dt><a class="normal" href="al5color.html#al_color_name_to_rgb">al_color_name_to_rgb</a></dt>
+  <dd>Given a name, returns the RGB triplet.</dd>
+  <dt><a class="normal" href="al5color.html#al_color_name">al_color_name</a></dt>
+  <dd>Returns an <a class="normal" href="Allegro5.ALLEGRO_COLOR.html">ALLEGRO_COLOR</a> with the given name.</dd>
+</dl>
+</td></tr>
+</table>
+<table class="detail wide_list">
+<tr class="list">
+<td class="itemcode"><span id="al_color_cmyk_to_rgb"></span><code>PROCEDURE <b>al_color_cmyk_to_rgb</b> (c, m, y, k: <a  href="al5Base.html#AL_FLOAT">AL_FLOAT</a>; OUT r, g, b: <a  href="al5Base.html#AL_FLOAT">AL_FLOAT</a>); CDECL; EXTERNAL ALLEGRO_COLOR_LIB_NAME;</code></td>
+</tr>
+<tr><td colspan="1">
+<p>
+Converts CMYK values to RGB values.  </p>
+<h6 class="description_section">See also</h6>
+<dl class="see_also">
+  <dt><a class="normal" href="al5color.html#al_color_cmyk">al_color_cmyk</a></dt>
+  <dd>Returns an <a class="normal" href="Allegro5.ALLEGRO_COLOR.html">ALLEGRO_COLOR</a> structure from CMYK values (cyan, magenta, yellow, black).</dd>
+  <dt><a class="normal" href="al5color.html#al_color_rgb_to_cmyk">al_color_rgb_to_cmyk</a></dt>
+  <dd>Each RGB color can be represented in CMYK with a K component of 0 with the following formula: </p>
+
+<pre class="preformatted">
+C = 1 - R
+M = 1 - G
+Y = 1 - B
+K = 0</pre>
+
+<p> This function will instead find the representation with the maximal value for K and minimal color components.</dd>
+</dl>
+</td></tr>
+</table>
+<table class="detail wide_list">
+<tr class="list">
+<td class="itemcode"><span id="al_color_rgb_to_cmyk"></span><code>PROCEDURE <b>al_color_rgb_to_cmyk</b> (r, g, b: <a  href="al5Base.html#AL_FLOAT">AL_FLOAT</a>; OUT c, m, y, k: <a  href="al5Base.html#AL_FLOAT">AL_FLOAT</a>); CDECL; EXTERNAL ALLEGRO_COLOR_LIB_NAME;</code></td>
+</tr>
+<tr><td colspan="1">
+<p>
+Each RGB color can be represented in CMYK with a K component of 0 with the following formula: </p>
+
+<pre class="preformatted">
+C = 1 - R
+M = 1 - G
+Y = 1 - B
+K = 0</pre>
+
+<p> This function will instead find the representation with the maximal value for K and minimal color components.  </p>
+<h6 class="description_section">See also</h6>
+<dl class="see_also">
+  <dt><a class="normal" href="al5color.html#al_color_cmyk">al_color_cmyk</a></dt>
+  <dd>Returns an <a class="normal" href="Allegro5.ALLEGRO_COLOR.html">ALLEGRO_COLOR</a> structure from CMYK values (cyan, magenta, yellow, black).</dd>
+  <dt><a class="normal" href="al5color.html#al_color_cmyk_to_rgb">al_color_cmyk_to_rgb</a></dt>
+  <dd>Converts CMYK values to RGB values.</dd>
+</dl>
+</td></tr>
+</table>
+<table class="detail wide_list">
+<tr class="list">
+<td class="itemcode"><span id="al_color_yuv_to_rgb"></span><code>PROCEDURE <b>al_color_yuv_to_rgb</b> (y, u, v: <a  href="al5Base.html#AL_FLOAT">AL_FLOAT</a>; OUT r, g, b: <a  href="al5Base.html#AL_FLOAT">AL_FLOAT</a>); CDECL; EXTERNAL ALLEGRO_COLOR_LIB_NAME;</code></td>
+</tr>
+<tr><td colspan="1">
+<p>
+Converts YUV color values to RGB color space.  </p>
+<h6 class="description_section">See also</h6>
+<dl class="see_also">
+  <dt><a class="normal" href="al5color.html#al_color_yuv">al_color_yuv</a></dt>
+  <dd>Returns an <a class="normal" href="Allegro5.ALLEGRO_COLOR.html">ALLEGRO_COLOR</a> structure from YUV values.</dd>
+  <dt><a class="normal" href="al5color.html#al_color_rgb_to_yuv">al_color_rgb_to_yuv</a></dt>
+  <dd>Converts RGB values to YUV color space.</dd>
+</dl>
+</td></tr>
+</table>
+<table class="detail wide_list">
+<tr class="list">
+<td class="itemcode"><span id="al_color_rgb_to_yuv"></span><code>PROCEDURE <b>al_color_rgb_to_yuv</b> (r, g, b: <a  href="al5Base.html#AL_FLOAT">AL_FLOAT</a>; OUT y, u, v: <a  href="al5Base.html#AL_FLOAT">AL_FLOAT</a>); CDECL; EXTERNAL ALLEGRO_COLOR_LIB_NAME;</code></td>
+</tr>
+<tr><td colspan="1">
+<p>
+Converts RGB values to YUV color space.  </p>
+<h6 class="description_section">See also</h6>
+<dl class="see_also">
+  <dt><a class="normal" href="al5color.html#al_color_yuv">al_color_yuv</a></dt>
+  <dd>Returns an <a class="normal" href="Allegro5.ALLEGRO_COLOR.html">ALLEGRO_COLOR</a> structure from YUV values.</dd>
+  <dt><a class="normal" href="al5color.html#al_color_yuv_to_rgb">al_color_yuv_to_rgb</a></dt>
+  <dd>Converts YUV color values to RGB color space.</dd>
+</dl>
+</td></tr>
+</table>
+<table class="detail wide_list">
+<tr class="list">
+<td class="itemcode"><span id="al_color_rgb_to_html"></span><code>FUNCTION <b>al_color_rgb_to_html</b> (r, g, b: <a  href="al5Base.html#AL_FLOAT">AL_FLOAT</a>): <a  href="al5Base.html#AL_STRptr">AL_STRptr</a>; INLINE;</code></td>
+</tr>
+<tr><td colspan="1">
+<p>
+Creates an HTML-style string representation of an RGB triplet, e.g. <code>#00FAFF</code>.
+
+<p>Example:
+
+<p></p>
+
+<pre class="longcode">
+<span class="pascal_keyword">VAR</span>
+  HTMLstring: <span class="pascal_keyword">STRING</span>;
+<span class="pascal_keyword">BEGIN</span>
+  HTMLstring := al_color_rgb_to_html (<span class="pascal_numeric">1</span>, <span class="pascal_numeric">0</span>, <span class="pascal_numeric">0</span>);</pre>
+
+<p> Now <code>HTMLstring</code> will contain &quot;#ff0000&quot;.  </p>
+<h6 class="description_section">See also</h6>
+<dl class="see_also">
+  <dt><a class="normal" href="al5color.html#al_color_html">al_color_html</a></dt>
+  <dd>Interprets an HTML-style hex number (e.g.</dd>
+  <dt><a class="normal" href="al5color.html#al_color_html_to_rgb">al_color_html_to_rgb</a></dt>
+  <dd>Interprets an HTML-style hex number (e.g.</dd>
+</dl>
+</td></tr>
+</table>
+<table class="detail wide_list">
+<tr class="list">
+<td class="itemcode"><span id="al_color_html_to_rgb"></span><code>PROCEDURE <b>al_color_html_to_rgb</b> (CONST str: <a  href="al5Base.html#AL_STR">AL_STR</a>; OUT r, g, b: <a  href="al5Base.html#AL_FLOAT">AL_FLOAT</a>); CDECL; EXTERNAL ALLEGRO_COLOR_LIB_NAME;</code></td>
+</tr>
+<tr><td colspan="1">
+<p>
+Interprets an HTML-style hex number (e.g. <code>#00FAFF</code>) as a color. The only accepted formats are &quot;#RRGGBB&quot; and &quot;RRGGBB&quot; where R, G, B are hexadecimal digits <code>[0-9A-Fa-f]</code>.
+
+<p><b>Note</b>
+
+<p>the behaviour on invalid strings is different from Allegro 5.0.x.   </p>
+<h6 class="description_section">Returns</h6>
+<p class="return"><code>True</code> on success, <code>False</code> on failure. On failure all components are set to zero.</p><h6 class="description_section">See also</h6>
+<dl class="see_also">
+  <dt><a class="normal" href="al5color.html#al_color_html">al_color_html</a></dt>
+  <dd>Interprets an HTML-style hex number (e.g.</dd>
+  <dt><a class="normal" href="al5color.html#al_color_rgb_to_html">al_color_rgb_to_html</a></dt>
+  <dd>Creates an HTML-style string representation of an RGB triplet, e.g.</dd>
+</dl>
+</td></tr>
+</table>
+<table class="detail wide_list">
+<tr class="list">
+<td class="itemcode"><span id="al_color_yuv"></span><code>FUNCTION <b>al_color_yuv</b> (y, u, v: <a  href="al5Base.html#AL_FLOAT">AL_FLOAT</a>): <a  href="Allegro5.ALLEGRO_COLOR.html">ALLEGRO_COLOR</a>; CDECL; EXTERNAL ALLEGRO_COLOR_LIB_NAME;</code></td>
+</tr>
+<tr><td colspan="1">
+<p>
+Returns an <a class="normal" href="Allegro5.ALLEGRO_COLOR.html">ALLEGRO_COLOR</a> structure from YUV values.  </p>
+<h6 class="description_section">See also</h6>
+<dl class="see_also">
+  <dt><a class="normal" href="al5color.html#al_color_yuv_to_rgb">al_color_yuv_to_rgb</a></dt>
+  <dd>Converts YUV color values to RGB color space.</dd>
+  <dt><a class="normal" href="al5color.html#al_color_rgb_to_yuv">al_color_rgb_to_yuv</a></dt>
+  <dd>Converts RGB values to YUV color space.</dd>
+</dl>
+</td></tr>
+</table>
+<table class="detail wide_list">
+<tr class="list">
+<td class="itemcode"><span id="al_color_cmyk"></span><code>FUNCTION <b>al_color_cmyk</b> (c, m, y, k: <a  href="al5Base.html#AL_FLOAT">AL_FLOAT</a>): <a  href="Allegro5.ALLEGRO_COLOR.html">ALLEGRO_COLOR</a>; CDECL; EXTERNAL ALLEGRO_COLOR_LIB_NAME;</code></td>
+</tr>
+<tr><td colspan="1">
+<p>
+Returns an <a class="normal" href="Allegro5.ALLEGRO_COLOR.html">ALLEGRO_COLOR</a> structure from CMYK values (cyan, magenta, yellow, black).  </p>
+<h6 class="description_section">See also</h6>
+<dl class="see_also">
+  <dt><a class="normal" href="al5color.html#al_color_cmyk_to_rgb">al_color_cmyk_to_rgb</a></dt>
+  <dd>Converts CMYK values to RGB values.</dd>
+  <dt><a class="normal" href="al5color.html#al_color_rgb_to_cmyk">al_color_rgb_to_cmyk</a></dt>
+  <dd>Each RGB color can be represented in CMYK with a K component of 0 with the following formula: </p>
+
+<pre class="preformatted">
+C = 1 - R
+M = 1 - G
+Y = 1 - B
+K = 0</pre>
+
+<p> This function will instead find the representation with the maximal value for K and minimal color components.</dd>
+</dl>
+</td></tr>
+</table>
+<table class="detail wide_list">
+<tr class="list">
+<td class="itemcode"><span id="al_color_hsl"></span><code>FUNCTION <b>al_color_hsl</b> (h, s, l: <a  href="al5Base.html#AL_FLOAT">AL_FLOAT</a>): <a  href="Allegro5.ALLEGRO_COLOR.html">ALLEGRO_COLOR</a>; CDECL; EXTERNAL ALLEGRO_COLOR_LIB_NAME;</code></td>
+</tr>
+<tr><td colspan="1">
+<p>
+Returns an <a class="normal" href="Allegro5.ALLEGRO_COLOR.html">ALLEGRO_COLOR</a> structure from HSL (hue, saturation, lightness) values.     </p>
+<h6 class="description_section">Parameters</h6>
+<dl class="parameters">
+<dt>h</dt>
+<dd>Color hue angle in the range <code>0..360</code>.</dd>
+<dt>s</dt>
+<dd>Color saturation in the range <code>0..1</code>.</dd>
+<dt>l</dt>
+<dd>Color lightness in the range <code>0..1</code>.</dd>
+</dl>
+<h6 class="description_section">See also</h6>
+<dl class="see_also">
+  <dt><a class="normal" href="al5color.html#al_color_hsl_to_rgb">al_color_hsl_to_rgb</a></dt>
+  <dd>Converts values in HSL color model to RGB color model.</dd>
+  <dt><a class="normal" href="al5color.html#al_color_hsv">al_color_hsv</a></dt>
+  <dd>Returns an <a class="normal" href="Allegro5.ALLEGRO_COLOR.html">ALLEGRO_COLOR</a> structure from HSV (hue, saturation, value) values.</dd>
+</dl>
+</td></tr>
+</table>
+<table class="detail wide_list">
+<tr class="list">
+<td class="itemcode"><span id="al_color_hsv"></span><code>FUNCTION <b>al_color_hsv</b> (h, s, v: <a  href="al5Base.html#AL_FLOAT">AL_FLOAT</a>): <a  href="Allegro5.ALLEGRO_COLOR.html">ALLEGRO_COLOR</a>; CDECL; EXTERNAL ALLEGRO_COLOR_LIB_NAME;</code></td>
+</tr>
+<tr><td colspan="1">
+<p>
+Returns an <a class="normal" href="Allegro5.ALLEGRO_COLOR.html">ALLEGRO_COLOR</a> structure from HSV (hue, saturation, value) values.     </p>
+<h6 class="description_section">Parameters</h6>
+<dl class="parameters">
+<dt>h</dt>
+<dd>Color hue angle in the range <code>0..360</code>.</dd>
+<dt>s</dt>
+<dd>Color saturation in the range <code>0..1</code>.</dd>
+<dt>v</dt>
+<dd>Color value in the range <code>0..1</code>.</dd>
+</dl>
+<h6 class="description_section">See also</h6>
+<dl class="see_also">
+  <dt><a class="normal" href="al5color.html#al_color_hsv_to_rgb">al_color_hsv_to_rgb</a></dt>
+  <dd>Converts values in HSV color model to RGB color model.</dd>
+  <dt><a class="normal" href="al5color.html#al_color_hsl">al_color_hsl</a></dt>
+  <dd>Returns an <a class="normal" href="Allegro5.ALLEGRO_COLOR.html">ALLEGRO_COLOR</a> structure from HSL (hue, saturation, lightness) values.</dd>
+</dl>
+</td></tr>
+</table>
+<table class="detail wide_list">
+<tr class="list">
+<td class="itemcode"><span id="al_color_name"></span><code>FUNCTION <b>al_color_name</b> (CONST name: <a  href="al5Base.html#AL_STR">AL_STR</a>): <a  href="Allegro5.ALLEGRO_COLOR.html">ALLEGRO_COLOR</a>; CDECL; EXTERNAL ALLEGRO_COLOR_LIB_NAME;</code></td>
+</tr>
+<tr><td colspan="1">
+<p>
+Returns an <a class="normal" href="Allegro5.ALLEGRO_COLOR.html">ALLEGRO_COLOR</a> with the given name. If the color is not found then black is returned.
+
+<p>See <a class="normal" href="al5color.html#al_color_name_to_rgb">al_color_name_to_rgb</a> for the list of names.</p>
+</td></tr>
+</table>
+<table class="detail wide_list">
+<tr class="list">
+<td class="itemcode"><span id="al_color_html"></span><code>FUNCTION <b>al_color_html</b> (CONST str: <a  href="al5Base.html#AL_STR">al_STR</a>): <a  href="Allegro5.ALLEGRO_COLOR.html">ALLEGRO_COLOR</a>; CDECL; EXTERNAL ALLEGRO_COLOR_LIB_NAME;</code></td>
+</tr>
+<tr><td colspan="1">
+<p>
+Interprets an HTML-style hex number (e.g. <code>#00FAFF</code> as a color. The accepted format is the same as <a class="normal" href="al5color.html#al_color_html_to_rgb">al_color_html_to_rgb</a>.
+
+<p><b>Note</b>
+
+<p>the behaviour on invalid strings is different from Allegro 5.0.x.   </p>
+<h6 class="description_section">Returns</h6>
+<p class="return">the interpreted color, or <code><a class="normal" href="Allegro5.html#al_map_rgba">al_map_rgba</a> (0, 0, 0, 0)</code> if the string could not be parsed.</p><h6 class="description_section">See also</h6>
+<dl class="see_also">
+  <dt><a class="normal" href="al5color.html#al_color_html_to_rgb">al_color_html_to_rgb</a></dt>
+  <dd>Interprets an HTML-style hex number (e.g.</dd>
+  <dt><a class="normal" href="al5color.html#al_color_rgb_to_html">al_color_rgb_to_html</a></dt>
+  <dd>Creates an HTML-style string representation of an RGB triplet, e.g.</dd>
+</dl>
+</td></tr>
+</table>
+<table class="detail wide_list">
+<tr class="list">
+<td class="itemcode"><span id="al_color_xyz_to_rgb"></span><code>PROCEDURE <b>al_color_xyz_to_rgb</b> (x, y, z: <a  href="al5Base.html#AL_FLOAT">AL_FLOAT</a>; OUT red, green, blue: <a  href="al5Base.html#AL_FLOAT">AL_FLOAT</a>); CDECL; EXTERNAL ALLEGRO_COLOR_LIB_NAME;</code></td>
+</tr>
+<tr><td colspan="1">
+<p>
+Converts XYZ color values to RGB color space.  </p>
+<h6 class="description_section">See also</h6>
+<dl class="see_also">
+  <dt><a class="normal" href="al5color.html#al_color_xyz">al_color_xyz</a></dt>
+  <dd>Returns an <a class="normal" href="Allegro5.ALLEGRO_COLOR.html">ALLEGRO_COLOR</a> structure from XYZ values.</dd>
+  <dt><a class="normal" href="al5color.html#al_color_rgb_to_xyz">al_color_rgb_to_xyz</a></dt>
+  <dd>Converts RGB values to XYZ color space.</dd>
+</dl>
+</td></tr>
+</table>
+<table class="detail wide_list">
+<tr class="list">
+<td class="itemcode"><span id="al_color_rgb_to_xyz"></span><code>PROCEDURE <b>al_color_rgb_to_xyz</b> (red, green, blue: <a  href="al5Base.html#AL_FLOAT">AL_FLOAT</a>; OUT x, y, z: <a  href="al5Base.html#AL_FLOAT">AL_FLOAT</a>); CDECL; EXTERNAL ALLEGRO_COLOR_LIB_NAME;</code></td>
+</tr>
+<tr><td colspan="1">
+<p>
+Converts RGB values to XYZ color space.  </p>
+<h6 class="description_section">See also</h6>
+<dl class="see_also">
+  <dt><a class="normal" href="al5color.html#al_color_xyz">al_color_xyz</a></dt>
+  <dd>Returns an <a class="normal" href="Allegro5.ALLEGRO_COLOR.html">ALLEGRO_COLOR</a> structure from XYZ values.</dd>
+  <dt><a class="normal" href="al5color.html#al_color_xyz_to_rgb">al_color_xyz_to_rgb</a></dt>
+  <dd>Converts XYZ color values to RGB color space.</dd>
+</dl>
+</td></tr>
+</table>
+<table class="detail wide_list">
+<tr class="list">
+<td class="itemcode"><span id="al_color_xyz"></span><code>FUNCTION <b>al_color_xyz</b> (x, y, z:<a  href="al5Base.html#AL_FLOAT">AL_FLOAT</a>): <a  href="Allegro5.ALLEGRO_COLOR.html">ALLEGRO_COLOR</a>; CDECL; EXTERNAL ALLEGRO_COLOR_LIB_NAME;</code></td>
+</tr>
+<tr><td colspan="1">
+<p>
+Returns an <a class="normal" href="Allegro5.ALLEGRO_COLOR.html">ALLEGRO_COLOR</a> structure from XYZ values. The CIE 1931 XYZ color space consists of three components in the range <code>0..1</code>. The Y component corresponds to luminance and the X and Z components define the color.
+
+<p>RGB components are always assumed to be in sRGB space.
+
+<p><b>Note</b>
+
+<p>The XYZ color space can represent more colors than are visible in sRGB and therefore conversion may result in RGB values outside of the <code>0..1</code> range. You can check for that case with <a class="normal" href="al5color.html#al_is_color_valid">al_is_color_valid</a>.  </p>
+<h6 class="description_section">See also</h6>
+<dl class="see_also">
+  <dt><a class="normal" href="al5color.html#al_color_xyz_to_rgb">al_color_xyz_to_rgb</a></dt>
+  <dd>Converts XYZ color values to RGB color space.</dd>
+  <dt><a class="normal" href="al5color.html#al_color_rgb_to_xyz">al_color_rgb_to_xyz</a></dt>
+  <dd>Converts RGB values to XYZ color space.</dd>
+</dl>
+</td></tr>
+</table>
+<table class="detail wide_list">
+<tr class="list">
+<td class="itemcode"><span id="al_color_lab_to_rgb"></span><code>PROCEDURE <b>al_color_lab_to_rgb</b> (l, a, b: <a  href="al5Base.html#AL_FLOAT">AL_FLOAT</a>; OUT red, green, blue: <a  href="al5Base.html#AL_FLOAT">AL_FLOAT</a>); CDECL; EXTERNAL ALLEGRO_COLOR_LIB_NAME;</code></td>
+</tr>
+<tr><td colspan="1">
+<p>
+Converts CIE L*a*b* color values to RGB color space.  </p>
+<h6 class="description_section">See also</h6>
+<dl class="see_also">
+  <dt><a class="normal" href="al5color.html#al_color_lab">al_color_lab</a></dt>
+  <dd>Returns an <a class="normal" href="Allegro5.ALLEGRO_COLOR.html">ALLEGRO_COLOR</a> structure from CIE L*a*b* values.</dd>
+  <dt><a class="normal" href="al5color.html#al_color_rgb_to_lab">al_color_rgb_to_lab</a></dt>
+  <dd>Converts RGB values to L*a*b color space.</dd>
+</dl>
+</td></tr>
+</table>
+<table class="detail wide_list">
+<tr class="list">
+<td class="itemcode"><span id="al_color_rgb_to_lab"></span><code>PROCEDURE <b>al_color_rgb_to_lab</b> (red, green, blue: <a  href="al5Base.html#AL_FLOAT">AL_FLOAT</a>; OUT l, a, b: <a  href="al5Base.html#AL_FLOAT">AL_FLOAT</a>); CDECL; EXTERNAL ALLEGRO_COLOR_LIB_NAME;</code></td>
+</tr>
+<tr><td colspan="1">
+<p>
+Converts RGB values to L*a*b color space.  </p>
+<h6 class="description_section">See also</h6>
+<dl class="see_also">
+  <dt><a class="normal" href="al5color.html#al_color_lab">al_color_lab</a></dt>
+  <dd>Returns an <a class="normal" href="Allegro5.ALLEGRO_COLOR.html">ALLEGRO_COLOR</a> structure from CIE L*a*b* values.</dd>
+  <dt><a class="normal" href="al5color.html#al_color_lab_to_rgb">al_color_lab_to_rgb</a></dt>
+  <dd>Converts CIE L*a*b* color values to RGB color space.</dd>
+</dl>
+</td></tr>
+</table>
+<table class="detail wide_list">
+<tr class="list">
+<td class="itemcode"><span id="al_color_lab"></span><code>FUNCTION <b>al_color_lab</b> (l, a, b: <a  href="al5Base.html#AL_FLOAT">AL_FLOAT</a>): <a  href="Allegro5.ALLEGRO_COLOR.html">ALLEGRO_COLOR</a>; CDECL; EXTERNAL ALLEGRO_COLOR_LIB_NAME;</code></td>
+</tr>
+<tr><td colspan="1">
+<p>
+Returns an <a class="normal" href="Allegro5.ALLEGRO_COLOR.html">ALLEGRO_COLOR</a> structure from CIE L*a*b* values. The L* component corresponds to luminance from <code>0..1</code>. The a* and b* components are in the range <code>-1..+1</code>.
+
+<p><b>Note</b>
+
+<p>The L*a*b* color space can represent more colors than are visible in sRGB and therefore conversion may result in RGB values outside of the <code>0..1</code> range. You can check for that case with <a class="normal" href="al5color.html#al_is_color_valid">al_is_color_valid</a>.
+
+<p><b>Note</b>
+
+<p>In some literature the range of L* is 0 to 100 and a* and b* are from -100 to +100. In that case divide all components by 100 before passing them to this function.  </p>
+<h6 class="description_section">See also</h6>
+<dl class="see_also">
+  <dt><a class="normal" href="al5color.html#al_color_lab_to_rgb">al_color_lab_to_rgb</a></dt>
+  <dd>Converts CIE L*a*b* color values to RGB color space.</dd>
+  <dt><a class="normal" href="al5color.html#al_color_rgb_to_lab">al_color_rgb_to_lab</a></dt>
+  <dd>Converts RGB values to L*a*b color space.</dd>
+</dl>
+</td></tr>
+</table>
+<table class="detail wide_list">
+<tr class="list">
+<td class="itemcode"><span id="al_color_xyy_to_rgb"></span><code>PROCEDURE <b>al_color_xyy_to_rgb</b> (x, y, y2: <a  href="al5Base.html#AL_FLOAT">AL_FLOAT</a>; OUT red, green, blue: <a  href="al5Base.html#AL_FLOAT">AL_FLOAT</a>); CDECL; EXTERNAL ALLEGRO_COLOR_LIB_NAME;</code></td>
+</tr>
+<tr><td colspan="1">
+<p>
+Converts xyY color values to RGB color space.  </p>
+<h6 class="description_section">See also</h6>
+<dl class="see_also">
+  <dt><a class="normal" href="al5color.html#al_color_xyy">al_color_xyy</a></dt>
+  <dd>Returns an <a class="normal" href="Allegro5.ALLEGRO_COLOR.html">ALLEGRO_COLOR</a> structure from xyY values.</dd>
+  <dt><a class="normal" href="al5color.html#al_color_rgb_to_xyy">al_color_rgb_to_xyy</a></dt>
+  <dd>Converts RGB values to xyY color space.</dd>
+</dl>
+</td></tr>
+</table>
+<table class="detail wide_list">
+<tr class="list">
+<td class="itemcode"><span id="al_color_rgb_to_xyy"></span><code>PROCEDURE <b>al_color_rgb_to_xyy</b> (red, green, blue: <a  href="al5Base.html#AL_FLOAT">AL_FLOAT</a>; OUT x, y, y2: <a  href="al5Base.html#AL_FLOAT">AL_FLOAT</a>); CDECL; EXTERNAL ALLEGRO_COLOR_LIB_NAME;</code></td>
+</tr>
+<tr><td colspan="1">
+<p>
+Converts RGB values to xyY color space.  </p>
+<h6 class="description_section">See also</h6>
+<dl class="see_also">
+  <dt><a class="normal" href="al5color.html#al_color_xyy">al_color_xyy</a></dt>
+  <dd>Returns an <a class="normal" href="Allegro5.ALLEGRO_COLOR.html">ALLEGRO_COLOR</a> structure from xyY values.</dd>
+  <dt><a class="normal" href="al5color.html#al_color_xyy_to_rgb">al_color_xyy_to_rgb</a></dt>
+  <dd>Converts xyY color values to RGB color space.</dd>
+</dl>
+</td></tr>
+</table>
+<table class="detail wide_list">
+<tr class="list">
+<td class="itemcode"><span id="al_color_xyy"></span><code>FUNCTION <b>al_color_xyy</b> (x, y, y2: <a  href="al5Base.html#AL_FLOAT">AL_FLOAT</a>): <a  href="Allegro5.ALLEGRO_COLOR.html">ALLEGRO_COLOR</a>; CDECL; EXTERNAL ALLEGRO_COLOR_LIB_NAME;</code></td>
+</tr>
+<tr><td colspan="1">
+<p>
+Returns an <a class="normal" href="Allegro5.ALLEGRO_COLOR.html">ALLEGRO_COLOR</a> structure from xyY values. The Y component in the xyY color space is the same as the Y in XYZ.
+
+<p>However the x and y values are computed from XYZ like this: </p>
+
+<pre class="preformatted">
+x = X / (X + Y + Z)
+y = Y / (X + Y + Z)</pre>
+
+<p>  </p>
+<h6 class="description_section">See also</h6>
+<dl class="see_also">
+  <dt><a class="normal" href="al5color.html#al_color_xyy_to_rgb">al_color_xyy_to_rgb</a></dt>
+  <dd>Converts xyY color values to RGB color space.</dd>
+  <dt><a class="normal" href="al5color.html#al_color_rgb_to_xyy">al_color_rgb_to_xyy</a></dt>
+  <dd>Converts RGB values to xyY color space.</dd>
+</dl>
+</td></tr>
+</table>
+<table class="detail wide_list">
+<tr class="list">
+<td class="itemcode"><span id="al_color_distance_ciede2000"></span><code>FUNCTION <b>al_color_distance_ciede2000</b> (c1, c2: <a  href="Allegro5.ALLEGRO_COLOR.html">ALLEGRO_COLOR</a>): <a  href="al5Base.html#AL_DOUBLE">AL_DOUBLE</a>; CDECL; EXTERNAL ALLEGRO_COLOR_LIB_NAME;</code></td>
+</tr>
+<tr><td colspan="1">
+<p>
+This function computes the CIEDE2000 color difference between two RGB colors. This is a visually uniform color difference, unlike for example the RGB distance.
+
+<p>When using the RGB distance (Euklidean distance between two RGB triplets) there can be color pairs with the same distance, where the colors of one pair appear to be almost the same color, while the colors of the other pair look quite different. This is improved by using the L*a*b* color space which was designed with perceptual uniformity in mind. However it still is not completely uniform. The CIEDE2000 formula contains some additional transformations to fix that.
+
+<p>The returned color distance is roughly in the range 0 (identical color) to 1 (completely different color) - but values greater than one are possible.
+
+<p><b>Note</b>
+
+<p>This function uses <a class="normal" href="al5color.html#al_color_lab">al_color_lab</a> internally which defines the L component to be in the range <code>0..1</code> (and not <code>0..100</code> as is sometimes seen).</p>
+</td></tr>
+</table>
+<table class="detail wide_list">
+<tr class="list">
+<td class="itemcode"><span id="al_color_lch_to_rgb"></span><code>PROCEDURE <b>al_color_lch_to_rgb</b> (l, c, h: <a  href="al5Base.html#AL_FLOAT">AL_FLOAT</a>; OUT red, green, blue); CDECL; EXTERNAL ALLEGRO_COLOR_LIB_NAME;</code></td>
+</tr>
+<tr><td colspan="1">
+<p>
+Converts CIE LCH color values to RGB color space.  </p>
+<h6 class="description_section">See also</h6>
+<dl class="see_also">
+  <dt><a class="normal" href="al5color.html#al_color_lch">al_color_lch</a></dt>
+  <dd>Returns an <a class="normal" href="Allegro5.ALLEGRO_COLOR.html">ALLEGRO_COLOR</a> structure from CIE LCH values.</dd>
+  <dt><a class="normal" href="al5color.html#al_color_rgb_to_lch">al_color_rgb_to_lch</a></dt>
+  <dd>Convert RGB values to CIE LCH color space.</dd>
+</dl>
+</td></tr>
+</table>
+<table class="detail wide_list">
+<tr class="list">
+<td class="itemcode"><span id="al_color_rgb_to_lch"></span><code>PROCEDURE <b>al_color_rgb_to_lch</b> (red, green, blue: <a  href="al5Base.html#AL_FLOAT">AL_FLOAT</a>; OUT l, c, h: <a  href="al5Base.html#AL_FLOAT">AL_FLOAT</a>); CDECL; EXTERNAL ALLEGRO_COLOR_LIB_NAME;</code></td>
+</tr>
+<tr><td colspan="1">
+<p>
+Convert RGB values to CIE LCH color space.  </p>
+<h6 class="description_section">See also</h6>
+<dl class="see_also">
+  <dt><a class="normal" href="al5color.html#al_color_lch">al_color_lch</a></dt>
+  <dd>Returns an <a class="normal" href="Allegro5.ALLEGRO_COLOR.html">ALLEGRO_COLOR</a> structure from CIE LCH values.</dd>
+  <dt><a class="normal" href="al5color.html#al_color_lch_to_rgb">al_color_lch_to_rgb</a></dt>
+  <dd>Converts CIE LCH color values to RGB color space.</dd>
+</dl>
+</td></tr>
+</table>
+<table class="detail wide_list">
+<tr class="list">
+<td class="itemcode"><span id="al_color_lch"></span><code>FUNCTION <b>al_color_lch</b> (l, c, h: <a  href="al5Base.html#AL_FLOAT">AL_FLOAT</a>): <a  href="Allegro5.ALLEGRO_COLOR.html">ALLEGRO_COLOR</a>; CDECL; EXTERNAL ALLEGRO_COLOR_LIB_NAME;</code></td>
+</tr>
+<tr><td colspan="1">
+<p>
+Returns an <a class="normal" href="Allegro5.ALLEGRO_COLOR.html">ALLEGRO_COLOR</a> structure from CIE LCH values. LCH colors are very similar to HSL, with the same meaning of L and H and C corresponding to S. However LCH is more visually uniform. Furthermore, this function expects the angle for H in radians and not in degree.
+
+<p>The CIE LCH color space is a cylindrical representation of the L*a*b* color space. The L component is the same and C and H are computed like this: </p>
+
+<pre class="preformatted">
+C = sqrt (a * a + b * b)
+H = atan2 (b, a)</pre>
+
+<p>  </p>
+<h6 class="description_section">See also</h6>
+<dl class="see_also">
+  <dt><a class="normal" href="al5color.html#al_color_lch_to_rgb">al_color_lch_to_rgb</a></dt>
+  <dd>Converts CIE LCH color values to RGB color space.</dd>
+  <dt><a class="normal" href="al5color.html#al_color_rgb_to_lch">al_color_rgb_to_lch</a></dt>
+  <dd>Convert RGB values to CIE LCH color space.</dd>
+</dl>
+</td></tr>
+</table>
+<table class="detail wide_list">
+<tr class="list">
+<td class="itemcode"><span id="al_is_color_valid"></span><code>FUNCTION <b>al_is_color_valid</b> (color: <a  href="Allegro5.ALLEGRO_COLOR.html">ALLEGRO_COLOR</a>): <a  href="al5Base.html#AL_BOOL">AL_BOOL</a>; CDECL; EXTERNAL ALLEGRO_COLOR_LIB_NAME;</code></td>
+</tr>
+<tr><td colspan="1">
+<p>
+Checks if all components of the color are between 0 and 1. Some of the color conversions in this addon support color spaces with more colors than can be represented in sRGB and when converted to RGB will result in invalid color components outside the <code>0..1</code> range.</p>
+</td></tr>
+</table>
+<hr><span class="appinfo"><em>Generated by <a  href="https://github.com/pasdoc/pasdoc/wiki">PasDoc 0.15.0</a>. Generated on 2020-04-16 11:56:29.</em>
+</span>
+</td></tr></table></body></html>

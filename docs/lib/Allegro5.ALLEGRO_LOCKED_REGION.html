@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<title>Allegro.pas 5.2.b.1: Allegro5: Record ALLEGRO_LOCKED_REGION</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="generator" content="PasDoc 0.15.0">
+<meta http-equiv="content-type" content="text/html; charset=utf-8">
+<link rel="stylesheet" type="text/css" href="tipuesearch/tipuesearch.css">
+
+<link rel="StyleSheet" type="text/css" href="pasdoc.css">
+</head>
+<body>
+<table class="container"><tr><td class="navigation">
+<h2>Allegro.pas 5.2.b.1</h2><p><a href="introduction.html" class="navigation">Introduction</a></p><p><a href="AllUnits.html" class="navigation">Units</a></p><p><a href="ClassHierarchy.html" class="navigation">Class Hierarchy</a></p><p><a href="AllClasses.html" class="navigation">Classes, Interfaces, Objects and Records</a></p><p><a href="AllTypes.html" class="navigation">Types</a></p><p><a href="AllVariables.html" class="navigation">Variables</a></p><p><a href="AllConstants.html" class="navigation">Constants</a></p><p><a href="AllFunctions.html" class="navigation">Functions and Procedures</a></p><p><a href="AllIdentifiers.html" class="navigation">Identifiers</a></p><form class="search-form" action="_tipue_results.html"><div class="search-input"><input type="text" name="q" id="tipue_search_input"></div><div class="search-button"><input type="button" id="tipue_search_button" onclick="this.form.submit();"></div></form>
+<div style="clear: both"></div>
+
+<script type="text/javascript">
+$(document).ready(function() {
+    $('#tipue_search_input').tipuesearch({
+        /* 10 items to display seems standard */
+        'show': 10,
+        /* For PasDoc docs, showing urls is not very useful,
+           since the page title already shows the unit and identifier. */
+        'showURL': false
+    });
+});
+</script>
+</td><td class="content">
+<span id="ALLEGRO_LOCKED_REGION"></span><h1 class="cio">Record ALLEGRO_LOCKED_REGION</h1>
+<div class="sections">
+<div class="one_section"><a class="section" href="#PasDoc-Description">Description</a></div><div class="one_section">Hierarchy</div><div class="one_section"><a class="section" href="#PasDoc-Fields">Fields</a></div><div class="one_section">Methods</div><div class="one_section">Properties</div></div>
+<span id="PasDoc-Description"></span><h2 class="unit">Unit</h2>
+<p class="unitlink">
+<a  href="Allegro5.html">Allegro5</a></p>
+<h2 class="declaration">Declaration</h2>
+<p class="declaration">
+<code>type ALLEGRO_LOCKED_REGION = record</code></p>
+<h2 class="description">Description</h2>
+<p>
+Users who wish to manually edit or read from a bitmap are required to lock it first. The <code>ALLEGRO_LOCKED_REGION</code> structure represents the locked region of the bitmap. This call will work with any bitmap, including memory bitmaps.        </p>
+<h6 class="description_section">See also</h6>
+<dl class="see_also">
+  <dt><a class="normal" href="Allegro5.html#al_lock_bitmap">al_lock_bitmap</a></dt>
+  <dd>Locks an entire bitmap for reading or writing.</dd>
+  <dt><a class="normal" href="Allegro5.html#al_lock_bitmap_region">al_lock_bitmap_region</a></dt>
+  <dd>Like <a class="normal" href="Allegro5.html#al_lock_bitmap">al_lock_bitmap</a>, but only locks a specific area of the bitmap.</dd>
+  <dt><a class="normal" href="Allegro5.html#al_unlock_bitmap">al_unlock_bitmap</a></dt>
+  <dd>Unlocks a previously locked bitmap or bitmap region.</dd>
+  <dt><a class="normal" href="Allegro5.html#ALLEGRO_PIXEL_FORMAT">ALLEGRO_PIXEL_FORMAT</a></dt>
+  <dd>Pixel formats.</dd>
+</dl>
+<h2 class="overview">Overview</h2>
+<span id="PasDoc-Fields"></span><h3 class="summary">Fields</h3>
+<table class="summary wide_list">
+<tr class="list">
+<td class="itemcode"><code><b><a  href="Allegro5.ALLEGRO_LOCKED_REGION.html#data">data</a></b>: <a  href="al5Base.html#AL_VOIDptr">AL_VOIDptr</a>;</code></td>
+</tr>
+<tr class="list2">
+<td class="itemcode"><code><b><a  href="Allegro5.ALLEGRO_LOCKED_REGION.html#format">format</a></b>: <a  href="al5Base.html#AL_INT">AL_INT</a>;</code></td>
+</tr>
+<tr class="list">
+<td class="itemcode"><code><b><a  href="Allegro5.ALLEGRO_LOCKED_REGION.html#pitch">pitch</a></b>: <a  href="al5Base.html#AL_INT">AL_INT</a>;</code></td>
+</tr>
+<tr class="list2">
+<td class="itemcode"><code><b><a  href="Allegro5.ALLEGRO_LOCKED_REGION.html#pixel_size">pixel_size</a></b>: <a  href="al5Base.html#AL_INT">AL_INT</a>;</code></td>
+</tr>
+</table>
+<h2 class="description">Description</h2>
+<h3 class="detail">Fields</h3>
+<table class="detail wide_list">
+<tr class="list">
+<td class="itemcode"><span id="data"></span><code><b>data</b>: <a  href="al5Base.html#AL_VOIDptr">AL_VOIDptr</a>;</code></td>
+</tr>
+<tr><td colspan="1">
+<p>
+Points to the leftmost pixel of the first row (row 0) of the locked region.</p>
+</td></tr>
+</table>
+<table class="detail wide_list">
+<tr class="list">
+<td class="itemcode"><span id="format"></span><code><b>format</b>: <a  href="al5Base.html#AL_INT">AL_INT</a>;</code></td>
+</tr>
+<tr><td colspan="1">
+<p>
+Indicates the pixel format of the data.</p>
+</td></tr>
+</table>
+<table class="detail wide_list">
+<tr class="list">
+<td class="itemcode"><span id="pitch"></span><code><b>pitch</b>: <a  href="al5Base.html#AL_INT">AL_INT</a>;</code></td>
+</tr>
+<tr><td colspan="1">
+<p>
+Gives the size in bytes of a single row (also known as the stride). The pitch may be greater than <code>width * pixel_size</code> due to padding; this is not uncommon. It is also not uncommon for the pitch to be negative (the bitmap may be upside down). For blocked bitmaps, 'row' refers to the row of blocks, not of pixels.</p>
+</td></tr>
+</table>
+<table class="detail wide_list">
+<tr class="list">
+<td class="itemcode"><span id="pixel_size"></span><code><b>pixel_size</b>: <a  href="al5Base.html#AL_INT">AL_INT</a>;</code></td>
+</tr>
+<tr><td colspan="1">
+<p>
+It is the number of bytes used to represent a single block of pixels for the pixel format of this locked region. For most formats (and historically, this used to be true for all formats), this is just the size of a single pixel, but for blocked pixel formats this value is different.</p>
+</td></tr>
+</table>
+<hr><span class="appinfo"><em>Generated by <a  href="https://github.com/pasdoc/pasdoc/wiki">PasDoc 0.15.0</a>. Generated on 2020-04-16 11:56:30.</em>
+</span>
+</td></tr></table></body></html>

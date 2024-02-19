@@ -1,0 +1,2352 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<title>Allegro.pas 5.2.b.1: al5primitives</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="generator" content="PasDoc 0.15.0">
+<meta http-equiv="content-type" content="text/html; charset=utf-8">
+<link rel="stylesheet" type="text/css" href="tipuesearch/tipuesearch.css">
+
+<link rel="StyleSheet" type="text/css" href="pasdoc.css">
+</head>
+<body>
+<table class="container"><tr><td class="navigation">
+<h2>Allegro.pas 5.2.b.1</h2><p><a href="introduction.html" class="navigation">Introduction</a></p><p><a href="AllUnits.html" class="navigation">Units</a></p><p><a href="ClassHierarchy.html" class="navigation">Class Hierarchy</a></p><p><a href="AllClasses.html" class="navigation">Classes, Interfaces, Objects and Records</a></p><p><a href="AllTypes.html" class="navigation">Types</a></p><p><a href="AllVariables.html" class="navigation">Variables</a></p><p><a href="AllConstants.html" class="navigation">Constants</a></p><p><a href="AllFunctions.html" class="navigation">Functions and Procedures</a></p><p><a href="AllIdentifiers.html" class="navigation">Identifiers</a></p><form class="search-form" action="_tipue_results.html"><div class="search-input"><input type="text" name="q" id="tipue_search_input"></div><div class="search-button"><input type="button" id="tipue_search_button" onclick="this.form.submit();"></div></form>
+<div style="clear: both"></div>
+
+<script type="text/javascript">
+$(document).ready(function() {
+    $('#tipue_search_input').tipuesearch({
+        /* 10 items to display seems standard */
+        'show': 10,
+        /* For PasDoc docs, showing urls is not very useful,
+           since the page title already shows the unit and identifier. */
+        'showURL': false
+    });
+});
+</script>
+</td><td class="content">
+<h1 class="unit">Unit al5primitives</h1>
+<div class="sections">
+<div class="one_section"><a class="section" href="#PasDoc-Description">Description</a></div><div class="one_section">Uses</div><div class="one_section"><a class="section" href="#PasDoc-Classes">Classes, Interfaces, Objects and Records</a></div><div class="one_section"><a class="section" href="#PasDoc-FuncsProcs">Functions and Procedures</a></div><div class="one_section"><a class="section" href="#PasDoc-Types">Types</a></div><div class="one_section"><a class="section" href="#PasDoc-Constants">Constants</a></div><div class="one_section">Variables</div></div>
+<span id="PasDoc-Description"></span><h2 class="description">Description</h2>
+<p>
+Primitive drawing.
+
+<p><b>High level drawing routines</b>
+
+<p>High level drawing routines encompass the most common usage of this addon: to draw geometric primitives, both smooth (variations on the circle theme) and piecewise linear. Outlined primitives support the concept of thickness with two distinct modes of output: hairline lines and thick lines. Hairline lines are specifically designed to be exactly a pixel wide, and are commonly used for drawing outlined figures that need to be a pixel wide. Hairline thickness is designated as thickness less than or equal to 0. Unfortunately, the exact rasterization rules for drawing these hairline lines vary from one video card to another, and sometimes leave gaps where the lines meet. If that matters to you, then you should use thick lines. In many cases, having a thickness of 1 will produce 1 pixel wide lines that look better than hairline lines. Obviously, hairline lines cannot replicate thicknesses greater than 1. Thick lines grow symmetrically around the generating shape as thickness is increased.
+
+<p><b>Low level drawing routines</b>
+
+<p>Low level drawing routines allow for more advanced usage of the addon, allowing you to pass arbitrary sequences of vertices to draw to the screen. These routines also support using textures on the primitives with the following restrictions:
+
+<p>For maximum portability, you should only use textures that have dimensions that are a power of two, as not every videocard supports textures of different sizes completely. This warning is relaxed, however, if the texture coordinates never exit the boundaries of a single bitmap (i.e. you are not having the texture repeat/tile). As long as that is the case, any texture can be used safely. Sub-bitmaps work as textures, but cannot be tiled.
+
+<p>Some platforms also dictate a minimum texture size, which means that textures smaller than that size will not tile properly. The minimum size that will work on all platforms is 32 by 32.
+
+<p>A note about pixel coordinates. In OpenGL the texture coordinate (0, 0) refers to the top left corner of the pixel. This confuses some drivers, because due to rounding errors the actual pixel sampled might be the pixel to the top and/or left of the (0, 0) pixel. To make this error less likely it is advisable to offset the texture coordinates you pass to the al_draw_prim by (0.5, 0.5) if you need precise pixel control. E.g. to refer to pixel (5, 10) you'd set the u and v to 5.5 and 10.5 respectively.
+
+<p><b>Pixel-precise output</b>
+
+<p>While normally you should not be too concerned with which pixels are displayed when the high level primitives are drawn, it is nevertheless possible to control that precisely by carefully picking the coordinates at which you draw those primitives.
+
+<p>To be able to do that, however, it is critical to understand how GPU cards convert shapes to pixels. Pixels are not the smallest unit that can be addressed by the GPU. Because the GPU deals with floating point coordinates, it can in fact assign different coordinates to different parts of a single pixel. To a GPU, thus, a screen is composed of a grid of squares that have width and length of 1. The top left corner of the top left pixel is located at (0, 0). Therefore, the center of that pixel is at (0.5, 0.5). The basic rule that determines which pixels are associated with which shape is then as follows: a pixel is treated to belong to a shape if the pixel's center is located in that shape. The figure below illustrates the above concepts:
+
+<p><figure>
+ <img src="images/primitives1.png" width="100%" title="Pixel output calculation" alt="[-]" />
+ <figcaption>Diagram showing a how pixel output is calculated by the GPU given the mathematical description of several shapes.</figcaption>
+</figure>
+
+<p>This figure depicts three shapes drawn at the top left of the screen: an orange and green rectangles and a purple circle. On the left are the mathematical descriptions of pixels on the screen and the shapes to be drawn. On the right is the screen output. Only a single pixel has its center inside the circle, and therefore only a single pixel is drawn on the screen. Similarly, two pixels are drawn for the orange rectangle. Since there are no pixels that have their centers inside the green rectangle, the output image has no green pixels.
+
+<p>Here is a more practical example. The image below shows the output of this code: </p>
+
+<pre class="longcode">
+<span class="pascal_comment">{ blue vertical line }</span>
+al_draw_line (<span class="pascal_float">0.5</span>, <span class="pascal_numeric">0</span>, <span class="pascal_float">0.5</span>, <span class="pascal_numeric">6</span>, ColorBlue, <span class="pascal_numeric">1</span>);
+<span class="pascal_comment">{ red horizontal line }</span>
+al_draw_line (<span class="pascal_numeric">2</span>, <span class="pascal_numeric">1</span>, <span class="pascal_numeric">6</span>, <span class="pascal_numeric">1</span>, ColorRed, <span class="pascal_numeric">2</span>);
+<span class="pascal_comment">{ green filled rectangle }</span>
+al_draw_filled_rectangle (<span class="pascal_numeric">3</span>, <span class="pascal_numeric">4</span>, <span class="pascal_numeric">5</span>, <span class="pascal_numeric">5</span>, ColorGreen);
+<span class="pascal_comment">{ purple outlined rectangle }</span>
+al_draw_rectangle (<span class="pascal_float">2.5</span>, <span class="pascal_float">3.5</span>, <span class="pascal_float">5.5</span>, <span class="pascal_float">5.5</span>, ColorPurple, <span class="pascal_numeric">1</span>);</pre>
+
+<p>
+
+<p><figure>
+ <img src="images/primitives2.png" width="100%" title="Pixel perfect" alt="[-]" />
+ <figcaption>Diagram showing a practical example of pixel output resulting from the invocation of several primitives addon functions.</figcaption>
+</figure>
+
+<p>It can be seen that lines are generated by making a rectangle based on the dashed line between the two endpoints. The thickness causes the rectangle to grow symmetrically about that generating line, as can be seen by comparing the red and blue lines. Note that to get proper pixel coverage, the coordinates passed to the al_draw_line had to be offset by 0.5 in the appropriate dimensions.
+
+<p>Filled rectangles are generated by making a rectangle between the endpoints passed to the <a class="normal" href="al5primitives.html#al_draw_filled_rectangle">al_draw_filled_rectangle</a>.
+
+<p>Outlined rectangles are generated by symmetrically expanding an outline of a rectangle. With a thickness of 1, as depicted in the diagram, this means that an offset of 0.5 is needed for both sets of endpoint coordinates to exactly line up with the pixels of the display raster.
+
+<p>The above rules only apply when multisampling is turned off. When multisampling is turned on, the area of a pixel that is covered by a shape is taken into account when choosing what color to draw there. This also means that shapes no longer have to contain the pixel's center to affect its color. For example, the green rectangle in the first diagram may in fact be drawn as two (or one) semi-transparent pixels. The advantages of multisampling is that slanted shapes will look smoother because they will not have jagged edges. A disadvantage of multisampling is that it may make vertical and horizontal edges blurry. While the exact rules for multisampling are unspecified, and may vary from GPU to GPU, it is usually safe to assume that as long as a pixel is either completely covered by a shape or completely not covered, then the shape edges will be sharp. The offsets used in the second diagram were chosen so that this is the case: if you use those offsets, your shapes (if they are oriented the same way as they are on the diagram) should look the same whether multisampling is turned on or off. </p>
+<span id="PasDoc-Uses"></span><h2 class="overview">Overview</h2>
+<span id="PasDoc-Classes"></span><h3 class="cio">Classes, Interfaces, Objects and Records</h3>
+<table class="classestable wide_list">
+<tr class="listheader">
+<th class="itemname">Name</th>
+<th class="itemdesc">Description</th>
+</tr>
+<tr class="list">
+<td class="itemname">Record&nbsp;<a class="bold" href="al5primitives.ALLEGRO_VERTEX_ELEMENT.html"><code>ALLEGRO_VERTEX_ELEMENT</code></a></td>
+<td class="itemdesc">A small structure describing a certain element of a vertex.</td>
+</tr>
+<tr class="list2">
+<td class="itemname">Record&nbsp;<a class="bold" href="al5primitives.ALLEGRO_VERTEX.html"><code>ALLEGRO_VERTEX</code></a></td>
+<td class="itemdesc">Defines the generic vertex type, with a 3D position, color and texture coordinates for a single texture.</td>
+</tr>
+</table>
+<span id="PasDoc-FuncsProcs"></span><h3 class="summary">Functions and Procedures</h3>
+<table class="summary wide_list">
+<tr class="list">
+<td class="itemcode"><code>FUNCTION <b><a  href="al5primitives.html#al_get_allegro_primitives_version">al_get_allegro_primitives_version</a></b>: <a  href="al5Base.html#AL_UINT32">AL_UINT32</a>; CDECL; EXTERNAL ALLEGRO_PRIMITIVES_LIB_NAME;</code></td>
+</tr>
+<tr class="list2">
+<td class="itemcode"><code>FUNCTION <b><a  href="al5primitives.html#al_init_primitives_addon">al_init_primitives_addon</a></b>: <a  href="al5Base.html#AL_BOOL">AL_BOOL</a>; CDECL; EXTERNAL ALLEGRO_PRIMITIVES_LIB_NAME;</code></td>
+</tr>
+<tr class="list">
+<td class="itemcode"><code>PROCEDURE <b><a  href="al5primitives.html#al_shutdown_primitives_addon">al_shutdown_primitives_addon</a></b>; CDECL; EXTERNAL ALLEGRO_PRIMITIVES_LIB_NAME;</code></td>
+</tr>
+<tr class="list2">
+<td class="itemcode"><code>FUNCTION <b><a  href="al5primitives.html#al_draw_prim">al_draw_prim</a></b> (VAR vtxs: ARRAY OF <a  href="al5primitives.ALLEGRO_VERTEX.html">ALLEGRO_VERTEX</a>; texture: <a  href="Allegro5.html#ALLEGRO_BITMAPptr">ALLEGRO_BITMAPptr</a>; start, finish: <a  href="al5Base.html#AL_INT">AL_INT</a>; atype: <a  href="al5primitives.html#ALLEGRO_PRIM_TYPE">ALLEGRO_PRIM_TYPE</a>): <a  href="al5Base.html#AL_INT">AL_INT</a>;</code></td>
+</tr>
+<tr class="list">
+<td class="itemcode"><code>FUNCTION <b><a  href="al5primitives.html#al_draw_prim_ex">al_draw_prim_ex</a></b> (CONST vtxs: <a  href="al5Base.html#AL_VOIDptr">AL_VOIDptr</a>; CONST decl: <a  href="al5primitives.html#ALLEGRO_VERTEX_DECLptr">ALLEGRO_VERTEX_DECLptr</a>; texture: <a  href="Allegro5.html#ALLEGRO_BITMAPptr">ALLEGRO_BITMAPptr</a>; start, finish: <a  href="al5Base.html#AL_INT">AL_INT</a>; atype: <a  href="al5primitives.html#ALLEGRO_PRIM_TYPE">ALLEGRO_PRIM_TYPE</a>): <a  href="al5Base.html#AL_INT">AL_INT</a>; CDECL; EXTERNAL ALLEGRO_PRIMITIVES_LIB_NAME NAME 'al_draw_prim';</code></td>
+</tr>
+<tr class="list2">
+<td class="itemcode"><code>FUNCTION <b><a  href="al5primitives.html#al_draw_indexed_prim">al_draw_indexed_prim</a></b> (VAR vtxs: ARRAY OF <a  href="al5primitives.ALLEGRO_VERTEX.html">ALLEGRO_VERTEX</a>; texture: <a  href="Allegro5.html#ALLEGRO_BITMAPptr">ALLEGRO_BITMAPptr</a>; VAR indices: ARRAY OF <a  href="al5Base.html#AL_INT">AL_INT</a>; num_vtx: <a  href="al5Base.html#AL_INT">AL_INT</a>; atype: <a  href="al5primitives.html#ALLEGRO_PRIM_TYPE">ALLEGRO_PRIM_TYPE</a>): <a  href="al5Base.html#AL_INT">AL_INT</a>;</code></td>
+</tr>
+<tr class="list">
+<td class="itemcode"><code>FUNCTION <b><a  href="al5primitives.html#al_draw_indexed_prim_ex">al_draw_indexed_prim_ex</a></b> (CONST vtxs: <a  href="al5Base.html#AL_VOIDptr">AL_VOIDptr</a>; CONST decl: <a  href="al5primitives.html#ALLEGRO_VERTEX_DECLptr">ALLEGRO_VERTEX_DECLptr</a>; texture: <a  href="Allegro5.html#ALLEGRO_BITMAPptr">ALLEGRO_BITMAPptr</a>; VAR indices: ARRAY OF <a  href="al5Base.html#AL_INT">AL_INT</a>; num_vtx: <a  href="al5Base.html#AL_INT">AL_INT</a>; atype: <a  href="al5primitives.html#ALLEGRO_PRIM_TYPE">ALLEGRO_PRIM_TYPE</a>): <a  href="al5Base.html#AL_INT">AL_INT</a>; CDECL; EXTERNAL ALLEGRO_PRIMITIVES_LIB_NAME NAME 'al_draw_indexed_prim';</code></td>
+</tr>
+<tr class="list2">
+<td class="itemcode"><code>FUNCTION <b><a  href="al5primitives.html#al_draw_vertex_buffer">al_draw_vertex_buffer</a></b> (vertex_buffer: <a  href="al5primitives.html#ALLEGRO_VERTEX_BUFFERptr">ALLEGRO_VERTEX_BUFFERptr</a>; texture: <a  href="Allegro5.html#ALLEGRO_BITMAPptr">ALLEGRO_BITMAPptr</a>; start, finish: <a  href="al5Base.html#AL_INT">AL_INT</a>; atype: <a  href="al5primitives.html#ALLEGRO_PRIM_TYPE">ALLEGRO_PRIM_TYPE</a>): <a  href="al5Base.html#AL_INT">AL_INT</a>; CDECL; EXTERNAL ALLEGRO_PRIMITIVES_LIB_NAME;</code></td>
+</tr>
+<tr class="list">
+<td class="itemcode"><code>FUNCTION <b><a  href="al5primitives.html#al_draw_indexed_buffer">al_draw_indexed_buffer</a></b> (vertex_buffer: <a  href="al5primitives.html#ALLEGRO_VERTEX_BUFFERptr">ALLEGRO_VERTEX_BUFFERptr</a>; texture: <a  href="Allegro5.html#ALLEGRO_BITMAPptr">ALLEGRO_BITMAPptr</a>; index_buffer: <a  href="al5primitives.html#ALLEGRO_INDEX_BUFFERptr">ALLEGRO_INDEX_BUFFERptr</a>; start, finish: <a  href="al5Base.html#AL_INT">AL_INT</a>; atype: <a  href="al5primitives.html#ALLEGRO_PRIM_TYPE">ALLEGRO_PRIM_TYPE</a>): <a  href="al5Base.html#AL_INT">AL_INT</a>; CDECL; EXTERNAL ALLEGRO_PRIMITIVES_LIB_NAME;</code></td>
+</tr>
+<tr class="list2">
+<td class="itemcode"><code>FUNCTION <b><a  href="al5primitives.html#al_create_vertex_decl">al_create_vertex_decl</a></b> (VAR elements: ARRAY OF <a  href="al5primitives.ALLEGRO_VERTEX_ELEMENT.html">ALLEGRO_VERTEX_ELEMENT</a>; stride: <a  href="al5Base.html#AL_INT">AL_INT</a>): <a  href="al5primitives.html#ALLEGRO_VERTEX_DECLptr">ALLEGRO_VERTEX_DECLptr</a>; CDECL; EXTERNAL ALLEGRO_PRIMITIVES_LIB_NAME;</code></td>
+</tr>
+<tr class="list">
+<td class="itemcode"><code>PROCEDURE <b><a  href="al5primitives.html#al_destroy_vertex_decl">al_destroy_vertex_decl</a></b> (decl: <a  href="al5primitives.html#ALLEGRO_VERTEX_DECLptr">ALLEGRO_VERTEX_DECLptr</a>); CDECL; EXTERNAL ALLEGRO_PRIMITIVES_LIB_NAME;</code></td>
+</tr>
+<tr class="list2">
+<td class="itemcode"><code>FUNCTION <b><a  href="al5primitives.html#al_create_vertex_buffer">al_create_vertex_buffer</a></b> (VAR initial_data: ARRAY OF <a  href="al5primitives.ALLEGRO_VERTEX.html">ALLEGRO_VERTEX</a>; flags: <a  href="al5primitives.html#ALLEGRO_PRIM_BUFFER_FLAGS">ALLEGRO_PRIM_BUFFER_FLAGS</a>): <a  href="al5primitives.html#ALLEGRO_VERTEX_BUFFERptr">ALLEGRO_VERTEX_BUFFERptr</a>;</code></td>
+</tr>
+<tr class="list">
+<td class="itemcode"><code>FUNCTION <b><a  href="al5primitives.html#al_create_vertex_buffer_ex">al_create_vertex_buffer_ex</a></b> (decl: <a  href="al5primitives.html#ALLEGRO_VERTEX_DECLptr">ALLEGRO_VERTEX_DECLptr</a>; CONST initial_data: <a  href="al5Base.html#AL_VOIDptr">AL_VOIDptr</a>; num_vertices: <a  href="al5Base.html#AL_INT">AL_INT</a>; flags: <a  href="al5primitives.html#ALLEGRO_PRIM_BUFFER_FLAGS">ALLEGRO_PRIM_BUFFER_FLAGS</a>): <a  href="al5primitives.html#ALLEGRO_VERTEX_BUFFERptr">ALLEGRO_VERTEX_BUFFERptr</a>; CDECL; EXTERNAL ALLEGRO_PRIMITIVES_LIB_NAME NAME 'al_create_vertex_buffer';</code></td>
+</tr>
+<tr class="list2">
+<td class="itemcode"><code>PROCEDURE <b><a  href="al5primitives.html#al_destroy_vertex_buffer">al_destroy_vertex_buffer</a></b> (buffer: <a  href="al5primitives.html#ALLEGRO_VERTEX_BUFFERptr">ALLEGRO_VERTEX_BUFFERptr</a>); CDECL; EXTERNAL ALLEGRO_PRIMITIVES_LIB_NAME;</code></td>
+</tr>
+<tr class="list">
+<td class="itemcode"><code>FUNCTION <b><a  href="al5primitives.html#al_lock_vertex_buffer">al_lock_vertex_buffer</a></b> (buffer: <a  href="al5primitives.html#ALLEGRO_VERTEX_BUFFERptr">ALLEGRO_VERTEX_BUFFERptr</a>; offset, length: <a  href="al5Base.html#AL_INT">AL_INT</a>; flags: <a  href="Allegro5.html#ALLEGRO_LOCK">ALLEGRO_LOCK</a>): <a  href="al5Base.html#AL_VOIDptr">AL_VOIDptr</a>; CDECL; EXTERNAL ALLEGRO_PRIMITIVES_LIB_NAME;</code></td>
+</tr>
+<tr class="list2">
+<td class="itemcode"><code>PROCEDURE <b><a  href="al5primitives.html#al_unlock_vertex_buffer">al_unlock_vertex_buffer</a></b> (buffer: <a  href="al5primitives.html#ALLEGRO_VERTEX_BUFFERptr">ALLEGRO_VERTEX_BUFFERptr</a>); CDECL; EXTERNAL ALLEGRO_PRIMITIVES_LIB_NAME;</code></td>
+</tr>
+<tr class="list">
+<td class="itemcode"><code>FUNCTION <b><a  href="al5primitives.html#al_get_vertex_buffer_size">al_get_vertex_buffer_size</a></b> (buffer: <a  href="al5primitives.html#ALLEGRO_VERTEX_BUFFERptr">ALLEGRO_VERTEX_BUFFERptr</a>): <a  href="al5Base.html#AL_INT">AL_INT</a>; CDECL; EXTERNAL ALLEGRO_PRIMITIVES_LIB_NAME;</code></td>
+</tr>
+<tr class="list2">
+<td class="itemcode"><code>FUNCTION <b><a  href="al5primitives.html#al_create_index_buffer">al_create_index_buffer</a></b> (index_size: <a  href="al5Base.html#AL_INT">AL_INT</a>; const initial_data: <a  href="al5Base.html#AL_VOIDptr">AL_VOIDptr</a>; num_indices: <a  href="al5Base.html#AL_INT">AL_INT</a>; flags: <a  href="al5primitives.html#ALLEGRO_PRIM_BUFFER_FLAGS">ALLEGRO_PRIM_BUFFER_FLAGS</a>): <a  href="al5primitives.html#ALLEGRO_INDEX_BUFFERptr">ALLEGRO_INDEX_BUFFERptr</a>; CDECL; EXTERNAL ALLEGRO_PRIMITIVES_LIB_NAME;</code></td>
+</tr>
+<tr class="list">
+<td class="itemcode"><code>PROCEDURE <b><a  href="al5primitives.html#al_destroy_index_buffer">al_destroy_index_buffer</a></b> (buffer: <a  href="al5primitives.html#ALLEGRO_INDEX_BUFFERptr">ALLEGRO_INDEX_BUFFERptr</a>); CDECL; EXTERNAL ALLEGRO_PRIMITIVES_LIB_NAME;</code></td>
+</tr>
+<tr class="list2">
+<td class="itemcode"><code>FUNCTION <b><a  href="al5primitives.html#al_lock_index_buffer">al_lock_index_buffer</a></b> (buffer: <a  href="al5primitives.html#ALLEGRO_INDEX_BUFFERptr">ALLEGRO_INDEX_BUFFERptr</a>; offset, length: <a  href="al5Base.html#AL_INT">AL_INT</a>; flags: <a  href="Allegro5.html#ALLEGRO_LOCK">ALLEGRO_LOCK</a>): <a  href="al5Base.html#AL_VOIDptr">AL_VOIDptr</a>; CDECL; EXTERNAL ALLEGRO_PRIMITIVES_LIB_NAME;</code></td>
+</tr>
+<tr class="list">
+<td class="itemcode"><code>PROCEDURE <b><a  href="al5primitives.html#al_unlock_index_buffer">al_unlock_index_buffer</a></b> (buffer: <a  href="al5primitives.html#ALLEGRO_INDEX_BUFFERptr">ALLEGRO_INDEX_BUFFERptr</a>); CDECL; EXTERNAL ALLEGRO_PRIMITIVES_LIB_NAME;</code></td>
+</tr>
+<tr class="list2">
+<td class="itemcode"><code>FUNCTION <b><a  href="al5primitives.html#al_get_index_buffer_size">al_get_index_buffer_size</a></b> (buffer: <a  href="al5primitives.html#ALLEGRO_INDEX_BUFFERptr">ALLEGRO_INDEX_BUFFERptr</a>): <a  href="al5Base.html#AL_INT">AL_INT</a>; CDECL; EXTERNAL ALLEGRO_PRIMITIVES_LIB_NAME;</code></td>
+</tr>
+<tr class="list">
+<td class="itemcode"><code>FUNCTION <b><a  href="al5primitives.html#al_triangulate_polygon">al_triangulate_polygon</a></b> (VAR vertices: ARRAY OF <a  href="al5Base.html#AL_FLOAT">AL_FLOAT</a>; svertex_stride: <a  href="al5Base.html#AL_SIZE_T">AL_SIZE_T</a>; VAR vertex_counts: ARRAY OF <a  href="al5Base.html#AL_INT">AL_INT</a>; emit_triangle: <a  href="al5primitives.html#ALLEGRO_EMIT_TRIANGLE_PROC">ALLEGRO_EMIT_TRIANGLE_PROC</a>; userdata: <a  href="al5Base.html#AL_VOIDptr">AL_VOIDptr</a>): <a  href="al5Base.html#AL_BOOL">AL_BOOL</a>; CDECL; EXTERNAL ALLEGRO_PRIMITIVES_LIB_NAME;</code></td>
+</tr>
+<tr class="list2">
+<td class="itemcode"><code>PROCEDURE <b><a  href="al5primitives.html#al_draw_soft_triangle">al_draw_soft_triangle</a></b> (v1, v2, v3: <a  href="al5primitives.html#ALLEGRO_VERTEXptr">ALLEGRO_VERTEXptr</a>; state: <a  href="al5Base.html#AL_UINTPTR_T">AL_UINTPTR_T</a>; init: <a  href="al5primitives.html#ALLEGRO_INIT_TRIANGLE_PROC">ALLEGRO_INIT_TRIANGLE_PROC</a>; first: <a  href="al5primitives.html#ALLEGRO_FIRST_TRIANGLE_PROC">ALLEGRO_FIRST_TRIANGLE_PROC</a>; step: <a  href="al5primitives.html#ALLEGRO_STEP_PROC">ALLEGRO_STEP_PROC</a>; draw: <a  href="al5primitives.html#ALLEGRO_DRAW_TRIANGLE_PROC">ALLEGRO_DRAW_TRIANGLE_PROC</a>); CDECL; EXTERNAL ALLEGRO_PRIMITIVES_LIB_NAME;</code></td>
+</tr>
+<tr class="list">
+<td class="itemcode"><code>PROCEDURE <b><a  href="al5primitives.html#al_draw_soft_line">al_draw_soft_line</a></b> (v1, v2: <a  href="al5primitives.html#ALLEGRO_VERTEXptr">ALLEGRO_VERTEXptr</a>; state: <a  href="al5Base.html#AL_UINTPTR_T">AL_UINTPTR_T</a>; first: <a  href="al5primitives.html#ALLEGRO_FIRST_LINE_PROC">ALLEGRO_FIRST_LINE_PROC</a>; step: <a  href="al5primitives.html#ALLEGRO_STEP_PROC">ALLEGRO_STEP_PROC</a>; draw: <a  href="al5primitives.html#ALLEGRO_DRAW_LINE_PROC">ALLEGRO_DRAW_LINE_PROC</a>); CDECL; EXTERNAL ALLEGRO_PRIMITIVES_LIB_NAME;</code></td>
+</tr>
+<tr class="list2">
+<td class="itemcode"><code>PROCEDURE <b><a  href="al5primitives.html#al_draw_line">al_draw_line</a></b> (x1, y1, x2, y2: <a  href="al5Base.html#AL_FLOAT">AL_FLOAT</a>; color: <a  href="Allegro5.ALLEGRO_COLOR.html">ALLEGRO_COLOR</a>; thickness: <a  href="al5Base.html#AL_FLOAT">AL_FLOAT</a>); CDECL; EXTERNAL ALLEGRO_PRIMITIVES_LIB_NAME;</code></td>
+</tr>
+<tr class="list">
+<td class="itemcode"><code>PROCEDURE <b><a  href="al5primitives.html#al_draw_triangle">al_draw_triangle</a></b> (x1, y1, x2, y2, x3, y3: <a  href="al5Base.html#AL_FLOAT">AL_FLOAT</a>; color: <a  href="Allegro5.ALLEGRO_COLOR.html">ALLEGRO_COLOR</a>; thickness: <a  href="al5Base.html#AL_FLOAT">AL_FLOAT</a>); CDECL; EXTERNAL ALLEGRO_PRIMITIVES_LIB_NAME;</code></td>
+</tr>
+<tr class="list2">
+<td class="itemcode"><code>PROCEDURE <b><a  href="al5primitives.html#al_draw_rectangle">al_draw_rectangle</a></b> (x1, y1, x2, y2: <a  href="al5Base.html#AL_FLOAT">AL_FLOAT</a>; color: <a  href="Allegro5.ALLEGRO_COLOR.html">ALLEGRO_COLOR</a>; thickness: <a  href="al5Base.html#AL_FLOAT">AL_FLOAT</a>); CDECL; EXTERNAL ALLEGRO_PRIMITIVES_LIB_NAME;</code></td>
+</tr>
+<tr class="list">
+<td class="itemcode"><code>PROCEDURE <b><a  href="al5primitives.html#al_draw_rounded_rectangle">al_draw_rounded_rectangle</a></b> (x1, y1, x2, y2, rx, ry: <a  href="al5Base.html#AL_FLOAT">AL_FLOAT</a>; color: <a  href="Allegro5.ALLEGRO_COLOR.html">ALLEGRO_COLOR</a>; thickness: <a  href="al5Base.html#AL_FLOAT">AL_FLOAT</a>); CDECL; EXTERNAL ALLEGRO_PRIMITIVES_LIB_NAME;</code></td>
+</tr>
+<tr class="list2">
+<td class="itemcode"><code>PROCEDURE <b><a  href="al5primitives.html#al_calculate_arc">al_calculate_arc</a></b> (dest: ARRAY OF <a  href="al5Base.html#AL_FLOAT">AL_FLOAT</a>; cx, cy, rx, ry, start_theta, delta_theta, thickness: <a  href="al5Base.html#AL_FLOAT">AL_FLOAT</a>);</code></td>
+</tr>
+<tr class="list">
+<td class="itemcode"><code>PROCEDURE <b><a  href="al5primitives.html#al_calculate_arc_ex">al_calculate_arc_ex</a></b> (dest: <a  href="al5Base.html#AL_VOIDptr">AL_VOIDptr</a>; stride: <a  href="al5Base.html#AL_INT">AL_INT</a>; cx, cy, rx, ry, start_theta, delta_theta, thickness: <a  href="al5Base.html#AL_FLOAT">AL_FLOAT</a>; num_segments: <a  href="al5Base.html#AL_INT">AL_INT</a>); CDECL; EXTERNAL ALLEGRO_PRIMITIVES_LIB_NAME NAME 'al_calculate_arc';</code></td>
+</tr>
+<tr class="list2">
+<td class="itemcode"><code>PROCEDURE <b><a  href="al5primitives.html#al_draw_circle">al_draw_circle</a></b> (cx, cy, r: <a  href="al5Base.html#AL_FLOAT">AL_FLOAT</a>; color: <a  href="Allegro5.ALLEGRO_COLOR.html">ALLEGRO_COLOR</a>; thickness: <a  href="al5Base.html#AL_FLOAT">AL_FLOAT</a>); CDECL; EXTERNAL ALLEGRO_PRIMITIVES_LIB_NAME;</code></td>
+</tr>
+<tr class="list">
+<td class="itemcode"><code>PROCEDURE <b><a  href="al5primitives.html#al_draw_ellipse">al_draw_ellipse</a></b> (cx, cy, rx, ry: <a  href="al5Base.html#AL_FLOAT">AL_FLOAT</a>; color: <a  href="Allegro5.ALLEGRO_COLOR.html">ALLEGRO_COLOR</a>; thickness: <a  href="al5Base.html#AL_FLOAT">AL_FLOAT</a>); CDECL; EXTERNAL ALLEGRO_PRIMITIVES_LIB_NAME;</code></td>
+</tr>
+<tr class="list2">
+<td class="itemcode"><code>PROCEDURE <b><a  href="al5primitives.html#al_draw_arc">al_draw_arc</a></b> (cx, cy, r, start_theta, delta_theta: <a  href="al5Base.html#AL_FLOAT">AL_FLOAT</a>; color: <a  href="Allegro5.ALLEGRO_COLOR.html">ALLEGRO_COLOR</a>; thickness: <a  href="al5Base.html#AL_FLOAT">AL_FLOAT</a>); CDECL; EXTERNAL ALLEGRO_PRIMITIVES_LIB_NAME;</code></td>
+</tr>
+<tr class="list">
+<td class="itemcode"><code>PROCEDURE <b><a  href="al5primitives.html#al_draw_elliptical_arc">al_draw_elliptical_arc</a></b> (cx, cy, rx, ry, start_theta, delta_theta: <a  href="al5Base.html#AL_FLOAT">AL_FLOAT</a>; color: <a  href="Allegro5.ALLEGRO_COLOR.html">ALLEGRO_COLOR</a>; thickness: <a  href="al5Base.html#AL_FLOAT">AL_FLOAT</a>); CDECL; EXTERNAL ALLEGRO_PRIMITIVES_LIB_NAME;</code></td>
+</tr>
+<tr class="list2">
+<td class="itemcode"><code>PROCEDURE <b><a  href="al5primitives.html#al_draw_pieslice">al_draw_pieslice</a></b> (cx, cy, r, start_theta, fdelta_theta: <a  href="al5Base.html#AL_FLOAT">AL_FLOAT</a>; color: <a  href="Allegro5.ALLEGRO_COLOR.html">ALLEGRO_COLOR</a>; thickness: <a  href="al5Base.html#AL_FLOAT">AL_FLOAT</a>); CDECL; EXTERNAL ALLEGRO_PRIMITIVES_LIB_NAME;</code></td>
+</tr>
+<tr class="list">
+<td class="itemcode"><code>PROCEDURE <b><a  href="al5primitives.html#al_calculate_spline">al_calculate_spline</a></b> (dest: <a  href="al5Base.html#AL_FLOATptr">AL_FLOATptr</a>; stride: <a  href="al5Base.html#AL_INT">AL_INT</a>; VAR points: <a  href="al5primitives.html#ALLEGRO_SPLINE_CONTROL_POINTS">ALLEGRO_SPLINE_CONTROL_POINTS</a>; thickness: <a  href="al5Base.html#AL_FLOAT">AL_FLOAT</a>; num_segments: <a  href="al5Base.html#AL_INT">AL_INT</a>); CDECL; EXTERNAL ALLEGRO_PRIMITIVES_LIB_NAME;</code></td>
+</tr>
+<tr class="list2">
+<td class="itemcode"><code>PROCEDURE <b><a  href="al5primitives.html#al_draw_spline">al_draw_spline</a></b> (VAR points: <a  href="al5primitives.html#ALLEGRO_SPLINE_CONTROL_POINTS">ALLEGRO_SPLINE_CONTROL_POINTS</a>; color: <a  href="Allegro5.ALLEGRO_COLOR.html">ALLEGRO_COLOR</a>; thickness: <a  href="al5Base.html#AL_FLOAT">AL_FLOAT</a>); CDECL; EXTERNAL ALLEGRO_PRIMITIVES_LIB_NAME;</code></td>
+</tr>
+<tr class="list">
+<td class="itemcode"><code>PROCEDURE <b><a  href="al5primitives.html#al_calculate_ribbon">al_calculate_ribbon</a></b> (dest: <a  href="al5Base.html#AL_FLOATptr">AL_FLOATptr</a>; dest_stride: <a  href="al5Base.html#AL_INT">AL_INT</a>; VAR points: ARRAY OF <a  href="al5Base.html#AL_FLOAT">AL_FLOAT</a>; points_stride: <a  href="al5Base.html#AL_INT">AL_INT</a>; thickness: <a  href="al5Base.html#AL_FLOAT">AL_FLOAT</a>; num_segments: <a  href="al5Base.html#AL_INT">AL_INT</a>); CDECL; EXTERNAL ALLEGRO_PRIMITIVES_LIB_NAME;</code></td>
+</tr>
+<tr class="list2">
+<td class="itemcode"><code>PROCEDURE <b><a  href="al5primitives.html#al_draw_ribbon">al_draw_ribbon</a></b> (CONST points: <a  href="al5Base.html#AL_FLOATptr">AL_FLOATptr</a>; points_stride: <a  href="al5Base.html#AL_INT">AL_INT</a>; color: <a  href="Allegro5.ALLEGRO_COLOR.html">ALLEGRO_COLOR</a>; thickness: <a  href="al5Base.html#AL_FLOAT">AL_FLOAT</a>; num_segments: <a  href="al5Base.html#AL_INT">AL_INT</a>); CDECL; EXTERNAL ALLEGRO_PRIMITIVES_LIB_NAME;</code></td>
+</tr>
+<tr class="list">
+<td class="itemcode"><code>PROCEDURE <b><a  href="al5primitives.html#al_draw_filled_triangle">al_draw_filled_triangle</a></b> (x1, y1, x2, y2, x3, y3: <a  href="al5Base.html#AL_FLOAT">AL_FLOAT</a>; color: <a  href="Allegro5.ALLEGRO_COLOR.html">ALLEGRO_COLOR</a>); CDECL; EXTERNAL ALLEGRO_PRIMITIVES_LIB_NAME;</code></td>
+</tr>
+<tr class="list2">
+<td class="itemcode"><code>PROCEDURE <b><a  href="al5primitives.html#al_draw_filled_rectangle">al_draw_filled_rectangle</a></b> (x1, y1, x2, y2: <a  href="al5Base.html#AL_FLOAT">AL_FLOAT</a>; color: <a  href="Allegro5.ALLEGRO_COLOR.html">ALLEGRO_COLOR</a>); CDECL; EXTERNAL ALLEGRO_PRIMITIVES_LIB_NAME;</code></td>
+</tr>
+<tr class="list">
+<td class="itemcode"><code>PROCEDURE <b><a  href="al5primitives.html#al_draw_filled_ellipse">al_draw_filled_ellipse</a></b> (cx, cy, rx, ry: <a  href="al5Base.html#AL_FLOAT">AL_FLOAT</a>; color: <a  href="Allegro5.ALLEGRO_COLOR.html">ALLEGRO_COLOR</a>); CDECL; EXTERNAL ALLEGRO_PRIMITIVES_LIB_NAME;</code></td>
+</tr>
+<tr class="list2">
+<td class="itemcode"><code>PROCEDURE <b><a  href="al5primitives.html#al_draw_filled_circle">al_draw_filled_circle</a></b> (cx, cy, r: <a  href="al5Base.html#AL_FLOAT">AL_FLOAT</a>; color: <a  href="Allegro5.ALLEGRO_COLOR.html">ALLEGRO_COLOR</a>); CDECL; EXTERNAL ALLEGRO_PRIMITIVES_LIB_NAME;</code></td>
+</tr>
+<tr class="list">
+<td class="itemcode"><code>PROCEDURE <b><a  href="al5primitives.html#al_draw_filled_pieslice">al_draw_filled_pieslice</a></b> (cx, cy, r, start_theta, fdelta_theta: <a  href="al5Base.html#AL_FLOAT">AL_FLOAT</a>; color: <a  href="Allegro5.ALLEGRO_COLOR.html">ALLEGRO_COLOR</a>); CDECL; EXTERNAL ALLEGRO_PRIMITIVES_LIB_NAME;</code></td>
+</tr>
+<tr class="list2">
+<td class="itemcode"><code>PROCEDURE <b><a  href="al5primitives.html#al_draw_filled_rounded_rectangle">al_draw_filled_rounded_rectangle</a></b> (x1, y1, x2, y2, rx, ry: <a  href="al5Base.html#AL_FLOAT">AL_FLOAT</a>; color: <a  href="Allegro5.ALLEGRO_COLOR.html">ALLEGRO_COLOR</a>); CDECL; EXTERNAL ALLEGRO_PRIMITIVES_LIB_NAME;</code></td>
+</tr>
+<tr class="list">
+<td class="itemcode"><code>PROCEDURE <b><a  href="al5primitives.html#al_draw_polyline">al_draw_polyline</a></b> (VAR vertices: ARRAY OF <a  href="al5Base.html#AL_FLOAT">AL_FLOAT</a>; join_style: <a  href="al5primitives.html#ALLEGRO_LINE_JOIN">ALLEGRO_LINE_JOIN</a>; cap_style: <a  href="al5primitives.html#ALLEGRO_LINE_CAP">ALLEGRO_LINE_CAP</a>; color: <a  href="Allegro5.ALLEGRO_COLOR.html">ALLEGRO_COLOR</a>; thickness, miter_limit: <a  href="al5Base.html#AL_FLOAT">AL_FLOAT</a>);</code></td>
+</tr>
+<tr class="list2">
+<td class="itemcode"><code>PROCEDURE <b><a  href="al5primitives.html#al_draw_polyline_ex">al_draw_polyline_ex</a></b> (CONST vertices: <a  href="al5Base.html#AL_VOIDptr">AL_VOIDptr</a>; vertex_stride, vertex_count: <a  href="al5Base.html#AL_INT">AL_INT</a>; join_style: <a  href="al5primitives.html#ALLEGRO_LINE_JOIN">ALLEGRO_LINE_JOIN</a>; cap_style: <a  href="al5primitives.html#ALLEGRO_LINE_CAP">ALLEGRO_LINE_CAP</a>; color: <a  href="Allegro5.ALLEGRO_COLOR.html">ALLEGRO_COLOR</a>; thickness, miter_limit: <a  href="al5Base.html#AL_FLOAT">AL_FLOAT</a>); CDECL; EXTERNAL ALLEGRO_PRIMITIVES_LIB_NAME NAME 'al_draw_polyline';</code></td>
+</tr>
+<tr class="list">
+<td class="itemcode"><code>PROCEDURE <b><a  href="al5primitives.html#al_draw_polygon">al_draw_polygon</a></b> (VAR vertices: ARRAY OF <a  href="al5Base.html#AL_FLOAT">AL_FLOAT</a>; join_style: <a  href="al5primitives.html#ALLEGRO_LINE_JOIN">ALLEGRO_LINE_JOIN</a>; color: <a  href="Allegro5.ALLEGRO_COLOR.html">ALLEGRO_COLOR</a>; thickness, miter_limit: <a  href="al5Base.html#AL_FLOAT">AL_FLOAT</a>);</code></td>
+</tr>
+<tr class="list2">
+<td class="itemcode"><code>PROCEDURE <b><a  href="al5primitives.html#al_draw_filled_polygon">al_draw_filled_polygon</a></b> (VAR vertices: ARRAY OF <a  href="al5Base.html#AL_FLOAT">AL_FLOAT</a>; color: <a  href="Allegro5.ALLEGRO_COLOR.html">ALLEGRO_COLOR</a>);</code></td>
+</tr>
+<tr class="list">
+<td class="itemcode"><code>PROCEDURE <b><a  href="al5primitives.html#al_draw_filled_polygon_with_holes">al_draw_filled_polygon_with_holes</a></b> (VAR vertices: ARRAY OF <a  href="al5Base.html#AL_FLOAT">AL_FLOAT</a>; VAR vertex_counts: ARRAY OF <a  href="al5Base.html#AL_INT">AL_INT</a>; color: <a  href="Allegro5.ALLEGRO_COLOR.html">ALLEGRO_COLOR</a>); CDECL; EXTERNAL ALLEGRO_PRIMITIVES_LIB_NAME;</code></td>
+</tr>
+</table>
+<span id="PasDoc-Types"></span><h3 class="summary">Types</h3>
+<table class="summary wide_list">
+<tr class="list">
+<td class="itemcode"><code><b><a  href="al5primitives.html#ALLEGRO_PRIM_TYPE">ALLEGRO_PRIM_TYPE</a></b> = (...);</code></td>
+</tr>
+<tr class="list2">
+<td class="itemcode"><code><b><a  href="al5primitives.html#ALLEGRO_PRIM_ATTR">ALLEGRO_PRIM_ATTR</a></b> = (...);</code></td>
+</tr>
+<tr class="list">
+<td class="itemcode"><code><b><a  href="al5primitives.html#ALLEGRO_PRIM_STORAGE">ALLEGRO_PRIM_STORAGE</a></b> = (...);</code></td>
+</tr>
+<tr class="list2">
+<td class="itemcode"><code><b><a  href="al5primitives.html#ALLEGRO_LINE_JOIN">ALLEGRO_LINE_JOIN</a></b> = (...);</code></td>
+</tr>
+<tr class="list">
+<td class="itemcode"><code><b><a  href="al5primitives.html#ALLEGRO_LINE_CAP">ALLEGRO_LINE_CAP</a></b> = (...);</code></td>
+</tr>
+<tr class="list2">
+<td class="itemcode"><code><b><a  href="al5primitives.html#ALLEGRO_PRIM_BUFFER_FLAGS">ALLEGRO_PRIM_BUFFER_FLAGS</a></b> = (...);</code></td>
+</tr>
+<tr class="list">
+<td class="itemcode"><code><b><a  href="al5primitives.html#ALLEGRO_VERTEX_ELEMENTptr">ALLEGRO_VERTEX_ELEMENTptr</a></b> = &circ;<a  href="al5primitives.ALLEGRO_VERTEX_ELEMENT.html">ALLEGRO_VERTEX_ELEMENT</a>;</code></td>
+</tr>
+<tr class="list2">
+<td class="itemcode"><code><b><a  href="al5primitives.html#ALLEGRO_VERTEX_DECLptr">ALLEGRO_VERTEX_DECLptr</a></b> = <a  href="al5Base.html#AL_POINTER">AL_POINTER</a>;</code></td>
+</tr>
+<tr class="list">
+<td class="itemcode"><code><b><a  href="al5primitives.html#ALLEGRO_VERTEXptr">ALLEGRO_VERTEXptr</a></b> = &circ;<a  href="al5primitives.ALLEGRO_VERTEX.html">ALLEGRO_VERTEX</a>;</code></td>
+</tr>
+<tr class="list2">
+<td class="itemcode"><code><b><a  href="al5primitives.html#ALLEGRO_VERTEX_BUFFERptr">ALLEGRO_VERTEX_BUFFERptr</a></b> = <a  href="al5Base.html#AL_POINTER">AL_POINTER</a>;</code></td>
+</tr>
+<tr class="list">
+<td class="itemcode"><code><b><a  href="al5primitives.html#ALLEGRO_INDEX_BUFFERptr">ALLEGRO_INDEX_BUFFERptr</a></b> = <a  href="al5Base.html#AL_POINTER">AL_POINTER</a>;</code></td>
+</tr>
+<tr class="list2">
+<td class="itemcode"><code><b><a  href="al5primitives.html#ALLEGRO_EMIT_TRIANGLE_PROC">ALLEGRO_EMIT_TRIANGLE_PROC</a></b> = PROCEDURE (a, b, c: <a  href="al5Base.html#AL_INT">AL_INT</a>; p: <a  href="al5Base.html#AL_VOIDptr">AL_VOIDptr</a>); CDECL;</code></td>
+</tr>
+<tr class="list">
+<td class="itemcode"><code><b><a  href="al5primitives.html#ALLEGRO_INIT_TRIANGLE_PROC">ALLEGRO_INIT_TRIANGLE_PROC</a></b> = PROCEDURE (state: <a  href="al5Base.html#AL_UINTPTR_T">AL_UINTPTR_T</a>; v1, v2, v3: <a  href="al5primitives.html#ALLEGRO_VERTEXptr">ALLEGRO_VERTEXptr</a>); CDECL;</code></td>
+</tr>
+<tr class="list2">
+<td class="itemcode"><code><b><a  href="al5primitives.html#ALLEGRO_FIRST_TRIANGLE_PROC">ALLEGRO_FIRST_TRIANGLE_PROC</a></b> = PROCEDURE (state: <a  href="al5Base.html#AL_UINTPTR_T">AL_UINTPTR_T</a>; x, y, l1, l2: <a  href="al5Base.html#AL_INT">AL_INT</a>); CDECL;</code></td>
+</tr>
+<tr class="list">
+<td class="itemcode"><code><b><a  href="al5primitives.html#ALLEGRO_DRAW_TRIANGLE_PROC">ALLEGRO_DRAW_TRIANGLE_PROC</a></b> = PROCEDURE (state: <a  href="al5Base.html#AL_UINTPTR_T">AL_UINTPTR_T</a>; x1, y, x2: <a  href="al5Base.html#AL_INT">AL_INT</a>); CDECL;</code></td>
+</tr>
+<tr class="list2">
+<td class="itemcode"><code><b><a  href="al5primitives.html#ALLEGRO_FIRST_LINE_PROC">ALLEGRO_FIRST_LINE_PROC</a></b> = PROCEDURE (state: <a  href="al5Base.html#AL_UINTPTR_T">AL_UINTPTR_T</a>; px, py: <a  href="al5Base.html#AL_INT">AL_INT</a>; v1, v2: <a  href="al5primitives.html#ALLEGRO_VERTEXptr">ALLEGRO_VERTEXptr</a>); CDECL;</code></td>
+</tr>
+<tr class="list">
+<td class="itemcode"><code><b><a  href="al5primitives.html#ALLEGRO_DRAW_LINE_PROC">ALLEGRO_DRAW_LINE_PROC</a></b> = PROCEDURE (state: <a  href="al5Base.html#AL_UINTPTR_T">AL_UINTPTR_T</a>; x, y: <a  href="al5Base.html#AL_INT">AL_INT</a>); CDECL;</code></td>
+</tr>
+<tr class="list2">
+<td class="itemcode"><code><b><a  href="al5primitives.html#ALLEGRO_STEP_PROC">ALLEGRO_STEP_PROC</a></b> = PROCEDURE (state: <a  href="al5Base.html#AL_UINTPTR_T">AL_UINTPTR_T</a>; atype: <a  href="al5Base.html#AL_INT">AL_INT</a>); CDECL;</code></td>
+</tr>
+<tr class="list">
+<td class="itemcode"><code><b><a  href="al5primitives.html#ALLEGRO_SPLINE_CONTROL_POINTS">ALLEGRO_SPLINE_CONTROL_POINTS</a></b> = ARRAY [0..7] OF <a  href="al5Base.html#AL_FLOAT">AL_FLOAT</a>;</code></td>
+</tr>
+</table>
+<span id="PasDoc-Constants"></span><h3 class="summary">Constants</h3>
+<table class="summary wide_list">
+<tr class="list">
+<td class="itemcode"><code><b><a  href="al5primitives.html#ALLEGRO_PRIM_STORAGE_NONE">ALLEGRO_PRIM_STORAGE_NONE</a></b> = <a  href="al5primitives.html#ALLEGRO_PRIM_FLOAT_2">ALLEGRO_PRIM_FLOAT_2</a>;</code></td>
+</tr>
+<tr class="list2">
+<td class="itemcode"><code><b><a  href="al5primitives.html#ALLEGRO_LINE_JOIN_MITRE">ALLEGRO_LINE_JOIN_MITRE</a></b> = <a  href="al5primitives.html#ALLEGRO_LINE_JOIN_MITER">ALLEGRO_LINE_JOIN_MITER</a>;</code></td>
+</tr>
+<tr class="list">
+<td class="itemcode"><code><b><a  href="al5primitives.html#ALLEGRO_VERTEX_CACHE_SIZE">ALLEGRO_VERTEX_CACHE_SIZE</a></b> = 256;</code></td>
+</tr>
+</table>
+<h2 class="description">Description</h2>
+<h3 class="detail">Functions and Procedures</h3>
+<table class="detail wide_list">
+<tr class="list">
+<td class="itemcode"><span id="al_get_allegro_primitives_version"></span><code>FUNCTION <b>al_get_allegro_primitives_version</b>: <a  href="al5Base.html#AL_UINT32">AL_UINT32</a>; CDECL; EXTERNAL ALLEGRO_PRIMITIVES_LIB_NAME;</code></td>
+</tr>
+<tr><td colspan="1">
+<p>
+Returns the (compiled) version of the addon, in the same format as <a class="normal" href="Allegro5.html#al_get_allegro_version">al_get_allegro_version</a>.</p>
+</td></tr>
+</table>
+<table class="detail wide_list">
+<tr class="list">
+<td class="itemcode"><span id="al_init_primitives_addon"></span><code>FUNCTION <b>al_init_primitives_addon</b>: <a  href="al5Base.html#AL_BOOL">AL_BOOL</a>; CDECL; EXTERNAL ALLEGRO_PRIMITIVES_LIB_NAME;</code></td>
+</tr>
+<tr><td colspan="1">
+<p>
+Initializes the primitives addon.  </p>
+<h6 class="description_section">Returns</h6>
+<p class="return"><code>True</code> on success, <code>False</code> on failure.</p><h6 class="description_section">See also</h6>
+<dl class="see_also">
+  <dt><a class="normal" href="al5primitives.html#al_shutdown_primitives_addon">al_shutdown_primitives_addon</a></dt>
+  <dd>Shut down the primitives addon.</dd>
+</dl>
+</td></tr>
+</table>
+<table class="detail wide_list">
+<tr class="list">
+<td class="itemcode"><span id="al_shutdown_primitives_addon"></span><code>PROCEDURE <b>al_shutdown_primitives_addon</b>; CDECL; EXTERNAL ALLEGRO_PRIMITIVES_LIB_NAME;</code></td>
+</tr>
+<tr><td colspan="1">
+<p>
+Shut down the primitives addon. This is done automatically at program exit, but can be called any time the user wishes as well. </p>
+<h6 class="description_section">See also</h6>
+<dl class="see_also">
+  <dt><a class="normal" href="al5primitives.html#al_init_primitives_addon">al_init_primitives_addon</a></dt>
+  <dd>Initializes the primitives addon.</dd>
+</dl>
+</td></tr>
+</table>
+<table class="detail wide_list">
+<tr class="list">
+<td class="itemcode"><span id="al_draw_prim"></span><code>FUNCTION <b>al_draw_prim</b> (VAR vtxs: ARRAY OF <a  href="al5primitives.ALLEGRO_VERTEX.html">ALLEGRO_VERTEX</a>; texture: <a  href="Allegro5.html#ALLEGRO_BITMAPptr">ALLEGRO_BITMAPptr</a>; start, finish: <a  href="al5Base.html#AL_INT">AL_INT</a>; atype: <a  href="al5primitives.html#ALLEGRO_PRIM_TYPE">ALLEGRO_PRIM_TYPE</a>): <a  href="al5Base.html#AL_INT">AL_INT</a>;</code></td>
+</tr>
+<tr><td colspan="1">
+<p>
+Draws a subset of the passed vertex array.
+
+<p>For example to draw a textured triangle you could use: </p>
+
+<pre class="longcode">
+<span class="pascal_keyword">VAR</span>
+  v: <span class="pascal_keyword">ARRAY</span> [<span class="pascal_numeric">0</span>..2] <span class="pascal_keyword">OF</span> ALLEGRO_VERTEX = (
+    (x: <span class="pascal_numeric">128</span>, y: <span class="pascal_numeric">0</span>,   z: <span class="pascal_numeric">0</span>, color: white, u: <span class="pascal_numeric">128</span>, v: <span class="pascal_numeric">0</span>),
+    (x: <span class="pascal_numeric">0</span>,   y: <span class="pascal_numeric">256</span>, z: <span class="pascal_numeric">0</span>, color: white, u: <span class="pascal_numeric">0</span>,   v: <span class="pascal_numeric">256</span>),
+    (x: <span class="pascal_numeric">256</span>, y: <span class="pascal_numeric">256</span>, z: <span class="pascal_numeric">0</span>, color: white, u: <span class="pascal_numeric">256</span>, v: <span class="pascal_numeric">256</span>)
+  );
+<span class="pascal_keyword">BEGIN</span>
+  al_draw_prim (v, Texture, <span class="pascal_numeric">0</span>, <span class="pascal_numeric">3</span>, ALLEGRO_PRIM_TRIANGLE_LIST)
+<span class="pascal_keyword">END</span>;</pre>
+
+<p>          </p>
+<h6 class="description_section">Parameters</h6>
+<dl class="parameters">
+<dt>vtxs</dt>
+<dd>Pointer to an array of vertices.</dd>
+<dt>texture</dt>
+<dd>Texture to use, pass <code>Nil</code> to use only color shaded primitves.</dd>
+<dt>start</dt>
+<dd>Start index of the subset of the vertex array to draw.</dd>
+<dt>end</dt>
+<dd>One past the last index of the subset of the vertex array to draw.</dd>
+</dl>
+<h6 class="description_section">Returns</h6>
+<p class="return">Number of primitives drawn.</p><h6 class="description_section">See also</h6>
+<dl class="see_also">
+  <dt><a class="normal" href="al5primitives.html#al_draw_prim_ex">al_draw_prim_ex</a></dt>
+  <dd>Extended version of <a class="normal" href="al5primitives.html#al_draw_prim">al_draw_prim</a> that allows to define your own vertex type.</dd>
+  <dt><a class="normal" href="al5primitives.ALLEGRO_VERTEX.html">ALLEGRO_VERTEX</a></dt>
+  <dd>Defines the generic vertex type, with a 3D position, color and texture coordinates for a single texture.</dd>
+  <dt><a class="normal" href="al5primitives.html#ALLEGRO_PRIM_TYPE">ALLEGRO_PRIM_TYPE</a></dt>
+  <dd>Enumerates the types of primitives this addon can draw.</dd>
+  <dt><a class="normal" href="al5primitives.html#ALLEGRO_VERTEX_DECLptr">ALLEGRO_VERTEX_DECLptr</a></dt>
+  <dd>A vertex declaration.</dd>
+  <dt><a class="normal" href="al5primitives.html#al_draw_indexed_prim">al_draw_indexed_prim</a></dt>
+  <dd>Draws a subset of the passed vertex array.</dd>
+</dl>
+</td></tr>
+</table>
+<table class="detail wide_list">
+<tr class="list">
+<td class="itemcode"><span id="al_draw_prim_ex"></span><code>FUNCTION <b>al_draw_prim_ex</b> (CONST vtxs: <a  href="al5Base.html#AL_VOIDptr">AL_VOIDptr</a>; CONST decl: <a  href="al5primitives.html#ALLEGRO_VERTEX_DECLptr">ALLEGRO_VERTEX_DECLptr</a>; texture: <a  href="Allegro5.html#ALLEGRO_BITMAPptr">ALLEGRO_BITMAPptr</a>; start, finish: <a  href="al5Base.html#AL_INT">AL_INT</a>; atype: <a  href="al5primitives.html#ALLEGRO_PRIM_TYPE">ALLEGRO_PRIM_TYPE</a>): <a  href="al5Base.html#AL_INT">AL_INT</a>; CDECL; EXTERNAL ALLEGRO_PRIMITIVES_LIB_NAME NAME 'al_draw_prim';</code></td>
+</tr>
+<tr><td colspan="1">
+<p>
+Extended version of <a class="normal" href="al5primitives.html#al_draw_prim">al_draw_prim</a> that allows to define your own vertex type.            </p>
+<h6 class="description_section">Parameters</h6>
+<dl class="parameters">
+<dt>vtxs</dt>
+<dd>Pointer to an array of vertices.</dd>
+<dt>decl</dt>
+<dd>Pointer to a vertex declaration. If set to <code>Nil</code>, the <code>vtx</code> are assumed to be of the <a class="normal" href="al5primitives.ALLEGRO_VERTEX.html">ALLEGRO_VERTEX</a> type.</dd>
+<dt>texture</dt>
+<dd>Texture to use, pass <code>Nil</code> to use only color shaded primitves.</dd>
+<dt>start</dt>
+<dd>Start index of the subset of the vertex array to draw.</dd>
+<dt>end</dt>
+<dd>One past the last index of the subset of the vertex array to draw.</dd>
+<dt>atype</dt>
+<dd>A member of the <a class="normal" href="al5primitives.html#ALLEGRO_PRIM_TYPE">ALLEGRO_PRIM_TYPE</a> enumeration, specifying what kind of primitive to draw.</dd>
+</dl>
+<h6 class="description_section">Returns</h6>
+<p class="return">Number of primitives drawn.</p><h6 class="description_section">See also</h6>
+<dl class="see_also">
+  <dt><a class="normal" href="al5primitives.html#al_draw_prim_ex">al_draw_prim_ex</a></dt>
+  <dd>Extended version of <a class="normal" href="al5primitives.html#al_draw_prim">al_draw_prim</a> that allows to define your own vertex type.</dd>
+  <dt><a class="normal" href="al5primitives.ALLEGRO_VERTEX.html">ALLEGRO_VERTEX</a></dt>
+  <dd>Defines the generic vertex type, with a 3D position, color and texture coordinates for a single texture.</dd>
+  <dt><a class="normal" href="al5primitives.html#ALLEGRO_PRIM_TYPE">ALLEGRO_PRIM_TYPE</a></dt>
+  <dd>Enumerates the types of primitives this addon can draw.</dd>
+  <dt><a class="normal" href="al5primitives.html#ALLEGRO_VERTEX_DECLptr">ALLEGRO_VERTEX_DECLptr</a></dt>
+  <dd>A vertex declaration.</dd>
+  <dt><a class="normal" href="al5primitives.html#al_draw_indexed_prim">al_draw_indexed_prim</a></dt>
+  <dd>Draws a subset of the passed vertex array.</dd>
+</dl>
+</td></tr>
+</table>
+<table class="detail wide_list">
+<tr class="list">
+<td class="itemcode"><span id="al_draw_indexed_prim"></span><code>FUNCTION <b>al_draw_indexed_prim</b> (VAR vtxs: ARRAY OF <a  href="al5primitives.ALLEGRO_VERTEX.html">ALLEGRO_VERTEX</a>; texture: <a  href="Allegro5.html#ALLEGRO_BITMAPptr">ALLEGRO_BITMAPptr</a>; VAR indices: ARRAY OF <a  href="al5Base.html#AL_INT">AL_INT</a>; num_vtx: <a  href="al5Base.html#AL_INT">AL_INT</a>; atype: <a  href="al5primitives.html#ALLEGRO_PRIM_TYPE">ALLEGRO_PRIM_TYPE</a>): <a  href="al5Base.html#AL_INT">AL_INT</a>;</code></td>
+</tr>
+<tr><td colspan="1">
+<p>
+Draws a subset of the passed vertex array. This function uses an index array to specify which vertices to use.           </p>
+<h6 class="description_section">Parameters</h6>
+<dl class="parameters">
+<dt>vtxs</dt>
+<dd>Pointer to an array of vertices.</dd>
+<dt>texture</dt>
+<dd>Texture to use, pass <code>Nil</code> to use only color shaded primitves.</dd>
+<dt>indices</dt>
+<dd>An array of indices into the vertex array.</dd>
+<dt>num_vtx</dt>
+<dd>Number of indices from the indices array you want to draw.</dd>
+<dt>atype</dt>
+<dd>A member of the <a class="normal" href="al5primitives.html#ALLEGRO_PRIM_TYPE">ALLEGRO_PRIM_TYPE</a> enumeration, specifying what kind of primitive to draw.</dd>
+</dl>
+<h6 class="description_section">Returns</h6>
+<p class="return">Number of primitives drawn.</p><h6 class="description_section">See also</h6>
+<dl class="see_also">
+  <dt><a class="normal" href="al5primitives.html#al_draw_indexed_prim_ex">al_draw_indexed_prim_ex</a></dt>
+  <dd>Extended version of <a class="normal" href="al5primitives.html#al_draw_indexed_prim">al_draw_indexed_prim</a> that allows to define your own vertex type.</dd>
+  <dt><a class="normal" href="al5primitives.ALLEGRO_VERTEX.html">ALLEGRO_VERTEX</a></dt>
+  <dd>Defines the generic vertex type, with a 3D position, color and texture coordinates for a single texture.</dd>
+  <dt><a class="normal" href="al5primitives.html#ALLEGRO_PRIM_TYPE">ALLEGRO_PRIM_TYPE</a></dt>
+  <dd>Enumerates the types of primitives this addon can draw.</dd>
+  <dt><a class="normal" href="al5primitives.html#ALLEGRO_VERTEX_DECLptr">ALLEGRO_VERTEX_DECLptr</a></dt>
+  <dd>A vertex declaration.</dd>
+  <dt><a class="normal" href="al5primitives.html#al_draw_prim">al_draw_prim</a></dt>
+  <dd>Draws a subset of the passed vertex array.</dd>
+</dl>
+</td></tr>
+</table>
+<table class="detail wide_list">
+<tr class="list">
+<td class="itemcode"><span id="al_draw_indexed_prim_ex"></span><code>FUNCTION <b>al_draw_indexed_prim_ex</b> (CONST vtxs: <a  href="al5Base.html#AL_VOIDptr">AL_VOIDptr</a>; CONST decl: <a  href="al5primitives.html#ALLEGRO_VERTEX_DECLptr">ALLEGRO_VERTEX_DECLptr</a>; texture: <a  href="Allegro5.html#ALLEGRO_BITMAPptr">ALLEGRO_BITMAPptr</a>; VAR indices: ARRAY OF <a  href="al5Base.html#AL_INT">AL_INT</a>; num_vtx: <a  href="al5Base.html#AL_INT">AL_INT</a>; atype: <a  href="al5primitives.html#ALLEGRO_PRIM_TYPE">ALLEGRO_PRIM_TYPE</a>): <a  href="al5Base.html#AL_INT">AL_INT</a>; CDECL; EXTERNAL ALLEGRO_PRIMITIVES_LIB_NAME NAME 'al_draw_indexed_prim';</code></td>
+</tr>
+<tr><td colspan="1">
+<p>
+Extended version of <a class="normal" href="al5primitives.html#al_draw_indexed_prim">al_draw_indexed_prim</a> that allows to define your own vertex type.            </p>
+<h6 class="description_section">Parameters</h6>
+<dl class="parameters">
+<dt>vtxs</dt>
+<dd>Pointer to an array of vertices.</dd>
+<dt>decl</dt>
+<dd>Pointer to a vertex declaration. If set to <code>Nil</code>, the <code>vtxs</code> are assumed to be of the <a class="normal" href="al5primitives.ALLEGRO_VERTEX.html">ALLEGRO_VERTEX</a> type.</dd>
+<dt>texture</dt>
+<dd>Texture to use, pass <code>Nil</code> to use only color shaded primitves.</dd>
+<dt>indices</dt>
+<dd>An array of indices into the vertex array.</dd>
+<dt>num_vtx</dt>
+<dd>Number of indices from the indices array you want to draw.</dd>
+<dt>atype</dt>
+<dd>A member of the <a class="normal" href="al5primitives.html#ALLEGRO_PRIM_TYPE">ALLEGRO_PRIM_TYPE</a> enumeration, specifying what kind of primitive to draw.</dd>
+</dl>
+<h6 class="description_section">Returns</h6>
+<p class="return">Number of primitives drawn.</p><h6 class="description_section">See also</h6>
+<dl class="see_also">
+  <dt><a class="normal" href="al5primitives.html#al_draw_indexed_prim">al_draw_indexed_prim</a></dt>
+  <dd>Draws a subset of the passed vertex array.</dd>
+  <dt><a class="normal" href="al5primitives.ALLEGRO_VERTEX.html">ALLEGRO_VERTEX</a></dt>
+  <dd>Defines the generic vertex type, with a 3D position, color and texture coordinates for a single texture.</dd>
+  <dt><a class="normal" href="al5primitives.html#ALLEGRO_PRIM_TYPE">ALLEGRO_PRIM_TYPE</a></dt>
+  <dd>Enumerates the types of primitives this addon can draw.</dd>
+  <dt><a class="normal" href="al5primitives.html#ALLEGRO_VERTEX_DECLptr">ALLEGRO_VERTEX_DECLptr</a></dt>
+  <dd>A vertex declaration.</dd>
+  <dt><a class="normal" href="al5primitives.html#al_draw_prim">al_draw_prim</a></dt>
+  <dd>Draws a subset of the passed vertex array.</dd>
+</dl>
+</td></tr>
+</table>
+<table class="detail wide_list">
+<tr class="list">
+<td class="itemcode"><span id="al_draw_vertex_buffer"></span><code>FUNCTION <b>al_draw_vertex_buffer</b> (vertex_buffer: <a  href="al5primitives.html#ALLEGRO_VERTEX_BUFFERptr">ALLEGRO_VERTEX_BUFFERptr</a>; texture: <a  href="Allegro5.html#ALLEGRO_BITMAPptr">ALLEGRO_BITMAPptr</a>; start, finish: <a  href="al5Base.html#AL_INT">AL_INT</a>; atype: <a  href="al5primitives.html#ALLEGRO_PRIM_TYPE">ALLEGRO_PRIM_TYPE</a>): <a  href="al5Base.html#AL_INT">AL_INT</a>; CDECL; EXTERNAL ALLEGRO_PRIMITIVES_LIB_NAME;</code></td>
+</tr>
+<tr><td colspan="1">
+<p>
+Draws a subset of the passed vertex buffer. The vertex buffer must not be locked. Additionally, to draw onto memory bitmaps or with memory bitmap textures the vertex buffer must support reading (i.e. it must be created with the <code>ALLEGRO_PRIM_BUFFER_READWRITE</code>).        </p>
+<h6 class="description_section">Parameters</h6>
+<dl class="parameters">
+<dt>vertex_buffer</dt>
+<dd>Vertex buffer to draw.</dd>
+<dt>texture</dt>
+<dd>Texture to use, pass <code>Nil</code> to use only color shaded primitves.</dd>
+<dt>start</dt>
+<dd>Start index of the subset of the vertex buffer to draw.</dd>
+<dt>end</dt>
+<dd>One past the last index of the subset of the vertex buffer to draw.</dd>
+<dt>atype</dt>
+<dd>A member of the <a class="normal" href="al5primitives.html#ALLEGRO_PRIM_TYPE">ALLEGRO_PRIM_TYPE</a> enumeration, specifying what kind of primitive to draw.</dd>
+</dl>
+<h6 class="description_section">Returns</h6>
+<p class="return">Number of primitives drawn.</p><h6 class="description_section">See also</h6>
+<dl class="see_also">
+  <dt><a class="normal" href="al5primitives.html#ALLEGRO_VERTEX_BUFFERptr">ALLEGRO_VERTEX_BUFFERptr</a></dt>
+  <dd>A GPU vertex buffer that you can use to store vertices on the GPU instead of uploading them afresh during every drawing operation.</dd>
+  <dt><a class="normal" href="al5primitives.html#ALLEGRO_PRIM_TYPE">ALLEGRO_PRIM_TYPE</a></dt>
+  <dd>Enumerates the types of primitives this addon can draw.</dd>
+</dl>
+</td></tr>
+</table>
+<table class="detail wide_list">
+<tr class="list">
+<td class="itemcode"><span id="al_draw_indexed_buffer"></span><code>FUNCTION <b>al_draw_indexed_buffer</b> (vertex_buffer: <a  href="al5primitives.html#ALLEGRO_VERTEX_BUFFERptr">ALLEGRO_VERTEX_BUFFERptr</a>; texture: <a  href="Allegro5.html#ALLEGRO_BITMAPptr">ALLEGRO_BITMAPptr</a>; index_buffer: <a  href="al5primitives.html#ALLEGRO_INDEX_BUFFERptr">ALLEGRO_INDEX_BUFFERptr</a>; start, finish: <a  href="al5Base.html#AL_INT">AL_INT</a>; atype: <a  href="al5primitives.html#ALLEGRO_PRIM_TYPE">ALLEGRO_PRIM_TYPE</a>): <a  href="al5Base.html#AL_INT">AL_INT</a>; CDECL; EXTERNAL ALLEGRO_PRIMITIVES_LIB_NAME;</code></td>
+</tr>
+<tr><td colspan="1">
+<p>
+Draws a subset of the passed vertex buffer. This function uses an index buffer to specify which vertices to use. Both buffers must not be locked. Additionally, to draw onto memory bitmaps or with memory bitmap textures both buffers must support reading (i.e. they must be created with the <code>ALLEGRO_PRIM_BUFFER_READWRITE</code>).          </p>
+<h6 class="description_section">Parameters</h6>
+<dl class="parameters">
+<dt>vertex_buffer</dt>
+<dd>Vertex buffer to draw.</dd>
+<dt>texture</dt>
+<dd>Texture to use, pass <code>Nil</code> to use only color shaded primitves.</dd>
+<dt>index_buffer</dt>
+<dd>Index buffer to use.</dd>
+<dt>start</dt>
+<dd>Start index of the subset of the vertex buffer to draw.</dd>
+<dt>end</dt>
+<dd>One past the last index of the subset of the vertex buffer to draw.</dd>
+<dt>type</dt>
+<dd>A member of the <a class="normal" href="al5primitives.html#ALLEGRO_PRIM_TYPE">ALLEGRO_PRIM_TYPE</a> enumeration, specifying what kind of primitive to draw. Note that <code>ALLEGRO_PRIM_LINE_LOOP</code> and <code>ALLEGRO_PRIM_POINT_LIST</code> are not supported.</dd>
+</dl>
+<h6 class="description_section">Returns</h6>
+<p class="return">Number of primitives drawn.</p><h6 class="description_section">See also</h6>
+<dl class="see_also">
+  <dt><a class="normal" href="al5primitives.html#ALLEGRO_VERTEX_BUFFERptr">ALLEGRO_VERTEX_BUFFERptr</a></dt>
+  <dd>A GPU vertex buffer that you can use to store vertices on the GPU instead of uploading them afresh during every drawing operation.</dd>
+  <dt><a class="normal" href="al5primitives.html#ALLEGRO_INDEX_BUFFERptr">ALLEGRO_INDEX_BUFFERptr</a></dt>
+  <dd>A GPU index buffer that you can use to store indices of vertices in a vertex buffer on the GPU instead of uploading them afresh during every drawing operation.</dd>
+  <dt><a class="normal" href="al5primitives.html#ALLEGRO_PRIM_TYPE">ALLEGRO_PRIM_TYPE</a></dt>
+  <dd>Enumerates the types of primitives this addon can draw.</dd>
+</dl>
+</td></tr>
+</table>
+<table class="detail wide_list">
+<tr class="list">
+<td class="itemcode"><span id="al_create_vertex_decl"></span><code>FUNCTION <b>al_create_vertex_decl</b> (VAR elements: ARRAY OF <a  href="al5primitives.ALLEGRO_VERTEX_ELEMENT.html">ALLEGRO_VERTEX_ELEMENT</a>; stride: <a  href="al5Base.html#AL_INT">AL_INT</a>): <a  href="al5primitives.html#ALLEGRO_VERTEX_DECLptr">ALLEGRO_VERTEX_DECLptr</a>; CDECL; EXTERNAL ALLEGRO_PRIMITIVES_LIB_NAME;</code></td>
+</tr>
+<tr><td colspan="1">
+<p>
+Creates a vertex declaration, which describes a custom vertex format.      </p>
+<h6 class="description_section">Parameters</h6>
+<dl class="parameters">
+<dt>elements</dt>
+<dd>An array of <a class="normal" href="al5primitives.ALLEGRO_VERTEX_ELEMENT.html">ALLEGRO_VERTEX_ELEMENT</a> structures.</dd>
+<dt>stride</dt>
+<dd>Size of the custom vertex structure.</dd>
+</dl>
+<h6 class="description_section">Returns</h6>
+<p class="return">Newly created vertex declaration.</p><h6 class="description_section">See also</h6>
+<dl class="see_also">
+  <dt><a class="normal" href="al5primitives.ALLEGRO_VERTEX_ELEMENT.html">ALLEGRO_VERTEX_ELEMENT</a></dt>
+  <dd>A small structure describing a certain element of a vertex.</dd>
+  <dt><a class="normal" href="al5primitives.html#ALLEGRO_VERTEX_DECLptr">ALLEGRO_VERTEX_DECLptr</a></dt>
+  <dd>A vertex declaration.</dd>
+  <dt><a class="normal" href="al5primitives.html#al_destroy_vertex_decl">al_destroy_vertex_decl</a></dt>
+  <dd>Destroys a vertex declaration.</dd>
+</dl>
+</td></tr>
+</table>
+<table class="detail wide_list">
+<tr class="list">
+<td class="itemcode"><span id="al_destroy_vertex_decl"></span><code>PROCEDURE <b>al_destroy_vertex_decl</b> (decl: <a  href="al5primitives.html#ALLEGRO_VERTEX_DECLptr">ALLEGRO_VERTEX_DECLptr</a>); CDECL; EXTERNAL ALLEGRO_PRIMITIVES_LIB_NAME;</code></td>
+</tr>
+<tr><td colspan="1">
+<p>
+Destroys a vertex declaration.    </p>
+<h6 class="description_section">Parameters</h6>
+<dl class="parameters">
+<dt>decl</dt>
+<dd>Vertex declaration to destroy.</dd>
+</dl>
+<h6 class="description_section">See also</h6>
+<dl class="see_also">
+  <dt><a class="normal" href="al5primitives.ALLEGRO_VERTEX_ELEMENT.html">ALLEGRO_VERTEX_ELEMENT</a></dt>
+  <dd>A small structure describing a certain element of a vertex.</dd>
+  <dt><a class="normal" href="al5primitives.html#ALLEGRO_VERTEX_DECLptr">ALLEGRO_VERTEX_DECLptr</a></dt>
+  <dd>A vertex declaration.</dd>
+  <dt><a class="normal" href="al5primitives.html#al_create_vertex_decl">al_create_vertex_decl</a></dt>
+  <dd>Creates a vertex declaration, which describes a custom vertex format.</dd>
+</dl>
+</td></tr>
+</table>
+<table class="detail wide_list">
+<tr class="list">
+<td class="itemcode"><span id="al_create_vertex_buffer"></span><code>FUNCTION <b>al_create_vertex_buffer</b> (VAR initial_data: ARRAY OF <a  href="al5primitives.ALLEGRO_VERTEX.html">ALLEGRO_VERTEX</a>; flags: <a  href="al5primitives.html#ALLEGRO_PRIM_BUFFER_FLAGS">ALLEGRO_PRIM_BUFFER_FLAGS</a>): <a  href="al5primitives.html#ALLEGRO_VERTEX_BUFFERptr">ALLEGRO_VERTEX_BUFFERptr</a>;</code></td>
+</tr>
+<tr><td colspan="1">
+<p>
+Creates a vertex buffer. Can return <code>Nil</code> if the buffer could not be created (e.g. the system only supports write-only buffers).
+
+<p><b>Note</b>
+
+<p>This is an advanced feature, often unsupported on lower-end video cards. Be extra mindful of this function failing and make arrangements for fallback drawing functionality or a nice error message for users with such lower-end cards.     </p>
+<h6 class="description_section">Parameters</h6>
+<dl class="parameters">
+<dt>initial_data</dt>
+<dd>Memory buffer to copy from to initialize the vertex buffer.</dd>
+<dt>flags</dt>
+<dd>A combination of the <a class="normal" href="al5primitives.html#ALLEGRO_PRIM_BUFFER_FLAGS">ALLEGRO_PRIM_BUFFER_FLAGS</a> flags specifying how this buffer will be created.</dd>
+</dl>
+<h6 class="description_section">See also</h6>
+<dl class="see_also">
+  <dt><a class="normal" href="al5primitives.html#al_create_vertex_buffer_ex">al_create_vertex_buffer_ex</a></dt>
+  <dd>Extended version of <a class="normal" href="al5primitives.html#al_create_vertex_buffer">al_create_vertex_buffer</a> that allows to define your own vertex type.</dd>
+  <dt><a class="normal" href="al5primitives.html#ALLEGRO_VERTEX_BUFFERptr">ALLEGRO_VERTEX_BUFFERptr</a></dt>
+  <dd>A GPU vertex buffer that you can use to store vertices on the GPU instead of uploading them afresh during every drawing operation.</dd>
+  <dt><a class="normal" href="al5primitives.html#al_destroy_vertex_buffer">al_destroy_vertex_buffer</a></dt>
+  <dd>Destroys a vertex buffer.</dd>
+</dl>
+</td></tr>
+</table>
+<table class="detail wide_list">
+<tr class="list">
+<td class="itemcode"><span id="al_create_vertex_buffer_ex"></span><code>FUNCTION <b>al_create_vertex_buffer_ex</b> (decl: <a  href="al5primitives.html#ALLEGRO_VERTEX_DECLptr">ALLEGRO_VERTEX_DECLptr</a>; CONST initial_data: <a  href="al5Base.html#AL_VOIDptr">AL_VOIDptr</a>; num_vertices: <a  href="al5Base.html#AL_INT">AL_INT</a>; flags: <a  href="al5primitives.html#ALLEGRO_PRIM_BUFFER_FLAGS">ALLEGRO_PRIM_BUFFER_FLAGS</a>): <a  href="al5primitives.html#ALLEGRO_VERTEX_BUFFERptr">ALLEGRO_VERTEX_BUFFERptr</a>; CDECL; EXTERNAL ALLEGRO_PRIMITIVES_LIB_NAME NAME 'al_create_vertex_buffer';</code></td>
+</tr>
+<tr><td colspan="1">
+<p>
+Extended version of <a class="normal" href="al5primitives.html#al_create_vertex_buffer">al_create_vertex_buffer</a> that allows to define your own vertex type.       </p>
+<h6 class="description_section">Parameters</h6>
+<dl class="parameters">
+<dt>decl</dt>
+<dd>Vertex type that this buffer will hold. <code>Nil</code> implies that this buffer will hold ALLEGRO_VERTEX vertices.</dd>
+<dt>initial_data</dt>
+<dd>Memory buffer to copy from to initialize the vertex buffer. Can be <code>Nil</code>, in which case the buffer is uninitialized.</dd>
+<dt>num_vertices</dt>
+<dd>Number of vertices the buffer will hold.</dd>
+<dt>flags</dt>
+<dd>A combination of the <a class="normal" href="al5primitives.html#ALLEGRO_PRIM_BUFFER_FLAGS">ALLEGRO_PRIM_BUFFER_FLAGS</a> flags specifying how this buffer will be created.</dd>
+</dl>
+<h6 class="description_section">See also</h6>
+<dl class="see_also">
+  <dt><a class="normal" href="al5primitives.html#al_create_vertex_buffer">al_create_vertex_buffer</a></dt>
+  <dd>Creates a vertex buffer.</dd>
+  <dt><a class="normal" href="al5primitives.html#ALLEGRO_VERTEX_BUFFERptr">ALLEGRO_VERTEX_BUFFERptr</a></dt>
+  <dd>A GPU vertex buffer that you can use to store vertices on the GPU instead of uploading them afresh during every drawing operation.</dd>
+  <dt><a class="normal" href="al5primitives.html#al_destroy_vertex_buffer">al_destroy_vertex_buffer</a></dt>
+  <dd>Destroys a vertex buffer.</dd>
+</dl>
+</td></tr>
+</table>
+<table class="detail wide_list">
+<tr class="list">
+<td class="itemcode"><span id="al_destroy_vertex_buffer"></span><code>PROCEDURE <b>al_destroy_vertex_buffer</b> (buffer: <a  href="al5primitives.html#ALLEGRO_VERTEX_BUFFERptr">ALLEGRO_VERTEX_BUFFERptr</a>); CDECL; EXTERNAL ALLEGRO_PRIMITIVES_LIB_NAME;</code></td>
+</tr>
+<tr><td colspan="1">
+<p>
+Destroys a vertex buffer. Does nothing if passed <code>Nil</code>.  </p>
+<h6 class="description_section">See also</h6>
+<dl class="see_also">
+  <dt><a class="normal" href="al5primitives.html#ALLEGRO_VERTEX_BUFFERptr">ALLEGRO_VERTEX_BUFFERptr</a></dt>
+  <dd>A GPU vertex buffer that you can use to store vertices on the GPU instead of uploading them afresh during every drawing operation.</dd>
+  <dt><a class="normal" href="al5primitives.html#al_create_vertex_buffer">al_create_vertex_buffer</a></dt>
+  <dd>Creates a vertex buffer.</dd>
+</dl>
+</td></tr>
+</table>
+<table class="detail wide_list">
+<tr class="list">
+<td class="itemcode"><span id="al_lock_vertex_buffer"></span><code>FUNCTION <b>al_lock_vertex_buffer</b> (buffer: <a  href="al5primitives.html#ALLEGRO_VERTEX_BUFFERptr">ALLEGRO_VERTEX_BUFFERptr</a>; offset, length: <a  href="al5Base.html#AL_INT">AL_INT</a>; flags: <a  href="Allegro5.html#ALLEGRO_LOCK">ALLEGRO_LOCK</a>): <a  href="al5Base.html#AL_VOIDptr">AL_VOIDptr</a>; CDECL; EXTERNAL ALLEGRO_PRIMITIVES_LIB_NAME;</code></td>
+</tr>
+<tr><td colspan="1">
+<p>
+Locks a vertex buffer so you can access its data. Will return <code>Nil</code> if the parameters are invalid, if reading is requested from a write only buffer, or if the buffer is already locked.      </p>
+<h6 class="description_section">Parameters</h6>
+<dl class="parameters">
+<dt>buffer</dt>
+<dd>Vertex buffer to lock.</dd>
+<dt>offset</dt>
+<dd>Vertex index of the start of the locked range.</dd>
+<dt>length</dt>
+<dd>How many vertices to lock.</dd>
+<dt>flags</dt>
+<dd><code>ALLEGRO_LOCK_READONLY</code>, <code>ALLEGRO_LOCK_WRITEONLY</code> or <code>ALLEGRO_LOCK_READWRITE</code>.</dd>
+</dl>
+<h6 class="description_section">See also</h6>
+<dl class="see_also">
+  <dt><a class="normal" href="al5primitives.html#ALLEGRO_VERTEX_BUFFERptr">ALLEGRO_VERTEX_BUFFERptr</a></dt>
+  <dd>A GPU vertex buffer that you can use to store vertices on the GPU instead of uploading them afresh during every drawing operation.</dd>
+  <dt><a class="normal" href="al5primitives.html#al_unlock_vertex_buffer">al_unlock_vertex_buffer</a></dt>
+  <dd>Unlocks a previously locked vertex buffer.</dd>
+</dl>
+</td></tr>
+</table>
+<table class="detail wide_list">
+<tr class="list">
+<td class="itemcode"><span id="al_unlock_vertex_buffer"></span><code>PROCEDURE <b>al_unlock_vertex_buffer</b> (buffer: <a  href="al5primitives.html#ALLEGRO_VERTEX_BUFFERptr">ALLEGRO_VERTEX_BUFFERptr</a>); CDECL; EXTERNAL ALLEGRO_PRIMITIVES_LIB_NAME;</code></td>
+</tr>
+<tr><td colspan="1">
+<p>
+Unlocks a previously locked vertex buffer.  </p>
+<h6 class="description_section">See also</h6>
+<dl class="see_also">
+  <dt><a class="normal" href="al5primitives.html#ALLEGRO_VERTEX_BUFFERptr">ALLEGRO_VERTEX_BUFFERptr</a></dt>
+  <dd>A GPU vertex buffer that you can use to store vertices on the GPU instead of uploading them afresh during every drawing operation.</dd>
+  <dt><a class="normal" href="al5primitives.html#al_lock_vertex_buffer">al_lock_vertex_buffer</a></dt>
+  <dd>Locks a vertex buffer so you can access its data.</dd>
+</dl>
+</td></tr>
+</table>
+<table class="detail wide_list">
+<tr class="list">
+<td class="itemcode"><span id="al_get_vertex_buffer_size"></span><code>FUNCTION <b>al_get_vertex_buffer_size</b> (buffer: <a  href="al5primitives.html#ALLEGRO_VERTEX_BUFFERptr">ALLEGRO_VERTEX_BUFFERptr</a>): <a  href="al5Base.html#AL_INT">AL_INT</a>; CDECL; EXTERNAL ALLEGRO_PRIMITIVES_LIB_NAME;</code></td>
+</tr>
+<tr><td colspan="1">
+<p>
+Returns the size of the vertex buffer. </p>
+<h6 class="description_section">See also</h6>
+<dl class="see_also">
+  <dt><a class="normal" href="al5primitives.html#ALLEGRO_VERTEX_BUFFERptr">ALLEGRO_VERTEX_BUFFERptr</a></dt>
+  <dd>A GPU vertex buffer that you can use to store vertices on the GPU instead of uploading them afresh during every drawing operation.</dd>
+</dl>
+</td></tr>
+</table>
+<table class="detail wide_list">
+<tr class="list">
+<td class="itemcode"><span id="al_create_index_buffer"></span><code>FUNCTION <b>al_create_index_buffer</b> (index_size: <a  href="al5Base.html#AL_INT">AL_INT</a>; const initial_data: <a  href="al5Base.html#AL_VOIDptr">AL_VOIDptr</a>; num_indices: <a  href="al5Base.html#AL_INT">AL_INT</a>; flags: <a  href="al5primitives.html#ALLEGRO_PRIM_BUFFER_FLAGS">ALLEGRO_PRIM_BUFFER_FLAGS</a>): <a  href="al5primitives.html#ALLEGRO_INDEX_BUFFERptr">ALLEGRO_INDEX_BUFFERptr</a>; CDECL; EXTERNAL ALLEGRO_PRIMITIVES_LIB_NAME;</code></td>
+</tr>
+<tr><td colspan="1">
+<p>
+Creates an index buffer. Can return <code>Nil</code> if the buffer could not be created (e.g. the system only supports write-only buffers).
+
+<p><b>Note</b>
+
+<p>This is an advanced feature, often unsupported on lower-end video cards. Be extra mindful of this function failing and make arrangements for fallback drawing functionality or a nice error message for users with such lower-end cards.      </p>
+<h6 class="description_section">Parameters</h6>
+<dl class="parameters">
+<dt>index_size</dt>
+<dd>Size of the index in bytes. Supported sizes are 2 for short integers and 4 for integers.</dd>
+<dt>initial_data</dt>
+<dd>Memory buffer to copy from to initialize the index buffer. Can be <code>Nil</code>, in which case the buffer is uninitialized.</dd>
+<dt>num_indices</dt>
+<dd>Number of indices the buffer will hold.</dd>
+<dt>flags</dt>
+<dd>A combination of the <a class="normal" href="al5primitives.html#ALLEGRO_PRIM_BUFFER_FLAGS">ALLEGRO_PRIM_BUFFER_FLAGS</a> flags specifying how this buffer will be created.</dd>
+</dl>
+<h6 class="description_section">See also</h6>
+<dl class="see_also">
+  <dt><a class="normal" href="al5primitives.html#ALLEGRO_INDEX_BUFFERptr">ALLEGRO_INDEX_BUFFERptr</a></dt>
+  <dd>A GPU index buffer that you can use to store indices of vertices in a vertex buffer on the GPU instead of uploading them afresh during every drawing operation.</dd>
+  <dt><a class="normal" href="al5primitives.html#al_destroy_index_buffer">al_destroy_index_buffer</a></dt>
+  <dd>Destroys an index buffer.</dd>
+</dl>
+</td></tr>
+</table>
+<table class="detail wide_list">
+<tr class="list">
+<td class="itemcode"><span id="al_destroy_index_buffer"></span><code>PROCEDURE <b>al_destroy_index_buffer</b> (buffer: <a  href="al5primitives.html#ALLEGRO_INDEX_BUFFERptr">ALLEGRO_INDEX_BUFFERptr</a>); CDECL; EXTERNAL ALLEGRO_PRIMITIVES_LIB_NAME;</code></td>
+</tr>
+<tr><td colspan="1">
+<p>
+Destroys an index buffer. Does nothing if passed <code>Nil</code>.  </p>
+<h6 class="description_section">See also</h6>
+<dl class="see_also">
+  <dt><a class="normal" href="al5primitives.html#ALLEGRO_INDEX_BUFFERptr">ALLEGRO_INDEX_BUFFERptr</a></dt>
+  <dd>A GPU index buffer that you can use to store indices of vertices in a vertex buffer on the GPU instead of uploading them afresh during every drawing operation.</dd>
+  <dt><a class="normal" href="al5primitives.html#al_create_index_buffer">al_create_index_buffer</a></dt>
+  <dd>Creates an index buffer.</dd>
+</dl>
+</td></tr>
+</table>
+<table class="detail wide_list">
+<tr class="list">
+<td class="itemcode"><span id="al_lock_index_buffer"></span><code>FUNCTION <b>al_lock_index_buffer</b> (buffer: <a  href="al5primitives.html#ALLEGRO_INDEX_BUFFERptr">ALLEGRO_INDEX_BUFFERptr</a>; offset, length: <a  href="al5Base.html#AL_INT">AL_INT</a>; flags: <a  href="Allegro5.html#ALLEGRO_LOCK">ALLEGRO_LOCK</a>): <a  href="al5Base.html#AL_VOIDptr">AL_VOIDptr</a>; CDECL; EXTERNAL ALLEGRO_PRIMITIVES_LIB_NAME;</code></td>
+</tr>
+<tr><td colspan="1">
+<p>
+Locks an index buffer so you can access its data. Will return <code>Nil</code> if the parameters are invalid, if reading is requested from a write only buffer and if the buffer is already locked.      </p>
+<h6 class="description_section">Parameters</h6>
+<dl class="parameters">
+<dt>buffer</dt>
+<dd>Index buffer to lock.</dd>
+<dt>offset</dt>
+<dd>Element index of the start of the locked range.</dd>
+<dt>length</dt>
+<dd>How many indices to lock.</dd>
+<dt>flags</dt>
+<dd><code>ALLEGRO_LOCK_READONLY</code>, <code>ALLEGRO_LOCK_WRITEONLY</code> or <code>ALLEGRO_LOCK_READWRITE</code>.</dd>
+</dl>
+<h6 class="description_section">See also</h6>
+<dl class="see_also">
+  <dt><a class="normal" href="al5primitives.html#ALLEGRO_INDEX_BUFFERptr">ALLEGRO_INDEX_BUFFERptr</a></dt>
+  <dd>A GPU index buffer that you can use to store indices of vertices in a vertex buffer on the GPU instead of uploading them afresh during every drawing operation.</dd>
+  <dt><a class="normal" href="al5primitives.html#al_unlock_index_buffer">al_unlock_index_buffer</a></dt>
+  <dd>Unlocks a previously locked index buffer.</dd>
+</dl>
+</td></tr>
+</table>
+<table class="detail wide_list">
+<tr class="list">
+<td class="itemcode"><span id="al_unlock_index_buffer"></span><code>PROCEDURE <b>al_unlock_index_buffer</b> (buffer: <a  href="al5primitives.html#ALLEGRO_INDEX_BUFFERptr">ALLEGRO_INDEX_BUFFERptr</a>); CDECL; EXTERNAL ALLEGRO_PRIMITIVES_LIB_NAME;</code></td>
+</tr>
+<tr><td colspan="1">
+<p>
+Unlocks a previously locked index buffer.  </p>
+<h6 class="description_section">See also</h6>
+<dl class="see_also">
+  <dt><a class="normal" href="al5primitives.html#ALLEGRO_INDEX_BUFFERptr">ALLEGRO_INDEX_BUFFERptr</a></dt>
+  <dd>A GPU index buffer that you can use to store indices of vertices in a vertex buffer on the GPU instead of uploading them afresh during every drawing operation.</dd>
+  <dt><a class="normal" href="al5primitives.html#al_lock_index_buffer">al_lock_index_buffer</a></dt>
+  <dd>Locks an index buffer so you can access its data.</dd>
+</dl>
+</td></tr>
+</table>
+<table class="detail wide_list">
+<tr class="list">
+<td class="itemcode"><span id="al_get_index_buffer_size"></span><code>FUNCTION <b>al_get_index_buffer_size</b> (buffer: <a  href="al5primitives.html#ALLEGRO_INDEX_BUFFERptr">ALLEGRO_INDEX_BUFFERptr</a>): <a  href="al5Base.html#AL_INT">AL_INT</a>; CDECL; EXTERNAL ALLEGRO_PRIMITIVES_LIB_NAME;</code></td>
+</tr>
+<tr><td colspan="1">
+<p>
+Returns the size of the index buffer </p>
+<h6 class="description_section">See also</h6>
+<dl class="see_also">
+  <dt><a class="normal" href="al5primitives.html#ALLEGRO_INDEX_BUFFERptr">ALLEGRO_INDEX_BUFFERptr</a></dt>
+  <dd>A GPU index buffer that you can use to store indices of vertices in a vertex buffer on the GPU instead of uploading them afresh during every drawing operation.</dd>
+</dl>
+</td></tr>
+</table>
+<table class="detail wide_list">
+<tr class="list">
+<td class="itemcode"><span id="al_triangulate_polygon"></span><code>FUNCTION <b>al_triangulate_polygon</b> (VAR vertices: ARRAY OF <a  href="al5Base.html#AL_FLOAT">AL_FLOAT</a>; svertex_stride: <a  href="al5Base.html#AL_SIZE_T">AL_SIZE_T</a>; VAR vertex_counts: ARRAY OF <a  href="al5Base.html#AL_INT">AL_INT</a>; emit_triangle: <a  href="al5primitives.html#ALLEGRO_EMIT_TRIANGLE_PROC">ALLEGRO_EMIT_TRIANGLE_PROC</a>; userdata: <a  href="al5Base.html#AL_VOIDptr">AL_VOIDptr</a>): <a  href="al5Base.html#AL_BOOL">AL_BOOL</a>; CDECL; EXTERNAL ALLEGRO_PRIMITIVES_LIB_NAME;</code></td>
+</tr>
+<tr><td colspan="1">
+<p>
+Divides a simple polygon into triangles, with zero or more other simple polygons subtracted from it - the holes. The holes cannot touch or intersect with the outline of the main polygon. Simple means the polygon does not have to be convex but must not be self-overlapping.       </p>
+<h6 class="description_section">Parameters</h6>
+<dl class="parameters">
+<dt>vertices</dt>
+<dd>Interleaved array of (x, y) vertex coordinates for each of the polygons, including holes.</dd>
+<dt>vertex_stride</dt>
+<dd>Distance (in bytes) between successive pairs of vertices in the array.</dd>
+<dt>vertex_counts</dt>
+<dd>Number of vertices for each polygon. The number of vertices in the main polygon is given by vertex_counts[0] and must be at least three. Subsequent elements indicate the number of vertices in each hole. The array must be terminated with an element with value zero.</dd>
+<dt>emit_triangle</dt>
+<dd>A function to be called for every set of three points that form a triangle. The function is passed the indices of the points in <code>vertices</code> and <code>userdata</code>.</dd>
+<dt>userdata</dt>
+<dd>Arbitrary data to be passed to emit_triangle.</dd>
+</dl>
+<h6 class="description_section">See also</h6>
+<dl class="see_also">
+  <dt><a class="normal" href="al5primitives.html#ALLEGRO_EMIT_TRIANGLE_PROC">ALLEGRO_EMIT_TRIANGLE_PROC</a></dt>
+  <dd>Callback function used by <a class="normal" href="al5primitives.html#al_triangulate_polygon">al_triangulate_polygon</a>.</dd>
+  <dt><a class="normal" href="al5primitives.html#al_draw_filled_polygon_with_holes">al_draw_filled_polygon_with_holes</a></dt>
+  <dd>Draws a filled simple polygon with zero or more other simple polygons subtracted from it - the holes.</dd>
+</dl>
+</td></tr>
+</table>
+<table class="detail wide_list">
+<tr class="list">
+<td class="itemcode"><span id="al_draw_soft_triangle"></span><code>PROCEDURE <b>al_draw_soft_triangle</b> (v1, v2, v3: <a  href="al5primitives.html#ALLEGRO_VERTEXptr">ALLEGRO_VERTEXptr</a>; state: <a  href="al5Base.html#AL_UINTPTR_T">AL_UINTPTR_T</a>; init: <a  href="al5primitives.html#ALLEGRO_INIT_TRIANGLE_PROC">ALLEGRO_INIT_TRIANGLE_PROC</a>; first: <a  href="al5primitives.html#ALLEGRO_FIRST_TRIANGLE_PROC">ALLEGRO_FIRST_TRIANGLE_PROC</a>; step: <a  href="al5primitives.html#ALLEGRO_STEP_PROC">ALLEGRO_STEP_PROC</a>; draw: <a  href="al5primitives.html#ALLEGRO_DRAW_TRIANGLE_PROC">ALLEGRO_DRAW_TRIANGLE_PROC</a>); CDECL; EXTERNAL ALLEGRO_PRIMITIVES_LIB_NAME;</code></td>
+</tr>
+<tr><td colspan="1">
+<p>
+Draws a triangle using the software rasterizer and user supplied pixel functions. For help in understanding what these functions do, see the implementation of the various shading routines in <code>addons/primitives/tri_soft.c</code>. The triangle is drawn in two segments, from top to bottom. The segments are deliniated by the vertically middle vertex of the triangle. One of the two segments may be absent if two vertices are horizontally collinear.
+
+<p><b>Parámetros sin terminar de describir.</b> Alguna explicación habrá que ponerla en la descripción del tipo de parámetro.         </p>
+<h6 class="description_section">Parameters</h6>
+<dl class="parameters">
+<dt>v1</dt>
+<dd>The first vertex of the triangle.</dd>
+<dt>v2</dt>
+<dd>The second vertex of the triangle.</dd>
+<dt>v3</dt>
+<dd>The third vertex of the triangle.</dd>
+<dt>state</dt>
+<dd>A pointer to a user supplied struct, this struct will be passed to all the pixel functions.</dd>
+<dt>init</dt>
+<dd>Called once per call before any drawing is done. The three points passed to it may be altered by clipping.</dd>
+<dt>first</dt>
+<dd>Called twice per call, once per triangle segment.</dd>
+<dt>step</dt>
+<dd>Called once per scanline. The last parameter is set to 1 if the step is a minor step, and 0 if it is a major step.</dd>
+<dt>draw</dt>
+<dd>Called once per scanline.</dd>
+</dl>
+<h6 class="description_section">See also</h6>
+<dl class="see_also">
+  <dt><a class="normal" href="al5primitives.html#al_draw_triangle">al_draw_triangle</a></dt>
+  <dd>         </dd>
+</dl>
+</td></tr>
+</table>
+<table class="detail wide_list">
+<tr class="list">
+<td class="itemcode"><span id="al_draw_soft_line"></span><code>PROCEDURE <b>al_draw_soft_line</b> (v1, v2: <a  href="al5primitives.html#ALLEGRO_VERTEXptr">ALLEGRO_VERTEXptr</a>; state: <a  href="al5Base.html#AL_UINTPTR_T">AL_UINTPTR_T</a>; first: <a  href="al5primitives.html#ALLEGRO_FIRST_LINE_PROC">ALLEGRO_FIRST_LINE_PROC</a>; step: <a  href="al5primitives.html#ALLEGRO_STEP_PROC">ALLEGRO_STEP_PROC</a>; draw: <a  href="al5primitives.html#ALLEGRO_DRAW_LINE_PROC">ALLEGRO_DRAW_LINE_PROC</a>); CDECL; EXTERNAL ALLEGRO_PRIMITIVES_LIB_NAME;</code></td>
+</tr>
+<tr><td colspan="1">
+<p>
+Draws a line using the software rasterizer and user supplied pixel functions. For help in understanding what these functions do, see the implementation of the various shading routines in <code>addons/primitives/line_soft.c</code>. The line is drawn top to bottom.       </p>
+<h6 class="description_section">Parameters</h6>
+<dl class="parameters">
+<dt>v1</dt>
+<dd>Initial vertex of the line.</dd>
+<dt>v2</dt>
+<dd>Final vertex of the line.</dd>
+<dt>state</dt>
+<dd>A pointer to a user supplied struct, this struct will be passed to all the pixel functions.</dd>
+<dt>first</dt>
+<dd>Called before drawing the first pixel of the line.</dd>
+<dt>step</dt>
+<dd>Called once per pixel. The second parameter is set to 1 if the step is a minor step, and 0 if this step is a major step. Minor steps are taken only either in x or y directions. Major steps are taken in both directions diagonally. In all cases, the absolute value of the change in coordinate is at most 1 in either direction.</dd>
+<dt>draw</dt>
+<dd>Called once per pixel.</dd>
+</dl>
+<h6 class="description_section">See also</h6>
+<dl class="see_also">
+  <dt><a class="normal" href="al5primitives.html#al_draw_line">al_draw_line</a></dt>
+  <dd>Draws a line segment between two points.</dd>
+</dl>
+</td></tr>
+</table>
+<table class="detail wide_list">
+<tr class="list">
+<td class="itemcode"><span id="al_draw_line"></span><code>PROCEDURE <b>al_draw_line</b> (x1, y1, x2, y2: <a  href="al5Base.html#AL_FLOAT">AL_FLOAT</a>; color: <a  href="Allegro5.ALLEGRO_COLOR.html">ALLEGRO_COLOR</a>; thickness: <a  href="al5Base.html#AL_FLOAT">AL_FLOAT</a>); CDECL; EXTERNAL ALLEGRO_PRIMITIVES_LIB_NAME;</code></td>
+</tr>
+<tr><td colspan="1">
+<p>
+Draws a line segment between two points.       </p>
+<h6 class="description_section">Parameters</h6>
+<dl class="parameters">
+<dt>x1</dt>
+<dd>X start point of the line.</dd>
+<dt>y1</dt>
+<dd>Y start point of the line.</dd>
+<dt>x2</dt>
+<dd>X end point of the line.</dd>
+<dt>y2</dt>
+<dd>Y end point of the line.</dd>
+<dt>color</dt>
+<dd>Color of the line.</dd>
+<dt>thickness</dt>
+<dd>Thickness of the line, pass &lt;= 0 to draw hairline lines.</dd>
+</dl>
+<h6 class="description_section">See also</h6>
+<dl class="see_also">
+  <dt><a class="normal" href="al5primitives.html#al_draw_soft_line">al_draw_soft_line</a></dt>
+  <dd>Draws a line using the software rasterizer and user supplied pixel functions.</dd>
+</dl>
+</td></tr>
+</table>
+<table class="detail wide_list">
+<tr class="list">
+<td class="itemcode"><span id="al_draw_triangle"></span><code>PROCEDURE <b>al_draw_triangle</b> (x1, y1, x2, y2, x3, y3: <a  href="al5Base.html#AL_FLOAT">AL_FLOAT</a>; color: <a  href="Allegro5.ALLEGRO_COLOR.html">ALLEGRO_COLOR</a>; thickness: <a  href="al5Base.html#AL_FLOAT">AL_FLOAT</a>); CDECL; EXTERNAL ALLEGRO_PRIMITIVES_LIB_NAME;</code></td>
+</tr>
+<tr><td colspan="1">
+<p>
+         </p>
+<h6 class="description_section">Parameters</h6>
+<dl class="parameters">
+<dt>x1</dt>
+<dd>X coordinate of the first vertex.</dd>
+<dt>y1</dt>
+<dd>Y coordinate of the first vertex.</dd>
+<dt>x2</dt>
+<dd>X coordinate of the second vertex.</dd>
+<dt>y2</dt>
+<dd>Y coordinate of the second vertex.</dd>
+<dt>x3</dt>
+<dd>X coordinate of the third vertex.</dd>
+<dt>y3</dt>
+<dd>Y coordinate of the third vertex.</dd>
+<dt>color</dt>
+<dd>Color of the triangle.</dd>
+<dt>thickness</dt>
+<dd>Thickness of the lines, pass &lt;= 0 to draw hairline lines.</dd>
+</dl>
+<h6 class="description_section">See also</h6>
+<dl class="see_also">
+  <dt><a class="normal" href="al5primitives.html#al_draw_filled_triangle">al_draw_filled_triangle</a></dt>
+  <dd>Draws a filled triangle.</dd>
+  <dt><a class="normal" href="al5primitives.html#al_draw_soft_triangle">al_draw_soft_triangle</a></dt>
+  <dd>Draws a triangle using the software rasterizer and user supplied pixel functions.</dd>
+</dl>
+</td></tr>
+</table>
+<table class="detail wide_list">
+<tr class="list">
+<td class="itemcode"><span id="al_draw_rectangle"></span><code>PROCEDURE <b>al_draw_rectangle</b> (x1, y1, x2, y2: <a  href="al5Base.html#AL_FLOAT">AL_FLOAT</a>; color: <a  href="Allegro5.ALLEGRO_COLOR.html">ALLEGRO_COLOR</a>; thickness: <a  href="al5Base.html#AL_FLOAT">AL_FLOAT</a>); CDECL; EXTERNAL ALLEGRO_PRIMITIVES_LIB_NAME;</code></td>
+</tr>
+<tr><td colspan="1">
+<p>
+Draws an outlined rectangle.        </p>
+<h6 class="description_section">Parameters</h6>
+<dl class="parameters">
+<dt>x1</dt>
+<dd>Left side of the rectangle.</dd>
+<dt>y1</dt>
+<dd>Top side of the rectangle.</dd>
+<dt>x2</dt>
+<dd>Right side of the rectangle.</dd>
+<dt>y2</dt>
+<dd>Bottom side of the rectangle.</dd>
+<dt>color</dt>
+<dd>Color of the rectangle.</dd>
+<dt>thickness</dt>
+<dd>Thickness of the lines, pass &lt;= 0 to draw hairline lines.</dd>
+</dl>
+<h6 class="description_section">See also</h6>
+<dl class="see_also">
+  <dt><a class="normal" href="al5primitives.html#al_draw_filled_rectangle">al_draw_filled_rectangle</a></dt>
+  <dd>Draws a filled rectangle.</dd>
+  <dt><a class="normal" href="al5primitives.html#al_draw_rounded_rectangle">al_draw_rounded_rectangle</a></dt>
+  <dd>Draws an outlined rounded rectangle.</dd>
+</dl>
+</td></tr>
+</table>
+<table class="detail wide_list">
+<tr class="list">
+<td class="itemcode"><span id="al_draw_rounded_rectangle"></span><code>PROCEDURE <b>al_draw_rounded_rectangle</b> (x1, y1, x2, y2, rx, ry: <a  href="al5Base.html#AL_FLOAT">AL_FLOAT</a>; color: <a  href="Allegro5.ALLEGRO_COLOR.html">ALLEGRO_COLOR</a>; thickness: <a  href="al5Base.html#AL_FLOAT">AL_FLOAT</a>); CDECL; EXTERNAL ALLEGRO_PRIMITIVES_LIB_NAME;</code></td>
+</tr>
+<tr><td colspan="1">
+<p>
+Draws an outlined rounded rectangle.          </p>
+<h6 class="description_section">Parameters</h6>
+<dl class="parameters">
+<dt>x1</dt>
+<dd>Left side of the rectangle.</dd>
+<dt>y1</dt>
+<dd>Top side of the rectangle.</dd>
+<dt>x2</dt>
+<dd>Right side of the rectangle.</dd>
+<dt>y2</dt>
+<dd>Bottom side of the rectangle.</dd>
+<dt>rx</dt>
+<dd>Horizontal radius of the round.</dd>
+<dt>ry</dt>
+<dd>Vertical radius of the round.</dd>
+<dt>color</dt>
+<dd>Color of the rectangle.</dd>
+<dt>thickness</dt>
+<dd>Thickness of the lines, pass &lt;= 0 to draw hairline lines.</dd>
+</dl>
+<h6 class="description_section">See also</h6>
+<dl class="see_also">
+  <dt><a class="normal" href="al5primitives.html#al_draw_filled_rounded_rectangle">al_draw_filled_rounded_rectangle</a></dt>
+  <dd>Draws a filled rounded rectangle.</dd>
+  <dt><a class="normal" href="al5primitives.html#al_draw_rectangle">al_draw_rectangle</a></dt>
+  <dd>Draws an outlined rectangle.</dd>
+</dl>
+</td></tr>
+</table>
+<table class="detail wide_list">
+<tr class="list">
+<td class="itemcode"><span id="al_calculate_arc"></span><code>PROCEDURE <b>al_calculate_arc</b> (dest: ARRAY OF <a  href="al5Base.html#AL_FLOAT">AL_FLOAT</a>; cx, cy, rx, ry, start_theta, delta_theta, thickness: <a  href="al5Base.html#AL_FLOAT">AL_FLOAT</a>);</code></td>
+</tr>
+<tr><td colspan="1">
+<p>
+When <code>thickness &lt;= 0</code> this function computes positions of num_points regularly spaced points on an elliptical arc. When <code>thickness &gt; 0</code> this function computes two sets of points, obtained as follows: the first set is obtained by taking the points computed in the <code>thickness &lt;= 0</code> case and shifting them by <code>thickness / 2</code> outward, in a direction perpendicular to the arc curve. The second set is the same, but shifted <code>thickness / 2</code> inward relative to the arc. The two sets of points are interleaved in the destination buffer (i.e. the first pair of points will be collinear with the arc center, the first point of the pair will be farther from the center than the second point; the next pair will also be collinear, but at a different angle and so on).
+
+<p>The destination buffer dest is interpreted as a set of regularly spaced pairs of floats, each pair holding the coordinates of the corresponding point on the arc. The two floats in the pair are adjacent, and the distance (in bytes) between the addresses of the first float in two successive pairs is <code>stride</code>. For example, if you have a tightly packed array of floats with no spaces between pairs, then stride will be exactly <code>2 * sizeof (float)</code>.
+
+<p>Example with <code>thickness &lt;= 0</code>: </p>
+
+<pre class="longcode">
+<span class="pascal_keyword">CONST</span>
+  NumPoints = <span class="pascal_numeric">4</span>;
+<span class="pascal_keyword">VAR</span>
+  Points: <span class="pascal_keyword">ARRAY</span> [<span class="pascal_numeric">0</span>..NumPoints-<span class="pascal_numeric">1</span>, <span class="pascal_numeric">0</span>..1] <span class="pascal_keyword">OF</span> AL_FLOAT;
+<span class="pascal_keyword">BEGIN</span>
+  al_calculate_arc (
+    Points,
+    <span class="pascal_numeric">0</span>, <span class="pascal_numeric">0</span>,			<span class="pascal_comment">{ Center }</span>
+    <span class="pascal_numeric">10</span>, <span class="pascal_numeric">10</span>,			<span class="pascal_comment">{ Radii  }</span>
+    <span class="pascal_numeric">0</span>, ALLEGRO_PI / <span class="pascal_numeric">2</span>,		<span class="pascal_comment">{ Angles }</span>
+    <span class="pascal_numeric">0</span>
+  );
+<span class="pascal_keyword">END</span>;</pre>
+
+<p> Example with <code>thickness &gt; 0</code>: </p>
+
+<pre class="longcode">
+<span class="pascal_keyword">CONST</span>
+  NumPoints = <span class="pascal_numeric">4</span>;
+<span class="pascal_keyword">VAR</span>
+  Points: <span class="pascal_keyword">ARRAY</span> [<span class="pascal_numeric">0</span>..(NumPoints * <span class="pascal_numeric">2</span>)-<span class="pascal_numeric">1</span>, <span class="pascal_numeric">0</span>..1] <span class="pascal_keyword">OF</span> AL_FLOAT;
+<span class="pascal_keyword">BEGIN</span>
+  al_calculate_arc (
+    Points,
+    <span class="pascal_numeric">0</span>, <span class="pascal_numeric">0</span>,			<span class="pascal_comment">{ Center }</span>
+    <span class="pascal_numeric">10</span>, <span class="pascal_numeric">10</span>,			<span class="pascal_comment">{ Radii  }</span>
+    <span class="pascal_numeric">0</span>, ALLEGRO_PI / <span class="pascal_numeric">2</span>,		<span class="pascal_comment">{ Angles }</span>
+    <span class="pascal_numeric">2</span>
+  );
+<span class="pascal_keyword">END</span>;</pre>
+
+<p>            </p>
+<h6 class="description_section">Parameters</h6>
+<dl class="parameters">
+<dt>dest</dt>
+<dd>The destination buffer.</dd>
+<dt>cx</dt>
+<dd>X coordinate of the center of the arc.</dd>
+<dt>cy</dt>
+<dd>Y coordinate of the center of the arc.</dd>
+<dt>rx</dt>
+<dd>Horizontal radius of the arc.</dd>
+<dt>ry</dt>
+<dd>Vertical radius of the arc.</dd>
+<dt>start_theta</dt>
+<dd>The initial angle from which the arc is calculated in radians.</dd>
+<dt>delta_theta</dt>
+<dd>Angular span of the arc in radians (pass a negative number to switch direction).</dd>
+<dt>thickness</dt>
+<dd>Thickness of the arc.</dd>
+</dl>
+<h6 class="description_section">See also</h6>
+<dl class="see_also">
+  <dt><a class="normal" href="al5primitives.html#al_calculate_arc_ex">al_calculate_arc_ex</a></dt>
+  <dd>Same than <a class="normal" href="al5primitives.html#al_calculate_arc">al_calculate_arc</a> but using a pointer instead of an array.</dd>
+  <dt><a class="normal" href="al5primitives.html#al_draw_arc">al_draw_arc</a></dt>
+  <dd>Draws an arc.</dd>
+  <dt><a class="normal" href="al5primitives.html#al_calculate_spline">al_calculate_spline</a></dt>
+  <dd>Calculates a Bézier spline given 4 control points.</dd>
+  <dt><a class="normal" href="al5primitives.html#al_calculate_ribbon">al_calculate_ribbon</a></dt>
+  <dd>Calculates a ribbon given an array of points.</dd>
+</dl>
+</td></tr>
+</table>
+<table class="detail wide_list">
+<tr class="list">
+<td class="itemcode"><span id="al_calculate_arc_ex"></span><code>PROCEDURE <b>al_calculate_arc_ex</b> (dest: <a  href="al5Base.html#AL_VOIDptr">AL_VOIDptr</a>; stride: <a  href="al5Base.html#AL_INT">AL_INT</a>; cx, cy, rx, ry, start_theta, delta_theta, thickness: <a  href="al5Base.html#AL_FLOAT">AL_FLOAT</a>; num_segments: <a  href="al5Base.html#AL_INT">AL_INT</a>); CDECL; EXTERNAL ALLEGRO_PRIMITIVES_LIB_NAME NAME 'al_calculate_arc';</code></td>
+</tr>
+<tr><td colspan="1">
+<p>
+Same than <a class="normal" href="al5primitives.html#al_calculate_arc">al_calculate_arc</a> but using a pointer instead of an array.
+
+<p>Example with <code>thickness &lt;= 0</code>: </p>
+
+<pre class="longcode">
+<span class="pascal_keyword">CONST</span>
+  NumPoints = <span class="pascal_numeric">4</span>;
+<span class="pascal_keyword">VAR</span>
+  Points: <span class="pascal_keyword">ARRAY</span> [<span class="pascal_numeric">0</span>..NumPoints-<span class="pascal_numeric">1</span>, <span class="pascal_numeric">0</span>..1] <span class="pascal_keyword">OF</span> AL_FLOAT;
+<span class="pascal_keyword">BEGIN</span>
+  al_calculate_arc_ex (
+    @points[<span class="pascal_numeric">0</span>, <span class="pascal_numeric">0</span>],
+    <span class="pascal_numeric">2</span> * sizeof (AL_FLOAT),
+    <span class="pascal_numeric">0</span>, <span class="pascal_numeric">0</span>,			<span class="pascal_comment">{ Center }</span>
+    <span class="pascal_numeric">10</span>, <span class="pascal_numeric">10</span>,			<span class="pascal_comment">{ Radii  }</span>
+    <span class="pascal_numeric">0</span>, ALLEGRO_PI / <span class="pascal_numeric">2</span>,		<span class="pascal_comment">{ Angles }</span>
+    <span class="pascal_numeric">0</span>,
+    NumPoints
+  );
+<span class="pascal_keyword">END</span>;</pre>
+
+<p> Example with <code>thickness &gt; 0</code>: </p>
+
+<pre class="longcode">
+<span class="pascal_keyword">CONST</span>
+  NumPoints = <span class="pascal_numeric">4</span>;
+<span class="pascal_keyword">VAR</span>
+  Points: <span class="pascal_keyword">ARRAY</span> [<span class="pascal_numeric">0</span>..(NumPoints * <span class="pascal_numeric">2</span>)-<span class="pascal_numeric">1</span>, <span class="pascal_numeric">0</span>..1] <span class="pascal_keyword">OF</span> AL_FLOAT;
+<span class="pascal_keyword">BEGIN</span>
+  al_calculate_arc_ex (
+    @points[<span class="pascal_numeric">0</span>, <span class="pascal_numeric">0</span>],
+    <span class="pascal_numeric">2</span> * sizeof (AL_FLOAT),
+    <span class="pascal_numeric">0</span>, <span class="pascal_numeric">0</span>,			<span class="pascal_comment">{ Center }</span>
+    <span class="pascal_numeric">10</span>, <span class="pascal_numeric">10</span>,			<span class="pascal_comment">{ Radii  }</span>
+    <span class="pascal_numeric">0</span>, ALLEGRO_PI / <span class="pascal_numeric">2</span>,		<span class="pascal_comment">{ Angles }</span>
+    <span class="pascal_numeric">2</span>,
+    NumPoints
+  );
+<span class="pascal_keyword">END</span>;</pre>
+
+<p>              </p>
+<h6 class="description_section">Parameters</h6>
+<dl class="parameters">
+<dt>dest</dt>
+<dd>The destination buffer.</dd>
+<dt>stride</dt>
+<dd>Distance (in bytes) between starts of successive pairs of points.</dd>
+<dt>cx</dt>
+<dd>X coordinate of the center of the arc.</dd>
+<dt>cy</dt>
+<dd>Y coordinate of the center of the arc.</dd>
+<dt>rx</dt>
+<dd>Horizontal radius of the arc.</dd>
+<dt>ry</dt>
+<dd>Vertical radius of the arc.</dd>
+<dt>start_theta</dt>
+<dd>The initial angle from which the arc is calculated in radians.</dd>
+<dt>delta_theta</dt>
+<dd>Angular span of the arc in radians (pass a negative number to switch direction).</dd>
+<dt>thickness</dt>
+<dd>Thickness of the arc.</dd>
+<dt>num_points</dt>
+<dd>The number of points to calculate.</dd>
+</dl>
+<h6 class="description_section">See also</h6>
+<dl class="see_also">
+  <dt><a class="normal" href="al5primitives.html#al_calculate_arc">al_calculate_arc</a></dt>
+  <dd>When <code>thickness &lt;= 0</code> this function computes positions of num_points regularly spaced points on an elliptical arc.</dd>
+  <dt><a class="normal" href="al5primitives.html#al_draw_arc">al_draw_arc</a></dt>
+  <dd>Draws an arc.</dd>
+  <dt><a class="normal" href="al5primitives.html#al_calculate_spline">al_calculate_spline</a></dt>
+  <dd>Calculates a Bézier spline given 4 control points.</dd>
+  <dt><a class="normal" href="al5primitives.html#al_calculate_ribbon">al_calculate_ribbon</a></dt>
+  <dd>Calculates a ribbon given an array of points.</dd>
+</dl>
+</td></tr>
+</table>
+<table class="detail wide_list">
+<tr class="list">
+<td class="itemcode"><span id="al_draw_circle"></span><code>PROCEDURE <b>al_draw_circle</b> (cx, cy, r: <a  href="al5Base.html#AL_FLOAT">AL_FLOAT</a>; color: <a  href="Allegro5.ALLEGRO_COLOR.html">ALLEGRO_COLOR</a>; thickness: <a  href="al5Base.html#AL_FLOAT">AL_FLOAT</a>); CDECL; EXTERNAL ALLEGRO_PRIMITIVES_LIB_NAME;</code></td>
+</tr>
+<tr><td colspan="1">
+<p>
+Draws an outlined circle.       </p>
+<h6 class="description_section">Parameters</h6>
+<dl class="parameters">
+<dt>cx</dt>
+<dd>X coordinate of the center of the circle.</dd>
+<dt>cy</dt>
+<dd>Y coordinate of the center of the circle.</dd>
+<dt>r</dt>
+<dd>Radius of the circle.</dd>
+<dt>color</dt>
+<dd>Color of the circle.</dd>
+<dt>thickness</dt>
+<dd>Thickness of the circle, pass &lt;= 0 to draw a hairline circle.</dd>
+</dl>
+<h6 class="description_section">See also</h6>
+<dl class="see_also">
+  <dt><a class="normal" href="al5primitives.html#al_draw_filled_circle">al_draw_filled_circle</a></dt>
+  <dd>Draws a filled circle.</dd>
+  <dt><a class="normal" href="al5primitives.html#al_draw_ellipse">al_draw_ellipse</a></dt>
+  <dd>Draws an outlined ellipse.</dd>
+</dl>
+</td></tr>
+</table>
+<table class="detail wide_list">
+<tr class="list">
+<td class="itemcode"><span id="al_draw_ellipse"></span><code>PROCEDURE <b>al_draw_ellipse</b> (cx, cy, rx, ry: <a  href="al5Base.html#AL_FLOAT">AL_FLOAT</a>; color: <a  href="Allegro5.ALLEGRO_COLOR.html">ALLEGRO_COLOR</a>; thickness: <a  href="al5Base.html#AL_FLOAT">AL_FLOAT</a>); CDECL; EXTERNAL ALLEGRO_PRIMITIVES_LIB_NAME;</code></td>
+</tr>
+<tr><td colspan="1">
+<p>
+Draws an outlined ellipse.        </p>
+<h6 class="description_section">Parameters</h6>
+<dl class="parameters">
+<dt>cx</dt>
+<dd>X coordinate of the center of the ellipse.</dd>
+<dt>cy</dt>
+<dd>Y coordinate of the center of the ellipse.</dd>
+<dt>rx</dt>
+<dd>Horizontal radius of the ellipse.</dd>
+<dt>ry</dt>
+<dd>Vertical radius of the ellipse.</dd>
+<dt>color</dt>
+<dd>Color of the ellipse.</dd>
+<dt>thickness</dt>
+<dd>Thickness of the ellipse, pass &lt;= 0 to draw a hairline circle.</dd>
+</dl>
+<h6 class="description_section">See also</h6>
+<dl class="see_also">
+  <dt><a class="normal" href="al5primitives.html#al_draw_filled_ellipse">al_draw_filled_ellipse</a></dt>
+  <dd>Draws a filled ellipse.</dd>
+  <dt><a class="normal" href="al5primitives.html#al_draw_circle">al_draw_circle</a></dt>
+  <dd>Draws an outlined circle.</dd>
+</dl>
+</td></tr>
+</table>
+<table class="detail wide_list">
+<tr class="list">
+<td class="itemcode"><span id="al_draw_arc"></span><code>PROCEDURE <b>al_draw_arc</b> (cx, cy, r, start_theta, delta_theta: <a  href="al5Base.html#AL_FLOAT">AL_FLOAT</a>; color: <a  href="Allegro5.ALLEGRO_COLOR.html">ALLEGRO_COLOR</a>; thickness: <a  href="al5Base.html#AL_FLOAT">AL_FLOAT</a>); CDECL; EXTERNAL ALLEGRO_PRIMITIVES_LIB_NAME;</code></td>
+</tr>
+<tr><td colspan="1">
+<p>
+Draws an arc.         </p>
+<h6 class="description_section">Parameters</h6>
+<dl class="parameters">
+<dt>cx</dt>
+<dd>X coordinate of the center of the arc.</dd>
+<dt>cy</dt>
+<dd>Y coordinate of the center of the arc.</dd>
+<dt>r</dt>
+<dd>Radius of the arc.</dd>
+<dt>start_theta</dt>
+<dd>The initial angle from which the arc is calculated in radians.</dd>
+<dt>delta_theta</dt>
+<dd>Angular span of the arc in radians (pass a negative number to switch direction).</dd>
+<dt>color</dt>
+<dd>Color of the arc.</dd>
+<dt>thickness</dt>
+<dd>Thickness of the circle, pass &lt;= 0 to draw a hairline circle.</dd>
+</dl>
+<h6 class="description_section">See also</h6>
+<dl class="see_also">
+  <dt><a class="normal" href="al5primitives.html#al_calculate_arc">al_calculate_arc</a></dt>
+  <dd>When <code>thickness &lt;= 0</code> this function computes positions of num_points regularly spaced points on an elliptical arc.</dd>
+  <dt><a class="normal" href="al5primitives.html#al_draw_elliptical_arc">al_draw_elliptical_arc</a></dt>
+  <dd>Draws an elliptical arc.</dd>
+</dl>
+</td></tr>
+</table>
+<table class="detail wide_list">
+<tr class="list">
+<td class="itemcode"><span id="al_draw_elliptical_arc"></span><code>PROCEDURE <b>al_draw_elliptical_arc</b> (cx, cy, rx, ry, start_theta, delta_theta: <a  href="al5Base.html#AL_FLOAT">AL_FLOAT</a>; color: <a  href="Allegro5.ALLEGRO_COLOR.html">ALLEGRO_COLOR</a>; thickness: <a  href="al5Base.html#AL_FLOAT">AL_FLOAT</a>); CDECL; EXTERNAL ALLEGRO_PRIMITIVES_LIB_NAME;</code></td>
+</tr>
+<tr><td colspan="1">
+<p>
+Draws an elliptical arc.          </p>
+<h6 class="description_section">Parameters</h6>
+<dl class="parameters">
+<dt>cx</dt>
+<dd>X coordinate of the center of the arc.</dd>
+<dt>cy</dt>
+<dd>Y coordinate of the center of the arc.</dd>
+<dt>rx</dt>
+<dd>Horizontal radius of the arc.</dd>
+<dt>ry</dt>
+<dd>Vertical radius of the arc.</dd>
+<dt>start_theta</dt>
+<dd>The initial angle from which the arc is calculated in radians.</dd>
+<dt>delta_theta</dt>
+<dd>Angular span of the arc in radians (pass a negative number to switch direction).</dd>
+<dt>color</dt>
+<dd>Color of the arc.</dd>
+<dt>thickness</dt>
+<dd>Thickness of the arc, pass &lt;= 0 to draw a hairline circle.</dd>
+</dl>
+<h6 class="description_section">See also</h6>
+<dl class="see_also">
+  <dt><a class="normal" href="al5primitives.html#al_calculate_arc">al_calculate_arc</a></dt>
+  <dd>When <code>thickness &lt;= 0</code> this function computes positions of num_points regularly spaced points on an elliptical arc.</dd>
+  <dt><a class="normal" href="al5primitives.html#al_draw_arc">al_draw_arc</a></dt>
+  <dd>Draws an arc.</dd>
+</dl>
+</td></tr>
+</table>
+<table class="detail wide_list">
+<tr class="list">
+<td class="itemcode"><span id="al_draw_pieslice"></span><code>PROCEDURE <b>al_draw_pieslice</b> (cx, cy, r, start_theta, fdelta_theta: <a  href="al5Base.html#AL_FLOAT">AL_FLOAT</a>; color: <a  href="Allegro5.ALLEGRO_COLOR.html">ALLEGRO_COLOR</a>; thickness: <a  href="al5Base.html#AL_FLOAT">AL_FLOAT</a>); CDECL; EXTERNAL ALLEGRO_PRIMITIVES_LIB_NAME;</code></td>
+</tr>
+<tr><td colspan="1">
+<p>
+Draws a pieslice (outlined circular sector).        </p>
+<h6 class="description_section">Parameters</h6>
+<dl class="parameters">
+<dt>cx</dt>
+<dd>X coordinate of the center of the pieslice.</dd>
+<dt>cy</dt>
+<dd>Y coordinate of the center of the pieslice.</dd>
+<dt>r</dt>
+<dd>Radius of the pieslice.</dd>
+<dt>start_theta</dt>
+<dd>The initial angle from which the arc is calculated in radians.</dd>
+<dt>delta_theta</dt>
+<dd>Angular span of the arc in radians (pass a negative number to switch direction).</dd>
+<dt>color</dt>
+<dd>Color of the pieslice.</dd>
+<dt>thickness</dt>
+<dd>Thickness of the pieslice, pass &lt;= 0 to draw a hairline circle.</dd>
+</dl>
+<h6 class="description_section">See also</h6>
+<dl class="see_also">
+  <dt><a class="normal" href="al5primitives.html#al_draw_filled_pieslice">al_draw_filled_pieslice</a></dt>
+  <dd>Draws a filled pieslice (filled circular sector).</dd>
+</dl>
+</td></tr>
+</table>
+<table class="detail wide_list">
+<tr class="list">
+<td class="itemcode"><span id="al_calculate_spline"></span><code>PROCEDURE <b>al_calculate_spline</b> (dest: <a  href="al5Base.html#AL_FLOATptr">AL_FLOATptr</a>; stride: <a  href="al5Base.html#AL_INT">AL_INT</a>; VAR points: <a  href="al5primitives.html#ALLEGRO_SPLINE_CONTROL_POINTS">ALLEGRO_SPLINE_CONTROL_POINTS</a>; thickness: <a  href="al5Base.html#AL_FLOAT">AL_FLOAT</a>; num_segments: <a  href="al5Base.html#AL_INT">AL_INT</a>); CDECL; EXTERNAL ALLEGRO_PRIMITIVES_LIB_NAME;</code></td>
+</tr>
+<tr><td colspan="1">
+<p>
+Calculates a Bézier spline given 4 control points. If <code>thickness &lt;= 0</code>, then num_segments of points are required in the destination, otherwise twice as many are needed. The destination buffer should consist of regularly spaced (by distance of <code>stride</code> bytes) doublets of floats, corresponding to x and y coordinates of the vertices.         </p>
+<h6 class="description_section">Parameters</h6>
+<dl class="parameters">
+<dt>dest</dt>
+<dd>The destination buffer.</dd>
+<dt>stride</dt>
+<dd>Distance (in bytes) between starts of successive pairs of coordinates.</dd>
+<dt>points</dt>
+<dd>An array of 4 pairs of coordinates of the 4 control points.</dd>
+<dt>thickness</dt>
+<dd>Thickness of the spline ribbon.</dd>
+<dt>num_segments</dt>
+<dd>The number of points to calculate.</dd>
+</dl>
+<h6 class="description_section">See also</h6>
+<dl class="see_also">
+  <dt><a class="normal" href="al5primitives.html#al_draw_spline">al_draw_spline</a></dt>
+  <dd>Draws a Bézier spline given 4 control points.</dd>
+  <dt><a class="normal" href="al5primitives.html#al_calculate_arc">al_calculate_arc</a></dt>
+  <dd>When <code>thickness &lt;= 0</code> this function computes positions of num_points regularly spaced points on an elliptical arc.</dd>
+  <dt><a class="normal" href="al5primitives.html#al_calculate_ribbon">al_calculate_ribbon</a></dt>
+  <dd>Calculates a ribbon given an array of points.</dd>
+  <dt><a class="normal" href="al5primitives.html#al_draw_spline">al_draw_spline</a></dt>
+  <dd>Draws a Bézier spline given 4 control points.</dd>
+</dl>
+</td></tr>
+</table>
+<table class="detail wide_list">
+<tr class="list">
+<td class="itemcode"><span id="al_draw_spline"></span><code>PROCEDURE <b>al_draw_spline</b> (VAR points: <a  href="al5primitives.html#ALLEGRO_SPLINE_CONTROL_POINTS">ALLEGRO_SPLINE_CONTROL_POINTS</a>; color: <a  href="Allegro5.ALLEGRO_COLOR.html">ALLEGRO_COLOR</a>; thickness: <a  href="al5Base.html#AL_FLOAT">AL_FLOAT</a>); CDECL; EXTERNAL ALLEGRO_PRIMITIVES_LIB_NAME;</code></td>
+</tr>
+<tr><td colspan="1">
+<p>
+Draws a Bézier spline given 4 control points.    </p>
+<h6 class="description_section">Parameters</h6>
+<dl class="parameters">
+<dt>points</dt>
+<dd>An array of 4 pairs of coordinates of the 4 control points.</dd>
+<dt>color</dt>
+<dd>Color of the spline.</dd>
+<dt>thickness</dt>
+<dd>Thickness of the spline, pass &lt;= 0 to draw a hairline spline.</dd>
+</dl>
+<h6 class="description_section">See also</h6>
+<dl class="see_also">
+  <dt><a class="normal" href="al5primitives.html#al_calculate_spline">al_calculate_spline</a></dt>
+  <dd>Calculates a Bézier spline given 4 control points.</dd>
+</dl>
+</td></tr>
+</table>
+<table class="detail wide_list">
+<tr class="list">
+<td class="itemcode"><span id="al_calculate_ribbon"></span><code>PROCEDURE <b>al_calculate_ribbon</b> (dest: <a  href="al5Base.html#AL_FLOATptr">AL_FLOATptr</a>; dest_stride: <a  href="al5Base.html#AL_INT">AL_INT</a>; VAR points: ARRAY OF <a  href="al5Base.html#AL_FLOAT">AL_FLOAT</a>; points_stride: <a  href="al5Base.html#AL_INT">AL_INT</a>; thickness: <a  href="al5Base.html#AL_FLOAT">AL_FLOAT</a>; num_segments: <a  href="al5Base.html#AL_INT">AL_INT</a>); CDECL; EXTERNAL ALLEGRO_PRIMITIVES_LIB_NAME;</code></td>
+</tr>
+<tr><td colspan="1">
+<p>
+Calculates a ribbon given an array of points. The ribbon will go through all of the passed points. If <code>thickness &lt;= 0</code>, then <code>num_segments</code> of points are required in the destination buffer, otherwise twice as many are needed. The destination and the points buffer should consist of regularly spaced doublets of floats, corresponding to x and y coordinates of the vertices.          </p>
+<h6 class="description_section">Parameters</h6>
+<dl class="parameters">
+<dt>dest</dt>
+<dd>Pointer to the destination buffer.</dd>
+<dt>dest_stride</dt>
+<dd>Distance (in bytes) between starts of successive pairs of coordinates in the destination buffer.</dd>
+<dt>points</dt>
+<dd>An array of pairs of coordinates for each point.</dd>
+<dt>points_stride</dt>
+<dd>Distance (in bytes) between starts of successive pairs of coordinates in the points buffer.</dd>
+<dt>thickness</dt>
+<dd>Thickness of the spline ribbon.</dd>
+<dt>num_segments</dt>
+<dd>The number of points to calculate.</dd>
+</dl>
+<h6 class="description_section">See also</h6>
+<dl class="see_also">
+  <dt><a class="normal" href="al5primitives.html#al_draw_ribbon">al_draw_ribbon</a></dt>
+  <dd>Draws a ribbon given an array of points.</dd>
+  <dt><a class="normal" href="al5primitives.html#al_calculate_arc">al_calculate_arc</a></dt>
+  <dd>When <code>thickness &lt;= 0</code> this function computes positions of num_points regularly spaced points on an elliptical arc.</dd>
+  <dt><a class="normal" href="al5primitives.html#al_calculate_spline">al_calculate_spline</a></dt>
+  <dd>Calculates a Bézier spline given 4 control points.</dd>
+  <dt><a class="normal" href="al5primitives.html#al_draw_ribbon">al_draw_ribbon</a></dt>
+  <dd>Draws a ribbon given an array of points.</dd>
+</dl>
+</td></tr>
+</table>
+<table class="detail wide_list">
+<tr class="list">
+<td class="itemcode"><span id="al_draw_ribbon"></span><code>PROCEDURE <b>al_draw_ribbon</b> (CONST points: <a  href="al5Base.html#AL_FLOATptr">AL_FLOATptr</a>; points_stride: <a  href="al5Base.html#AL_INT">AL_INT</a>; color: <a  href="Allegro5.ALLEGRO_COLOR.html">ALLEGRO_COLOR</a>; thickness: <a  href="al5Base.html#AL_FLOAT">AL_FLOAT</a>; num_segments: <a  href="al5Base.html#AL_INT">AL_INT</a>); CDECL; EXTERNAL ALLEGRO_PRIMITIVES_LIB_NAME;</code></td>
+</tr>
+<tr><td colspan="1">
+<p>
+Draws a ribbon given an array of points. The ribbon will go through all of the passed points. The points buffer should consist of regularly spaced doublets of floats, corresponding to x and y coordinates of the vertices.      </p>
+<h6 class="description_section">Parameters</h6>
+<dl class="parameters">
+<dt>points</dt>
+<dd>An array of coordinate pairs (x and y) for each point.</dd>
+<dt>points_stride</dt>
+<dd>Distance (in bytes) between starts of successive pairs of coordinates in the points buffer.</dd>
+<dt>color</dt>
+<dd>Color of the spline.</dd>
+<dt>thickness</dt>
+<dd>Thickness of the spline, pass &lt;= 0 to draw hairline spline.</dd>
+<dt>num_segments</dt>
+<dd>The number of segments.</dd>
+</dl>
+<h6 class="description_section">See also</h6>
+<dl class="see_also">
+  <dt><a class="normal" href="al5primitives.html#al_calculate_ribbon">al_calculate_ribbon</a></dt>
+  <dd>Calculates a ribbon given an array of points.</dd>
+</dl>
+</td></tr>
+</table>
+<table class="detail wide_list">
+<tr class="list">
+<td class="itemcode"><span id="al_draw_filled_triangle"></span><code>PROCEDURE <b>al_draw_filled_triangle</b> (x1, y1, x2, y2, x3, y3: <a  href="al5Base.html#AL_FLOAT">AL_FLOAT</a>; color: <a  href="Allegro5.ALLEGRO_COLOR.html">ALLEGRO_COLOR</a>); CDECL; EXTERNAL ALLEGRO_PRIMITIVES_LIB_NAME;</code></td>
+</tr>
+<tr><td colspan="1">
+<p>
+Draws a filled triangle.        </p>
+<h6 class="description_section">Parameters</h6>
+<dl class="parameters">
+<dt>x1</dt>
+<dd>X coordinate of the first vertex.</dd>
+<dt>y1</dt>
+<dd>Y coordinate of the first vertex.</dd>
+<dt>x2</dt>
+<dd>X coordinate of the second vertex.</dd>
+<dt>y2</dt>
+<dd>Y coordinate of the second vertex.</dd>
+<dt>x3</dt>
+<dd>X coordinate of the third vertex.</dd>
+<dt>y3</dt>
+<dd>Y coordinate of the third vertex.</dd>
+<dt>color</dt>
+<dd>Color of the triangle.</dd>
+</dl>
+<h6 class="description_section">See also</h6>
+<dl class="see_also">
+  <dt><a class="normal" href="al5primitives.html#al_draw_triangle">al_draw_triangle</a></dt>
+  <dd>         </dd>
+</dl>
+</td></tr>
+</table>
+<table class="detail wide_list">
+<tr class="list">
+<td class="itemcode"><span id="al_draw_filled_rectangle"></span><code>PROCEDURE <b>al_draw_filled_rectangle</b> (x1, y1, x2, y2: <a  href="al5Base.html#AL_FLOAT">AL_FLOAT</a>; color: <a  href="Allegro5.ALLEGRO_COLOR.html">ALLEGRO_COLOR</a>); CDECL; EXTERNAL ALLEGRO_PRIMITIVES_LIB_NAME;</code></td>
+</tr>
+<tr><td colspan="1">
+<p>
+Draws a filled rectangle.       </p>
+<h6 class="description_section">Parameters</h6>
+<dl class="parameters">
+<dt>x1</dt>
+<dd>Left side of the rectangle.</dd>
+<dt>y1</dt>
+<dd>Top side of the rectangle.</dd>
+<dt>x2</dt>
+<dd>Right side of the rectangle.</dd>
+<dt>y2</dt>
+<dd>Bottom side of the rectangle.</dd>
+<dt>color</dt>
+<dd>Color of the rectangle.</dd>
+</dl>
+<h6 class="description_section">See also</h6>
+<dl class="see_also">
+  <dt><a class="normal" href="al5primitives.html#al_draw_rectangle">al_draw_rectangle</a></dt>
+  <dd>Draws an outlined rectangle.</dd>
+  <dt><a class="normal" href="al5primitives.html#al_draw_filled_rounded_rectangle">al_draw_filled_rounded_rectangle</a></dt>
+  <dd>Draws a filled rounded rectangle.</dd>
+</dl>
+</td></tr>
+</table>
+<table class="detail wide_list">
+<tr class="list">
+<td class="itemcode"><span id="al_draw_filled_ellipse"></span><code>PROCEDURE <b>al_draw_filled_ellipse</b> (cx, cy, rx, ry: <a  href="al5Base.html#AL_FLOAT">AL_FLOAT</a>; color: <a  href="Allegro5.ALLEGRO_COLOR.html">ALLEGRO_COLOR</a>); CDECL; EXTERNAL ALLEGRO_PRIMITIVES_LIB_NAME;</code></td>
+</tr>
+<tr><td colspan="1">
+<p>
+Draws a filled ellipse.       </p>
+<h6 class="description_section">Parameters</h6>
+<dl class="parameters">
+<dt>cx</dt>
+<dd>X coordinate of the center of the ellipse.</dd>
+<dt>cy</dt>
+<dd>Y coordinate of the center of the ellipse.</dd>
+<dt>rx</dt>
+<dd>Horizontal radius of the ellipse.</dd>
+<dt>ry</dt>
+<dd>Vertical radius of the ellipse.</dd>
+<dt>color</dt>
+<dd>Color of the ellipse.</dd>
+</dl>
+<h6 class="description_section">See also</h6>
+<dl class="see_also">
+  <dt><a class="normal" href="al5primitives.html#al_draw_ellipse">al_draw_ellipse</a></dt>
+  <dd>Draws an outlined ellipse.</dd>
+  <dt><a class="normal" href="al5primitives.html#al_draw_filled_circle">al_draw_filled_circle</a></dt>
+  <dd>Draws a filled circle.</dd>
+</dl>
+</td></tr>
+</table>
+<table class="detail wide_list">
+<tr class="list">
+<td class="itemcode"><span id="al_draw_filled_circle"></span><code>PROCEDURE <b>al_draw_filled_circle</b> (cx, cy, r: <a  href="al5Base.html#AL_FLOAT">AL_FLOAT</a>; color: <a  href="Allegro5.ALLEGRO_COLOR.html">ALLEGRO_COLOR</a>); CDECL; EXTERNAL ALLEGRO_PRIMITIVES_LIB_NAME;</code></td>
+</tr>
+<tr><td colspan="1">
+<p>
+Draws a filled circle.      </p>
+<h6 class="description_section">Parameters</h6>
+<dl class="parameters">
+<dt>cx</dt>
+<dd>X coordinate of the center of the circle.</dd>
+<dt>cy</dt>
+<dd>Y coordinate of the center of the circle.</dd>
+<dt>r</dt>
+<dd>Radius of the circle.</dd>
+<dt>color</dt>
+<dd>Color of the circle.</dd>
+</dl>
+<h6 class="description_section">See also</h6>
+<dl class="see_also">
+  <dt><a class="normal" href="al5primitives.html#al_draw_circle">al_draw_circle</a></dt>
+  <dd>Draws an outlined circle.</dd>
+  <dt><a class="normal" href="al5primitives.html#al_draw_filled_ellipse">al_draw_filled_ellipse</a></dt>
+  <dd>Draws a filled ellipse.</dd>
+</dl>
+</td></tr>
+</table>
+<table class="detail wide_list">
+<tr class="list">
+<td class="itemcode"><span id="al_draw_filled_pieslice"></span><code>PROCEDURE <b>al_draw_filled_pieslice</b> (cx, cy, r, start_theta, fdelta_theta: <a  href="al5Base.html#AL_FLOAT">AL_FLOAT</a>; color: <a  href="Allegro5.ALLEGRO_COLOR.html">ALLEGRO_COLOR</a>); CDECL; EXTERNAL ALLEGRO_PRIMITIVES_LIB_NAME;</code></td>
+</tr>
+<tr><td colspan="1">
+<p>
+Draws a filled pieslice (filled circular sector).       </p>
+<h6 class="description_section">Parameters</h6>
+<dl class="parameters">
+<dt>cx</dt>
+<dd>X coordinate of the center of the pieslice.</dd>
+<dt>cy</dt>
+<dd>Y coordinate of the center of the pieslice.</dd>
+<dt>r</dt>
+<dd>Radius of the pieslice.</dd>
+<dt>start_theta</dt>
+<dd>The initial angle from which the arc is calculated in radians.</dd>
+<dt>delta_theta</dt>
+<dd>Angular span of the arc in radians (pass a negative number to switch direction).</dd>
+<dt>color</dt>
+<dd>Color of the pieslice.</dd>
+</dl>
+<h6 class="description_section">See also</h6>
+<dl class="see_also">
+  <dt><a class="normal" href="al5primitives.html#al_draw_pieslice">al_draw_pieslice</a></dt>
+  <dd>Draws a pieslice (outlined circular sector).</dd>
+</dl>
+</td></tr>
+</table>
+<table class="detail wide_list">
+<tr class="list">
+<td class="itemcode"><span id="al_draw_filled_rounded_rectangle"></span><code>PROCEDURE <b>al_draw_filled_rounded_rectangle</b> (x1, y1, x2, y2, rx, ry: <a  href="al5Base.html#AL_FLOAT">AL_FLOAT</a>; color: <a  href="Allegro5.ALLEGRO_COLOR.html">ALLEGRO_COLOR</a>); CDECL; EXTERNAL ALLEGRO_PRIMITIVES_LIB_NAME;</code></td>
+</tr>
+<tr><td colspan="1">
+<p>
+Draws a filled rounded rectangle.         </p>
+<h6 class="description_section">Parameters</h6>
+<dl class="parameters">
+<dt>x1</dt>
+<dd>Left side of the rectangle.</dd>
+<dt>y1</dt>
+<dd>Top side of the rectangle.</dd>
+<dt>x2</dt>
+<dd>Right side of the rectangle.</dd>
+<dt>y2</dt>
+<dd>Bottom side of the rectangle.</dd>
+<dt>rx</dt>
+<dd>Horizontal radius of the round.</dd>
+<dt>ry</dt>
+<dd>Vertical radius of the round.</dd>
+<dt>color</dt>
+<dd>Color of the rectangle.</dd>
+</dl>
+<h6 class="description_section">See also</h6>
+<dl class="see_also">
+  <dt><a class="normal" href="al5primitives.html#al_draw_rounded_rectangle">al_draw_rounded_rectangle</a></dt>
+  <dd>Draws an outlined rounded rectangle.</dd>
+  <dt><a class="normal" href="al5primitives.html#al_draw_filled_rectangle">al_draw_filled_rectangle</a></dt>
+  <dd>Draws a filled rectangle.</dd>
+</dl>
+</td></tr>
+</table>
+<table class="detail wide_list">
+<tr class="list">
+<td class="itemcode"><span id="al_draw_polyline"></span><code>PROCEDURE <b>al_draw_polyline</b> (VAR vertices: ARRAY OF <a  href="al5Base.html#AL_FLOAT">AL_FLOAT</a>; join_style: <a  href="al5primitives.html#ALLEGRO_LINE_JOIN">ALLEGRO_LINE_JOIN</a>; cap_style: <a  href="al5primitives.html#ALLEGRO_LINE_CAP">ALLEGRO_LINE_CAP</a>; color: <a  href="Allegro5.ALLEGRO_COLOR.html">ALLEGRO_COLOR</a>; thickness, miter_limit: <a  href="al5Base.html#AL_FLOAT">AL_FLOAT</a>);</code></td>
+</tr>
+<tr><td colspan="1">
+<p>
+Draws a series of line segments.         </p>
+<h6 class="description_section">Parameters</h6>
+<dl class="parameters">
+<dt>vertices</dt>
+<dd>Interleaved array of (x, y) vertex coordinates.</dd>
+<dt>join_style</dt>
+<dd>Member of <a class="normal" href="al5primitives.html#ALLEGRO_LINE_JOIN">ALLEGRO_LINE_JOIN</a> specifying how to render the joins between line segments.</dd>
+<dt>cap_style</dt>
+<dd>Member of <a class="normal" href="al5primitives.html#ALLEGRO_LINE_CAP">ALLEGRO_LINE_CAP</a> specifying how to render the end caps.</dd>
+<dt>color</dt>
+<dd>Color of the line.</dd>
+<dt>thickness</dt>
+<dd>Thickness of the line, pass &lt;= 0 to draw hairline lines.</dd>
+<dt>miter_limit</dt>
+<dd>Parameter for miter join style.</dd>
+</dl>
+<h6 class="description_section">See also</h6>
+<dl class="see_also">
+  <dt><a class="normal" href="al5primitives.html#al_draw_polygon">al_draw_polygon</a></dt>
+  <dd>Draws an unfilled polygon.</dd>
+  <dt><a class="normal" href="al5primitives.html#ALLEGRO_LINE_JOIN">ALLEGRO_LINE_JOIN</a></dt>
+  <dd>See the picture for the difference.</dd>
+  <dt><a class="normal" href="al5primitives.html#ALLEGRO_LINE_CAP">ALLEGRO_LINE_CAP</a></dt>
+  <dd>See the picture for the difference.</dd>
+</dl>
+</td></tr>
+</table>
+<table class="detail wide_list">
+<tr class="list">
+<td class="itemcode"><span id="al_draw_polyline_ex"></span><code>PROCEDURE <b>al_draw_polyline_ex</b> (CONST vertices: <a  href="al5Base.html#AL_VOIDptr">AL_VOIDptr</a>; vertex_stride, vertex_count: <a  href="al5Base.html#AL_INT">AL_INT</a>; join_style: <a  href="al5primitives.html#ALLEGRO_LINE_JOIN">ALLEGRO_LINE_JOIN</a>; cap_style: <a  href="al5primitives.html#ALLEGRO_LINE_CAP">ALLEGRO_LINE_CAP</a>; color: <a  href="Allegro5.ALLEGRO_COLOR.html">ALLEGRO_COLOR</a>; thickness, miter_limit: <a  href="al5Base.html#AL_FLOAT">AL_FLOAT</a>); CDECL; EXTERNAL ALLEGRO_PRIMITIVES_LIB_NAME NAME 'al_draw_polyline';</code></td>
+</tr>
+<tr><td colspan="1">
+<p>
+An extended version of <a class="normal" href="al5primitives.html#al_draw_polyline">al_draw_polyline</a>.
+
+<p>The stride is normally <code>2 * sizeof (float)</code> but may be more if the vertex coordinates are in an array of some structure type, e.g. </p>
+
+<pre class="longcode">
+<span class="pascal_keyword">TYPE</span>
+  VertexInfo = <span class="pascal_keyword">RECORD</span>
+    x, y: AL_FLOAT;
+    id: INTEGER;
+  <span class="pascal_keyword">END</span>;
+
+<span class="pascal_keyword">PROCEDURE</span> MyDraw (Verts: <span class="pascal_keyword">ARRAY</span> <span class="pascal_keyword">OF</span> VertexInfo; Clr: ALLEGRO_COLOR);
+<span class="pascal_keyword">BEGIN</span>
+  al_draw_polyline_ex (
+    POINTER (@Verts[<span class="pascal_numeric">0</span>]),
+    SIZEOF (VertexInfo),
+    Length (Verts),
+    ALLEGRO_LINE_JOIN_NONE,
+    ALLEGRO_LINE_CAP_NONE,
+    Clr,
+    <span class="pascal_numeric">1</span>, <span class="pascal_numeric">1</span>
+  )
+<span class="pascal_keyword">END</span>;</pre>
+
+<p> The stride may also be negative if the vertices are stored in reverse order.           </p>
+<h6 class="description_section">Parameters</h6>
+<dl class="parameters">
+<dt>vertices</dt>
+<dd>Interleaved array of (x, y) vertex coordinates.</dd>
+<dt>vertex_stride</dt>
+<dd>the number of bytes between pairs of vertices (the stride).</dd>
+<dt>vertex_count</dt>
+<dd>Number of vertices in the array.</dd>
+<dt>join_style</dt>
+<dd>Member of <a class="normal" href="al5primitives.html#ALLEGRO_LINE_JOIN">ALLEGRO_LINE_JOIN</a> specifying how to render the joins between line segments.</dd>
+<dt>cap_style</dt>
+<dd>Member of <a class="normal" href="al5primitives.html#ALLEGRO_LINE_CAP">ALLEGRO_LINE_CAP</a> specifying how to render the end caps.</dd>
+<dt>color</dt>
+<dd>Color of the line.</dd>
+<dt>thickness</dt>
+<dd>Thickness of the line, pass &lt;= 0 to draw hairline lines.</dd>
+<dt>miter_limit</dt>
+<dd>Parameter for miter join style.</dd>
+</dl>
+<h6 class="description_section">See also</h6>
+<dl class="see_also">
+  <dt><a class="normal" href="al5primitives.html#al_draw_polygon">al_draw_polygon</a></dt>
+  <dd>Draws an unfilled polygon.</dd>
+  <dt><a class="normal" href="al5primitives.html#ALLEGRO_LINE_JOIN">ALLEGRO_LINE_JOIN</a></dt>
+  <dd>See the picture for the difference.</dd>
+  <dt><a class="normal" href="al5primitives.html#ALLEGRO_LINE_CAP">ALLEGRO_LINE_CAP</a></dt>
+  <dd>See the picture for the difference.</dd>
+</dl>
+</td></tr>
+</table>
+<table class="detail wide_list">
+<tr class="list">
+<td class="itemcode"><span id="al_draw_polygon"></span><code>PROCEDURE <b>al_draw_polygon</b> (VAR vertices: ARRAY OF <a  href="al5Base.html#AL_FLOAT">AL_FLOAT</a>; join_style: <a  href="al5primitives.html#ALLEGRO_LINE_JOIN">ALLEGRO_LINE_JOIN</a>; color: <a  href="Allegro5.ALLEGRO_COLOR.html">ALLEGRO_COLOR</a>; thickness, miter_limit: <a  href="al5Base.html#AL_FLOAT">AL_FLOAT</a>);</code></td>
+</tr>
+<tr><td colspan="1">
+<p>
+Draws an unfilled polygon. This is the same as passing <code>ALLEGRO_LINE_CAP</code> to <a class="normal" href="al5primitives.html#al_draw_polyline">al_draw_polyline</a>.        </p>
+<h6 class="description_section">Parameters</h6>
+<dl class="parameters">
+<dt>vertex</dt>
+<dd>Interleaved array of (x, y) vertex coordinates.</dd>
+<dt>join_style</dt>
+<dd>Member of <a class="normal" href="al5primitives.html#ALLEGRO_LINE_JOIN">ALLEGRO_LINE_JOIN</a> specifying how to render the joins between line segments.</dd>
+<dt>color</dt>
+<dd>Color of the line.</dd>
+<dt>thickness</dt>
+<dd>Thickness of the line, pass &lt;= 0 to draw hairline lines.</dd>
+<dt>miter_limit</dt>
+<dd>Parameter for miter join style.</dd>
+</dl>
+<h6 class="description_section">See also</h6>
+<dl class="see_also">
+  <dt><a class="normal" href="al5primitives.html#al_draw_filled_polygon">al_draw_filled_polygon</a></dt>
+  <dd>Draw a filled, simple polygon.</dd>
+  <dt><a class="normal" href="al5primitives.html#al_draw_polyline">al_draw_polyline</a></dt>
+  <dd>Draws a series of line segments.</dd>
+  <dt><a class="normal" href="al5primitives.html#ALLEGRO_LINE_JOIN">ALLEGRO_LINE_JOIN</a></dt>
+  <dd>See the picture for the difference.</dd>
+</dl>
+</td></tr>
+</table>
+<table class="detail wide_list">
+<tr class="list">
+<td class="itemcode"><span id="al_draw_filled_polygon"></span><code>PROCEDURE <b>al_draw_filled_polygon</b> (VAR vertices: ARRAY OF <a  href="al5Base.html#AL_FLOAT">AL_FLOAT</a>; color: <a  href="Allegro5.ALLEGRO_COLOR.html">ALLEGRO_COLOR</a>);</code></td>
+</tr>
+<tr><td colspan="1">
+<p>
+Draw a filled, simple polygon. Simple means it does not have to be convex but must not be self-overlapping.
+
+<p>When the y-axis is facing downwards (the usual), the coordinates must be ordered anti-clockwise.    </p>
+<h6 class="description_section">Parameters</h6>
+<dl class="parameters">
+<dt>vertices</dt>
+<dd>Interleaved array of (x, y) vertex coordinates.</dd>
+<dt>color</dt>
+<dd>Color of the filled polygon.</dd>
+</dl>
+<h6 class="description_section">See also</h6>
+<dl class="see_also">
+  <dt><a class="normal" href="al5primitives.html#al_draw_polygon">al_draw_polygon</a></dt>
+  <dd>Draws an unfilled polygon.</dd>
+  <dt><a class="normal" href="al5primitives.html#al_draw_filled_polygon_with_holes">al_draw_filled_polygon_with_holes</a></dt>
+  <dd>Draws a filled simple polygon with zero or more other simple polygons subtracted from it - the holes.</dd>
+</dl>
+</td></tr>
+</table>
+<table class="detail wide_list">
+<tr class="list">
+<td class="itemcode"><span id="al_draw_filled_polygon_with_holes"></span><code>PROCEDURE <b>al_draw_filled_polygon_with_holes</b> (VAR vertices: ARRAY OF <a  href="al5Base.html#AL_FLOAT">AL_FLOAT</a>; VAR vertex_counts: ARRAY OF <a  href="al5Base.html#AL_INT">AL_INT</a>; color: <a  href="Allegro5.ALLEGRO_COLOR.html">ALLEGRO_COLOR</a>); CDECL; EXTERNAL ALLEGRO_PRIMITIVES_LIB_NAME;</code></td>
+</tr>
+<tr><td colspan="1">
+<p>
+Draws a filled simple polygon with zero or more other simple polygons subtracted from it - the holes. The holes cannot touch or intersect with the outline of the filled polygon.
+
+<p>All hole vertices must use the opposite order (clockwise with y down) of the polygon vertices. All hole vertices must be inside the main polygon and no hole may overlap the main polygon.
+
+<p>For example: </p>
+
+<pre class="longcode">
+<span class="pascal_keyword">VAR</span>
+  Vertices: <span class="pascal_keyword">ARRAY</span> [<span class="pascal_numeric">0</span>..13] <span class="pascal_keyword">OF</span> AL_FLOAT = (
+      <span class="pascal_numeric">0</span>,   <span class="pascal_numeric">0</span>, <span class="pascal_comment">{ Filled polygon, upper left corner. }</span>
+      <span class="pascal_numeric">0</span>, <span class="pascal_numeric">100</span>, <span class="pascal_comment">{ Filled polygon, lower left corner. }</span>
+    <span class="pascal_numeric">100</span>, <span class="pascal_numeric">100</span>, <span class="pascal_comment">{ Filled polygon, lower right corner. }</span>
+    <span class="pascal_numeric">100</span>,   <span class="pascal_numeric">0</span>, <span class="pascal_comment">{ Filled polygon, upper right corner. }</span>
+     <span class="pascal_numeric">10</span>,  <span class="pascal_numeric">10</span>, <span class="pascal_comment">{ Hole, upper left. }</span>
+     <span class="pascal_numeric">90</span>,  <span class="pascal_numeric">10</span>, <span class="pascal_comment">{ Hole, upper right. }</span>
+     <span class="pascal_numeric">90</span>,  <span class="pascal_numeric">90</span>  <span class="pascal_comment">{ Hole, lower right. }</span>
+  );
+  VertexCounts: <span class="pascal_keyword">ARRAY</span> [<span class="pascal_numeric">0</span>..2] <span class="pascal_keyword">OF</span> AL_INT = (
+    <span class="pascal_numeric">4</span>, <span class="pascal_comment">{ number of vertices for filled polygon. }</span>
+    <span class="pascal_numeric">3</span>, <span class="pascal_comment">{ number of vertices for hole. }</span>
+    <span class="pascal_numeric">0</span>  <span class="pascal_comment">{ terminator. }</span>
+  );</pre>
+
+<p> There are 7 vertices: four for an outer square from (0, 0) to (100, 100) in anti-clockwise order, and three more for an inner triangle in clockwise order. The outer main polygon uses vertices 0 to 3 (inclusive) and the hole uses vertices 4 to 6 (inclusive).      </p>
+<h6 class="description_section">Parameters</h6>
+<dl class="parameters">
+<dt>vertices</dt>
+<dd>Interleaved array of (x, y) vertex coordinates for each of the polygons, including holes.</dd>
+<dt>vertex_counts</dt>
+<dd>Number of vertices for each polygon. The number of vertices in the filled polygon is given by <code>vertex_counts[0]</code> and must be at least three. Subsequent elements indicate the number of vertices in each hole. The array must be terminated with an element with value zero.</dd>
+<dt>color</dt>
+<dd>Color of the filled polygon.</dd>
+</dl>
+<h6 class="description_section">See also</h6>
+<dl class="see_also">
+  <dt><a class="normal" href="al5primitives.html#al_draw_filled_polygon">al_draw_filled_polygon</a></dt>
+  <dd>Draw a filled, simple polygon.</dd>
+  <dt><a class="normal" href="al5primitives.html#al_draw_filled_polygon_with_holes">al_draw_filled_polygon_with_holes</a></dt>
+  <dd>Draws a filled simple polygon with zero or more other simple polygons subtracted from it - the holes.</dd>
+  <dt><a class="normal" href="al5primitives.html#al_triangulate_polygon">al_triangulate_polygon</a></dt>
+  <dd>Divides a simple polygon into triangles, with zero or more other simple polygons subtracted from it - the holes.</dd>
+</dl>
+</td></tr>
+</table>
+<h3 class="detail">Types</h3>
+<table class="detail wide_list">
+<tr class="list">
+<td class="itemcode"><span id="ALLEGRO_PRIM_TYPE"></span><code><b>ALLEGRO_PRIM_TYPE</b> = (...);</code></td>
+</tr>
+<tr><td colspan="1">
+<p>
+Enumerates the types of primitives this addon can draw.       </p>
+<h6 class="description_section">Values</h6>
+<ul>
+<li>
+<span id="ALLEGRO_PRIM_LINE_LIST">ALLEGRO_PRIM_LINE_LIST</span>: A list of lines, sequential pairs of vertices define disjointed lines.</li>
+<li>
+<span id="ALLEGRO_PRIM_LINE_STRIP">ALLEGRO_PRIM_LINE_STRIP</span>: A strip of lines, sequential vertices define a strip of lines.</li>
+<li>
+<span id="ALLEGRO_PRIM_LINE_LOOP">ALLEGRO_PRIM_LINE_LOOP</span>: Like a line strip, except at the end the first and the last vertices are also connected by a line.</li>
+<li>
+<span id="ALLEGRO_PRIM_TRIANGLE_LIST">ALLEGRO_PRIM_TRIANGLE_LIST</span>: A list of triangles, sequential triplets of vertices define disjointed triangles.</li>
+<li>
+<span id="ALLEGRO_PRIM_TRIANGLE_STRIP">ALLEGRO_PRIM_TRIANGLE_STRIP</span>: A strip of triangles, sequential vertices define a strip of triangles.</li>
+<li>
+<span id="ALLEGRO_PRIM_TRIANGLE_FAN">ALLEGRO_PRIM_TRIANGLE_FAN</span>: A fan of triangles, all triangles share the first vertex.</li>
+<li>
+<span id="ALLEGRO_PRIM_POINT_LIST">ALLEGRO_PRIM_POINT_LIST</span>: A list of points, each vertex defines a point.</li>
+<li>
+<span id="ALLEGRO_PRIM_NUM_TYPES">ALLEGRO_PRIM_NUM_TYPES</span></li>
+</ul>
+</td></tr>
+</table>
+<table class="detail wide_list">
+<tr class="list">
+<td class="itemcode"><span id="ALLEGRO_PRIM_ATTR"></span><code><b>ALLEGRO_PRIM_ATTR</b> = (...);</code></td>
+</tr>
+<tr><td colspan="1">
+<p>
+Enumerates the types of vertex attributes that a custom vertex may have.       </p>
+<h6 class="description_section">See also</h6>
+<dl class="see_also">
+  <dt><a class="normal" href="al5primitives.html#ALLEGRO_VERTEX_DECLptr">ALLEGRO_VERTEX_DECLptr</a></dt>
+  <dd>A vertex declaration.</dd>
+  <dt><a class="normal" href="al5primitives.html#ALLEGRO_PRIM_STORAGE">ALLEGRO_PRIM_STORAGE</a></dt>
+  <dd>Enumerates the types of storage an attribute of a custom vertex may be stored in.</dd>
+</dl>
+<h6 class="description_section">Values</h6>
+<ul>
+<li>
+<span id="ALLEGRO_PRIM_ATTR_NONE">ALLEGRO_PRIM_ATTR_NONE = 0</span></li>
+<li>
+<span id="ALLEGRO_PRIM_POSITION">ALLEGRO_PRIM_POSITION = 1</span>: Position information, can be stored only in <code>ALLEGRO_PRIM_SHORT_2</code>, <code>ALLEGRO_PRIM_FLOAT_2</code> and <code>ALLEGRO_PRIM_FLOAT_3</code>.</li>
+<li>
+<span id="ALLEGRO_PRIM_COLOR_ATTR">ALLEGRO_PRIM_COLOR_ATTR</span>: Color information, stored in an <a class="normal" href="Allegro5.ALLEGRO_COLOR.html">ALLEGRO_COLOR</a>. The storage field of <a class="normal" href="al5primitives.ALLEGRO_VERTEX_ELEMENT.html">ALLEGRO_VERTEX_ELEMENT</a> is ignored.</li>
+<li>
+<span id="ALLEGRO_PRIM_TEX_COORD">ALLEGRO_PRIM_TEX_COORD</span>: Texture coordinate information, can be stored only in <code>ALLEGRO_PRIM_FLOAT_2</code> and <code>ALLEGRO_PRIM_SHORT_2</code>. These coordinates are normalized by the width and height of the texture, meaning that the bottom-right corner has texture coordinates of <code>(1, 1)</code>.</li>
+<li>
+<span id="ALLEGRO_PRIM_TEX_COORD_PIXEL">ALLEGRO_PRIM_TEX_COORD_PIXEL</span>: Texture coordinate information, can be stored only in <code>ALLEGRO_PRIM_FLOAT_2</code> and <code>ALLEGRO_PRIM_SHORT_2</code>. These coordinates are measured in pixels.</li>
+<li>
+<span id="ALLEGRO_PRIM_USER_ATTR">ALLEGRO_PRIM_USER_ATTR</span>: A user specified attribute. You can use any storage for this attribute. You may have at most 10 of these that you can specify by adding an index to the identifier, e.g. the first user attribute is <code>ALLEGRO_PRIM_USER_ATTR</code>, the second is <code>ALLEGRO_PRIM_USER_ATTR2</code> and so on.
+
+<p>To access these custom attributes from GLSL shaders you need to declare attributes that follow this nomenclature: <code>user_attr_#</code> where <code>#</code> is the index of the attribute.
+
+<p>To access these custom attributes from HLSL you need to declare a parameter with the following semantics: <code>TEXCOORD{# + 2}</code> where <code>#</code> is the index of the attribute. E.g. the first attribute can be accessed via TEXCOORD2, second via TEXCOORD3 and so on.</li>
+<li>
+<span id="ALLEGRO_PRIM_USER_ATTR2">ALLEGRO_PRIM_USER_ATTR2</span></li>
+<li>
+<span id="ALLEGRO_PRIM_USER_ATTR3">ALLEGRO_PRIM_USER_ATTR3</span></li>
+<li>
+<span id="ALLEGRO_PRIM_USER_ATTR4">ALLEGRO_PRIM_USER_ATTR4</span></li>
+<li>
+<span id="ALLEGRO_PRIM_USER_ATTR5">ALLEGRO_PRIM_USER_ATTR5</span></li>
+<li>
+<span id="ALLEGRO_PRIM_USER_ATTR6">ALLEGRO_PRIM_USER_ATTR6</span></li>
+<li>
+<span id="ALLEGRO_PRIM_USER_ATTR7">ALLEGRO_PRIM_USER_ATTR7</span></li>
+<li>
+<span id="ALLEGRO_PRIM_USER_ATTR8">ALLEGRO_PRIM_USER_ATTR8</span></li>
+<li>
+<span id="ALLEGRO_PRIM_USER_ATTR9">ALLEGRO_PRIM_USER_ATTR9</span></li>
+<li>
+<span id="ALLEGRO_PRIM_USER_ATTR10">ALLEGRO_PRIM_USER_ATTR10</span></li>
+<li>
+<span id="ALLEGRO_PRIM_ATTR_NUM">ALLEGRO_PRIM_ATTR_NUM</span></li>
+</ul>
+</td></tr>
+</table>
+<table class="detail wide_list">
+<tr class="list">
+<td class="itemcode"><span id="ALLEGRO_PRIM_STORAGE"></span><code><b>ALLEGRO_PRIM_STORAGE</b> = (...);</code></td>
+</tr>
+<tr><td colspan="1">
+<p>
+Enumerates the types of storage an attribute of a custom vertex may be stored in. Many of these can only be used for <a class="normal" href="al5primitives.html#ALLEGRO_PRIM_USER_ATTR">ALLEGRO_PRIM_USER_ATTR</a> attributes and can only be accessed via shaders. Usually no matter what the storage is specified the attribute gets converted to single precision floating point when the shader is run. Despite that, it may be advantageous to use more dense storage formats (e.g. <code>ALLEGRO_PRIM_NORMALIZED_UBYTE_4</code> instead of <code>ALLEGRO_PRIM_FLOAT_4</code>) when bandwidth (amount of memory sent to the GPU) is an issue but precision is not.                </p>
+<h6 class="description_section">See also</h6>
+<dl class="see_also">
+  <dt><a class="normal" href="al5primitives.html#ALLEGRO_PRIM_STORAGE_NONE">ALLEGRO_PRIM_STORAGE_NONE</a></dt>
+  <dd>Default storage value.</dd>
+  <dt><a class="normal" href="al5primitives.html#ALLEGRO_PRIM_ATTR">ALLEGRO_PRIM_ATTR</a></dt>
+  <dd>Enumerates the types of vertex attributes that a custom vertex may have.</dd>
+</dl>
+<h6 class="description_section">Values</h6>
+<ul>
+<li>
+<span id="ALLEGRO_PRIM_FLOAT_2">ALLEGRO_PRIM_FLOAT_2</span>: A doublet of floats.</li>
+<li>
+<span id="ALLEGRO_PRIM_FLOAT_3">ALLEGRO_PRIM_FLOAT_3</span>: A triplet of floats.</li>
+<li>
+<span id="ALLEGRO_PRIM_SHORT_2">ALLEGRO_PRIM_SHORT_2</span>: A doublet of shorts.</li>
+<li>
+<span id="ALLEGRO_PRIM_FLOAT_1">ALLEGRO_PRIM_FLOAT_1</span>: A single float.</li>
+<li>
+<span id="ALLEGRO_PRIM_FLOAT_4">ALLEGRO_PRIM_FLOAT_4</span>: A quad of floats.</li>
+<li>
+<span id="ALLEGRO_PRIM_UBYTE_4">ALLEGRO_PRIM_UBYTE_4</span>: A quad of unsigned bytes.</li>
+<li>
+<span id="ALLEGRO_PRIM_SHORT_4">ALLEGRO_PRIM_SHORT_4</span>: A quad of shorts.</li>
+<li>
+<span id="ALLEGRO_PRIM_NORMALIZED_UBYTE_4">ALLEGRO_PRIM_NORMALIZED_UBYTE_4</span>: A quad of unsigned bytes. Before being sent to the shader, each component is divided by 255. Each component of the resultant float quad ranges between 0.0 and 1.0.</li>
+<li>
+<span id="ALLEGRO_PRIM_NORMALIZED_SHORT_2">ALLEGRO_PRIM_NORMALIZED_SHORT_2</span>: A doublet of shorts. Before being sent to the shader, each component is divided by 32767. Each component of the resultant float doublet ranges between -1.0 and 1.0.</li>
+<li>
+<span id="ALLEGRO_PRIM_NORMALIZED_SHORT_4">ALLEGRO_PRIM_NORMALIZED_SHORT_4</span>: A quad of shorts. Before being sent to the shader, each component is divided by 32767. Each component of the resultant float quad ranges between -1.0 and 1.0.</li>
+<li>
+<span id="ALLEGRO_PRIM_NORMALIZED_USHORT_2">ALLEGRO_PRIM_NORMALIZED_USHORT_2</span>: A doublet of unsigned shorts. Before being sent to the shader, each component is divided by 65535. Each component of the resultant float doublet ranges between 0.0 and 1.0.</li>
+<li>
+<span id="ALLEGRO_PRIM_NORMALIZED_USHORT_4">ALLEGRO_PRIM_NORMALIZED_USHORT_4</span>: A quad of unsigned shorts. Before being sent to the shader, each component is divided by 65535. Each component of the resultant float quad ranges between 0.0 and 1.0.</li>
+<li>
+<span id="ALLEGRO_PRIM_HALF_FLOAT_2">ALLEGRO_PRIM_HALF_FLOAT_2</span>: A doublet of half-precision floats. Note that this storage format is not supported on all platforms. <a class="normal" href="al5primitives.html#al_create_vertex_decl">al_create_vertex_decl</a> will return <code>Nil</code> if you use it on those platforms.</li>
+<li>
+<span id="ALLEGRO_PRIM_HALF_FLOAT_4">ALLEGRO_PRIM_HALF_FLOAT_4</span>: A quad of half-precision floats. Note that this storage format is not supported on all platforms. <a class="normal" href="al5primitives.html#al_create_vertex_decl">al_create_vertex_decl</a> will return <code>Nil</code> if you use it on those platforms.</li>
+</ul>
+</td></tr>
+</table>
+<table class="detail wide_list">
+<tr class="list">
+<td class="itemcode"><span id="ALLEGRO_LINE_JOIN"></span><code><b>ALLEGRO_LINE_JOIN</b> = (...);</code></td>
+</tr>
+<tr><td colspan="1">
+<p>
+See the picture for the difference. <figure>
+ <img src="images/line_join.png" width="100%" title="Line joins" alt="[-]" />
+ <figcaption>ALLEGRO_LINE_JOIN styles.</figcaption>
+</figure> The maximum miter length (relative to the line width) can be specified as parameter to the polygon functions.  </p>
+<h6 class="description_section">See also</h6>
+<dl class="see_also">
+  <dt><a class="normal" href="al5primitives.html#al_draw_polygon">al_draw_polygon</a></dt>
+  <dd>Draws an unfilled polygon.</dd>
+  <dt><a class="normal" href="al5primitives.html#ALLEGRO_LINE_JOIN_MITRE">ALLEGRO_LINE_JOIN_MITRE</a></dt>
+  <dd>Alternative name for <code>ALLEGRO_LINE_JOIN_MITER</code>.</dd>
+</dl>
+<h6 class="description_section">Values</h6>
+<ul>
+<li>
+<span id="ALLEGRO_LINE_JOIN_NONE">ALLEGRO_LINE_JOIN_NONE</span></li>
+<li>
+<span id="ALLEGRO_LINE_JOIN_BEVEL">ALLEGRO_LINE_JOIN_BEVEL</span></li>
+<li>
+<span id="ALLEGRO_LINE_JOIN_ROUND">ALLEGRO_LINE_JOIN_ROUND</span></li>
+<li>
+<span id="ALLEGRO_LINE_JOIN_MITER">ALLEGRO_LINE_JOIN_MITER</span></li>
+</ul>
+</td></tr>
+</table>
+<table class="detail wide_list">
+<tr class="list">
+<td class="itemcode"><span id="ALLEGRO_LINE_CAP"></span><code><b>ALLEGRO_LINE_CAP</b> = (...);</code></td>
+</tr>
+<tr><td colspan="1">
+<p>
+See the picture for the difference. <figure>
+ <img src="images/line_cap.png" width="100%" title="Line cap" alt="[-]" />
+ <figcaption>ALLEGRO_LINE_CAP styles.</figcaption>
+</figure> <code>ALLEGRO_LINE_CAP_CLOSED</code> is different from the others - it causes the polygon to have no caps. (And the <a class="normal" href="al5primitives.html#ALLEGRO_LINE_JOIN">ALLEGRO_LINE_JOIN</a> style will determine how the vertex looks.) </p>
+<h6 class="description_section">See also</h6>
+<dl class="see_also">
+  <dt><a class="normal" href="al5primitives.html#al_draw_polygon">al_draw_polygon</a></dt>
+  <dd>Draws an unfilled polygon.</dd>
+</dl>
+<h6 class="description_section">Values</h6>
+<ul>
+<li>
+<span id="ALLEGRO_LINE_CAP_NONE">ALLEGRO_LINE_CAP_NONE</span></li>
+<li>
+<span id="ALLEGRO_LINE_CAP_SQUARE">ALLEGRO_LINE_CAP_SQUARE</span></li>
+<li>
+<span id="ALLEGRO_LINE_CAP_ROUND">ALLEGRO_LINE_CAP_ROUND</span></li>
+<li>
+<span id="ALLEGRO_LINE_CAP_TRIANGLE">ALLEGRO_LINE_CAP_TRIANGLE</span></li>
+<li>
+<span id="ALLEGRO_LINE_CAP_CLOSED">ALLEGRO_LINE_CAP_CLOSED</span></li>
+</ul>
+</td></tr>
+</table>
+<table class="detail wide_list">
+<tr class="list">
+<td class="itemcode"><span id="ALLEGRO_PRIM_BUFFER_FLAGS"></span><code><b>ALLEGRO_PRIM_BUFFER_FLAGS</b> = (...);</code></td>
+</tr>
+<tr><td colspan="1">
+<p>
+Flags to specify how to create a vertex or an index buffer.      </p>
+<h6 class="description_section">See also</h6>
+<dl class="see_also">
+  <dt><a class="normal" href="al5primitives.html#al_create_vertex_buffer">al_create_vertex_buffer</a></dt>
+  <dd>Creates a vertex buffer.</dd>
+  <dt><a class="normal" href="al5primitives.html#al_create_index_buffer">al_create_index_buffer</a></dt>
+  <dd>Creates an index buffer.</dd>
+</dl>
+<h6 class="description_section">Values</h6>
+<ul>
+<li>
+<span id="ALLEGRO_PRIM_BUFFER_NONE">ALLEGRO_PRIM_BUFFER_NONE = 0</span></li>
+<li>
+<span id="ALLEGRO_PRIM_BUFFER_STREAM">ALLEGRO_PRIM_BUFFER_STREAM = $01</span>: Hints to the driver that the buffer is written to often, but used only a few times per frame.</li>
+<li>
+<span id="ALLEGRO_PRIM_BUFFER_STATIC">ALLEGRO_PRIM_BUFFER_STATIC = $02</span>: Hints to the driver that the buffer is written to once and is used often.</li>
+<li>
+<span id="ALLEGRO_PRIM_BUFFER_DYNAMIC">ALLEGRO_PRIM_BUFFER_DYNAMIC = $04</span>: Hints to the driver that the buffer is written to often and is used often.</li>
+<li>
+<span id="ALLEGRO_PRIM_BUFFER_READWRITE">ALLEGRO_PRIM_BUFFER_READWRITE = $08</span>: Specifies that you want to be able read from this buffer. By default this is disabled for performance. Some platforms (like OpenGL ES) do not support reading from vertex buffers, so if you pass this flag to <a class="normal" href="al5primitives.html#al_create_vertex_buffer">al_create_vertex_buffer</a> or <a class="normal" href="al5primitives.html#al_create_index_buffer">al_create_index_buffer</a> the call will fail.</li>
+</ul>
+</td></tr>
+</table>
+<table class="detail wide_list">
+<tr class="list">
+<td class="itemcode"><span id="ALLEGRO_VERTEX_ELEMENTptr"></span><code><b>ALLEGRO_VERTEX_ELEMENTptr</b> = &circ;<a  href="al5primitives.ALLEGRO_VERTEX_ELEMENT.html">ALLEGRO_VERTEX_ELEMENT</a>;</code></td>
+</tr>
+<tr><td colspan="1">
+<p>
+Pointer to <a class="normal" href="al5primitives.ALLEGRO_VERTEX_ELEMENT.html">ALLEGRO_VERTEX_ELEMENT</a>.</p>
+</td></tr>
+</table>
+<table class="detail wide_list">
+<tr class="list">
+<td class="itemcode"><span id="ALLEGRO_VERTEX_DECLptr"></span><code><b>ALLEGRO_VERTEX_DECLptr</b> = <a  href="al5Base.html#AL_POINTER">AL_POINTER</a>;</code></td>
+</tr>
+<tr><td colspan="1">
+<p>
+A vertex declaration. This opaque structure is responsible for describing the format and layout of a user defined custom vertex. It is created and destroyed by specialized functions.   </p>
+<h6 class="description_section">See also</h6>
+<dl class="see_also">
+  <dt><a class="normal" href="al5primitives.html#al_create_vertex_decl">al_create_vertex_decl</a></dt>
+  <dd>Creates a vertex declaration, which describes a custom vertex format.</dd>
+  <dt><a class="normal" href="al5primitives.html#al_destroy_vertex_decl">al_destroy_vertex_decl</a></dt>
+  <dd>Destroys a vertex declaration.</dd>
+  <dt><a class="normal" href="al5primitives.ALLEGRO_VERTEX_ELEMENT.html">ALLEGRO_VERTEX_ELEMENT</a></dt>
+  <dd>A small structure describing a certain element of a vertex.</dd>
+</dl>
+</td></tr>
+</table>
+<table class="detail wide_list">
+<tr class="list">
+<td class="itemcode"><span id="ALLEGRO_VERTEXptr"></span><code><b>ALLEGRO_VERTEXptr</b> = &circ;<a  href="al5primitives.ALLEGRO_VERTEX.html">ALLEGRO_VERTEX</a>;</code></td>
+</tr>
+<tr><td colspan="1">
+<p>
+Pointer to <a class="normal" href="al5primitives.ALLEGRO_VERTEX.html">ALLEGRO_VERTEX</a>.</p>
+</td></tr>
+</table>
+<table class="detail wide_list">
+<tr class="list">
+<td class="itemcode"><span id="ALLEGRO_VERTEX_BUFFERptr"></span><code><b>ALLEGRO_VERTEX_BUFFERptr</b> = <a  href="al5Base.html#AL_POINTER">AL_POINTER</a>;</code></td>
+</tr>
+<tr><td colspan="1">
+<p>
+A GPU vertex buffer that you can use to store vertices on the GPU instead of uploading them afresh during every drawing operation.  </p>
+<h6 class="description_section">See also</h6>
+<dl class="see_also">
+  <dt><a class="normal" href="al5primitives.html#al_create_vertex_buffer">al_create_vertex_buffer</a></dt>
+  <dd>Creates a vertex buffer.</dd>
+  <dt><a class="normal" href="al5primitives.html#al_destroy_vertex_buffer">al_destroy_vertex_buffer</a></dt>
+  <dd>Destroys a vertex buffer.</dd>
+</dl>
+</td></tr>
+</table>
+<table class="detail wide_list">
+<tr class="list">
+<td class="itemcode"><span id="ALLEGRO_INDEX_BUFFERptr"></span><code><b>ALLEGRO_INDEX_BUFFERptr</b> = <a  href="al5Base.html#AL_POINTER">AL_POINTER</a>;</code></td>
+</tr>
+<tr><td colspan="1">
+<p>
+A GPU index buffer that you can use to store indices of vertices in a vertex buffer on the GPU instead of uploading them afresh during every drawing operation.  </p>
+<h6 class="description_section">See also</h6>
+<dl class="see_also">
+  <dt><a class="normal" href="al5primitives.html#al_create_index_buffer">al_create_index_buffer</a></dt>
+  <dd>Creates an index buffer.</dd>
+  <dt><a class="normal" href="al5primitives.html#al_destroy_index_buffer">al_destroy_index_buffer</a></dt>
+  <dd>Destroys an index buffer.</dd>
+</dl>
+</td></tr>
+</table>
+<table class="detail wide_list">
+<tr class="list">
+<td class="itemcode"><span id="ALLEGRO_EMIT_TRIANGLE_PROC"></span><code><b>ALLEGRO_EMIT_TRIANGLE_PROC</b> = PROCEDURE (a, b, c: <a  href="al5Base.html#AL_INT">AL_INT</a>; p: <a  href="al5Base.html#AL_VOIDptr">AL_VOIDptr</a>); CDECL;</code></td>
+</tr>
+<tr><td colspan="1">
+<p>
+Callback function used by <a class="normal" href="al5primitives.html#al_triangulate_polygon">al_triangulate_polygon</a>.    </p>
+<h6 class="description_section">Parameters</h6>
+<dl class="parameters">
+<dt>a</dt>
+<dd>Index of the first triangle vertex.</dd>
+<dt>b</dt>
+<dd>Index of the first triangle vertex.</dd>
+<dt>c</dt>
+<dd>Index of the first triangle vertex.</dd>
+<dt>p</dt>
+<dd>Pointer to user data.</dd>
+</dl>
+</td></tr>
+</table>
+<table class="detail wide_list">
+<tr class="list">
+<td class="itemcode"><span id="ALLEGRO_INIT_TRIANGLE_PROC"></span><code><b>ALLEGRO_INIT_TRIANGLE_PROC</b> = PROCEDURE (state: <a  href="al5Base.html#AL_UINTPTR_T">AL_UINTPTR_T</a>; v1, v2, v3: <a  href="al5primitives.html#ALLEGRO_VERTEXptr">ALLEGRO_VERTEXptr</a>); CDECL;</code></td>
+</tr>
+<tr><td colspan="1">
+<p>
+Callback function used by <a class="normal" href="al5primitives.html#al_draw_soft_triangle">al_draw_soft_triangle</a>.    </p>
+<h6 class="description_section">Parameters</h6>
+<dl class="parameters">
+<dt>state</dt>
+<dd>Pointer to a user suplied struct.</dd>
+<dt>v1</dt>
+<dd>First vertex of the triangle.</dd>
+<dt>v2</dt>
+<dd>Second vertex of the triangle.</dd>
+<dt>v3</dt>
+<dd>third vertex of the triangle.</dd>
+</dl>
+</td></tr>
+</table>
+<table class="detail wide_list">
+<tr class="list">
+<td class="itemcode"><span id="ALLEGRO_FIRST_TRIANGLE_PROC"></span><code><b>ALLEGRO_FIRST_TRIANGLE_PROC</b> = PROCEDURE (state: <a  href="al5Base.html#AL_UINTPTR_T">AL_UINTPTR_T</a>; x, y, l1, l2: <a  href="al5Base.html#AL_INT">AL_INT</a>); CDECL;</code></td>
+</tr>
+<tr><td colspan="1">
+<p>
+Callback function used by <a class="normal" href="al5primitives.html#al_draw_soft_triangle">al_draw_soft_triangle</a>.
+
+<p>It is passed 4 parameters, the first two are the coordinates of the initial pixel drawn in the segment. The second two are the left minor and the left major steps, respectively. They represent the sizes of two steps taken by the rasterizer as it walks on the left side of the triangle. From then on, each step will either be classified as a minor or a major step, corresponding to the above values.</p>
+</td></tr>
+</table>
+<table class="detail wide_list">
+<tr class="list">
+<td class="itemcode"><span id="ALLEGRO_DRAW_TRIANGLE_PROC"></span><code><b>ALLEGRO_DRAW_TRIANGLE_PROC</b> = PROCEDURE (state: <a  href="al5Base.html#AL_UINTPTR_T">AL_UINTPTR_T</a>; x1, y, x2: <a  href="al5Base.html#AL_INT">AL_INT</a>); CDECL;</code></td>
+</tr>
+<tr><td colspan="1">
+<p>
+Callback function used by <a class="normal" href="al5primitives.html#al_draw_soft_triangle">al_draw_soft_triangle</a>.
+
+<p>The function is expected to draw the scanline starting with a point specified by the first two parameters (<code>x1</code>, <code>y</code>) going to the right until it reaches the value of the third parameter (<code>x2</code>). All coordinates are inclusive.</p>
+</td></tr>
+</table>
+<table class="detail wide_list">
+<tr class="list">
+<td class="itemcode"><span id="ALLEGRO_FIRST_LINE_PROC"></span><code><b>ALLEGRO_FIRST_LINE_PROC</b> = PROCEDURE (state: <a  href="al5Base.html#AL_UINTPTR_T">AL_UINTPTR_T</a>; px, py: <a  href="al5Base.html#AL_INT">AL_INT</a>; v1, v2: <a  href="al5primitives.html#ALLEGRO_VERTEXptr">ALLEGRO_VERTEXptr</a>); CDECL;</code></td>
+</tr>
+<tr><td colspan="1">
+<p>
+Callback function used by <a class="normal" href="al5primitives.html#al_draw_soft_line">al_draw_soft_line</a>.
+
+<p>It is passed the coordinates of this pixel, as well as the two vertices above. The passed vertices may have been altered by clipping.</p>
+</td></tr>
+</table>
+<table class="detail wide_list">
+<tr class="list">
+<td class="itemcode"><span id="ALLEGRO_DRAW_LINE_PROC"></span><code><b>ALLEGRO_DRAW_LINE_PROC</b> = PROCEDURE (state: <a  href="al5Base.html#AL_UINTPTR_T">AL_UINTPTR_T</a>; x, y: <a  href="al5Base.html#AL_INT">AL_INT</a>); CDECL;</code></td>
+</tr>
+<tr><td colspan="1">
+<p>
+Callback function used by <a class="normal" href="al5primitives.html#al_draw_soft_line">al_draw_soft_line</a>.
+
+<p>The function is expected to draw the pixel at the coordinates passed to it.</p>
+</td></tr>
+</table>
+<table class="detail wide_list">
+<tr class="list">
+<td class="itemcode"><span id="ALLEGRO_STEP_PROC"></span><code><b>ALLEGRO_STEP_PROC</b> = PROCEDURE (state: <a  href="al5Base.html#AL_UINTPTR_T">AL_UINTPTR_T</a>; atype: <a  href="al5Base.html#AL_INT">AL_INT</a>); CDECL;</code></td>
+</tr>
+<tr><td colspan="1">
+<p>
+Callback function used to track the steps on some drawing functions.</p>
+</td></tr>
+</table>
+<table class="detail wide_list">
+<tr class="list">
+<td class="itemcode"><span id="ALLEGRO_SPLINE_CONTROL_POINTS"></span><code><b>ALLEGRO_SPLINE_CONTROL_POINTS</b> = ARRAY [0..7] OF <a  href="al5Base.html#AL_FLOAT">AL_FLOAT</a>;</code></td>
+</tr>
+<tr><td colspan="1">
+<p>
+An array that defines 4 pair of coordinates for spline lines.  </p>
+<h6 class="description_section">See also</h6>
+<dl class="see_also">
+  <dt><a class="normal" href="al5primitives.html#al_calculate_spline">al_calculate_spline</a></dt>
+  <dd>Calculates a Bézier spline given 4 control points.</dd>
+  <dt><a class="normal" href="al5primitives.html#al_draw_spline">al_draw_spline</a></dt>
+  <dd>Draws a Bézier spline given 4 control points.</dd>
+</dl>
+</td></tr>
+</table>
+<h3 class="detail">Constants</h3>
+<table class="detail wide_list">
+<tr class="list">
+<td class="itemcode"><span id="ALLEGRO_PRIM_STORAGE_NONE"></span><code><b>ALLEGRO_PRIM_STORAGE_NONE</b> = <a  href="al5primitives.html#ALLEGRO_PRIM_FLOAT_2">ALLEGRO_PRIM_FLOAT_2</a>;</code></td>
+</tr>
+<tr><td colspan="1">
+<p>
+Default storage value. </p>
+<h6 class="description_section">See also</h6>
+<dl class="see_also">
+  <dt><a class="normal" href="al5primitives.html#ALLEGRO_PRIM_STORAGE">ALLEGRO_PRIM_STORAGE</a></dt>
+  <dd>Enumerates the types of storage an attribute of a custom vertex may be stored in.</dd>
+</dl>
+</td></tr>
+</table>
+<table class="detail wide_list">
+<tr class="list">
+<td class="itemcode"><span id="ALLEGRO_LINE_JOIN_MITRE"></span><code><b>ALLEGRO_LINE_JOIN_MITRE</b> = <a  href="al5primitives.html#ALLEGRO_LINE_JOIN_MITER">ALLEGRO_LINE_JOIN_MITER</a>;</code></td>
+</tr>
+<tr><td colspan="1">
+<p>
+Alternative name for <code>ALLEGRO_LINE_JOIN_MITER</code>.</p>
+</td></tr>
+</table>
+<table class="detail wide_list">
+<tr class="list">
+<td class="itemcode"><span id="ALLEGRO_VERTEX_CACHE_SIZE"></span><code><b>ALLEGRO_VERTEX_CACHE_SIZE</b> = 256;</code></td>
+</tr>
+<tr><td colspan="1">
+<p>
+Defines the size of the transformation vertex cache for the software renderer. If you pass less than this many vertices to the primitive rendering functions you will get a speed boost. This also defines the size of the cache vertex buffer, used for the high-level primitives. This corresponds to the maximum number of line segments that will be used to form them.</p>
+</td></tr>
+</table>
+<hr><span class="appinfo"><em>Generated by <a  href="https://github.com/pasdoc/pasdoc/wiki">PasDoc 0.15.0</a>. Generated on 2020-04-16 11:56:29.</em>
+</span>
+</td></tr></table></body></html>

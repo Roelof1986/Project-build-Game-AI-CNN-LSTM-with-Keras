@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<title>Allegro.pas 5.2.b.1: Allegro5: Record ALLEGRO_MONITOR_INFO</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="generator" content="PasDoc 0.15.0">
+<meta http-equiv="content-type" content="text/html; charset=utf-8">
+<link rel="stylesheet" type="text/css" href="tipuesearch/tipuesearch.css">
+
+<link rel="StyleSheet" type="text/css" href="pasdoc.css">
+</head>
+<body>
+<table class="container"><tr><td class="navigation">
+<h2>Allegro.pas 5.2.b.1</h2><p><a href="introduction.html" class="navigation">Introduction</a></p><p><a href="AllUnits.html" class="navigation">Units</a></p><p><a href="ClassHierarchy.html" class="navigation">Class Hierarchy</a></p><p><a href="AllClasses.html" class="navigation">Classes, Interfaces, Objects and Records</a></p><p><a href="AllTypes.html" class="navigation">Types</a></p><p><a href="AllVariables.html" class="navigation">Variables</a></p><p><a href="AllConstants.html" class="navigation">Constants</a></p><p><a href="AllFunctions.html" class="navigation">Functions and Procedures</a></p><p><a href="AllIdentifiers.html" class="navigation">Identifiers</a></p><form class="search-form" action="_tipue_results.html"><div class="search-input"><input type="text" name="q" id="tipue_search_input"></div><div class="search-button"><input type="button" id="tipue_search_button" onclick="this.form.submit();"></div></form>
+<div style="clear: both"></div>
+
+<script type="text/javascript">
+$(document).ready(function() {
+    $('#tipue_search_input').tipuesearch({
+        /* 10 items to display seems standard */
+        'show': 10,
+        /* For PasDoc docs, showing urls is not very useful,
+           since the page title already shows the unit and identifier. */
+        'showURL': false
+    });
+});
+</script>
+</td><td class="content">
+<span id="ALLEGRO_MONITOR_INFO"></span><h1 class="cio">Record ALLEGRO_MONITOR_INFO</h1>
+<div class="sections">
+<div class="one_section"><a class="section" href="#PasDoc-Description">Description</a></div><div class="one_section">Hierarchy</div><div class="one_section"><a class="section" href="#PasDoc-Fields">Fields</a></div><div class="one_section">Methods</div><div class="one_section">Properties</div></div>
+<span id="PasDoc-Description"></span><h2 class="unit">Unit</h2>
+<p class="unitlink">
+<a  href="Allegro5.html">Allegro5</a></p>
+<h2 class="declaration">Declaration</h2>
+<p class="declaration">
+<code>type ALLEGRO_MONITOR_INFO = record</code></p>
+<h2 class="description">Description</h2>
+<p>
+Describes a monitor's size and position relative to other monitors. <code>x1, y1</code> will be <code>0, 0</code> on the primary display. Other monitors can have negative values if they are to the left or above the primary display. <code>x2, y2</code> are the coordinates one beyond the bottom right pixel, so that <code>x2 - x1</code> gives the width and <code>y2 - y1</code> gives the height of the display. </p>
+<h6 class="description_section">See also</h6>
+<dl class="see_also">
+  <dt><a class="normal" href="Allegro5.html#al_get_monitor_info">al_get_monitor_info</a></dt>
+  <dd>Get information about a monitor's position on the desktop.</dd>
+</dl>
+<h2 class="overview">Overview</h2>
+<span id="PasDoc-Fields"></span><h3 class="summary">Fields</h3>
+<table class="summary wide_list">
+<tr class="list">
+<td class="itemcode"><code><b><a  href="Allegro5.ALLEGRO_MONITOR_INFO.html#x1">x1</a></b>: <a  href="al5Base.html#AL_INT">AL_INT</a>;</code></td>
+</tr>
+<tr class="list2">
+<td class="itemcode"><code><b><a  href="Allegro5.ALLEGRO_MONITOR_INFO.html#y1">y1</a></b>: <a  href="al5Base.html#AL_INT">AL_INT</a>;</code></td>
+</tr>
+<tr class="list">
+<td class="itemcode"><code><b><a  href="Allegro5.ALLEGRO_MONITOR_INFO.html#x2">x2</a></b>: <a  href="al5Base.html#AL_INT">AL_INT</a>;</code></td>
+</tr>
+<tr class="list2">
+<td class="itemcode"><code><b><a  href="Allegro5.ALLEGRO_MONITOR_INFO.html#y2">y2</a></b>: <a  href="al5Base.html#AL_INT">AL_INT</a>;</code></td>
+</tr>
+</table>
+<h2 class="description">Description</h2>
+<h3 class="detail">Fields</h3>
+<table class="detail wide_list">
+<tr class="list">
+<td class="itemcode"><span id="x1"></span><code><b>x1</b>: <a  href="al5Base.html#AL_INT">AL_INT</a>;</code></td>
+</tr>
+<tr><td colspan="1">
+&nbsp;</td></tr>
+</table>
+<table class="detail wide_list">
+<tr class="list">
+<td class="itemcode"><span id="y1"></span><code><b>y1</b>: <a  href="al5Base.html#AL_INT">AL_INT</a>;</code></td>
+</tr>
+<tr><td colspan="1">
+&nbsp;</td></tr>
+</table>
+<table class="detail wide_list">
+<tr class="list">
+<td class="itemcode"><span id="x2"></span><code><b>x2</b>: <a  href="al5Base.html#AL_INT">AL_INT</a>;</code></td>
+</tr>
+<tr><td colspan="1">
+&nbsp;</td></tr>
+</table>
+<table class="detail wide_list">
+<tr class="list">
+<td class="itemcode"><span id="y2"></span><code><b>y2</b>: <a  href="al5Base.html#AL_INT">AL_INT</a>;</code></td>
+</tr>
+<tr><td colspan="1">
+&nbsp;</td></tr>
+</table>
+<hr><span class="appinfo"><em>Generated by <a  href="https://github.com/pasdoc/pasdoc/wiki">PasDoc 0.15.0</a>. Generated on 2020-04-16 11:56:30.</em>
+</span>
+</td></tr></table></body></html>

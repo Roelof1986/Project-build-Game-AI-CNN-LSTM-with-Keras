@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<title>Allegro.pas 5.2.b.1: al5video</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="generator" content="PasDoc 0.15.0">
+<meta http-equiv="content-type" content="text/html; charset=utf-8">
+<link rel="stylesheet" type="text/css" href="tipuesearch/tipuesearch.css">
+
+<link rel="StyleSheet" type="text/css" href="pasdoc.css">
+</head>
+<body>
+<table class="container"><tr><td class="navigation">
+<h2>Allegro.pas 5.2.b.1</h2><p><a href="introduction.html" class="navigation">Introduction</a></p><p><a href="AllUnits.html" class="navigation">Units</a></p><p><a href="ClassHierarchy.html" class="navigation">Class Hierarchy</a></p><p><a href="AllClasses.html" class="navigation">Classes, Interfaces, Objects and Records</a></p><p><a href="AllTypes.html" class="navigation">Types</a></p><p><a href="AllVariables.html" class="navigation">Variables</a></p><p><a href="AllConstants.html" class="navigation">Constants</a></p><p><a href="AllFunctions.html" class="navigation">Functions and Procedures</a></p><p><a href="AllIdentifiers.html" class="navigation">Identifiers</a></p><form class="search-form" action="_tipue_results.html"><div class="search-input"><input type="text" name="q" id="tipue_search_input"></div><div class="search-button"><input type="button" id="tipue_search_button" onclick="this.form.submit();"></div></form>
+<div style="clear: both"></div>
+
+<script type="text/javascript">
+$(document).ready(function() {
+    $('#tipue_search_input').tipuesearch({
+        /* 10 items to display seems standard */
+        'show': 10,
+        /* For PasDoc docs, showing urls is not very useful,
+           since the page title already shows the unit and identifier. */
+        'showURL': false
+    });
+});
+</script>
+</td><td class="content">
+<h1 class="unit">Unit al5video</h1>
+<div class="sections">
+<div class="one_section"><a class="section" href="#PasDoc-Description">Description</a></div><div class="one_section">Uses</div><div class="one_section">Classes, Interfaces, Objects and Records</div><div class="one_section"><a class="section" href="#PasDoc-FuncsProcs">Functions and Procedures</a></div><div class="one_section"><a class="section" href="#PasDoc-Types">Types</a></div><div class="one_section"><a class="section" href="#PasDoc-Constants">Constants</a></div><div class="one_section">Variables</div></div>
+<span id="PasDoc-Description"></span><h2 class="description">Description</h2>
+<p>
+Video playback.
+
+<p>Currently we have an Ogg backend (Theora + Vorbis). See <a  href="http://xiph.org/">http://xiph.org/</a> for installation instructions, licensing information and supported video formats..</p>
+<span id="PasDoc-Uses"></span><h2 class="overview">Overview</h2>
+<span id="PasDoc-FuncsProcs"></span><h3 class="summary">Functions and Procedures</h3>
+<table class="summary wide_list">
+<tr class="list">
+<td class="itemcode"><code>FUNCTION <b><a  href="al5video.html#al_init_video_addon">al_init_video_addon</a></b>: <a  href="al5Base.html#AL_BOOL">AL_BOOL</a>; CDECL; EXTERNAL ALLEGRO_VIDEO_LIB_NAME;</code></td>
+</tr>
+<tr class="list2">
+<td class="itemcode"><code>PROCEDURE <b><a  href="al5video.html#al_shutdown_video_addon">al_shutdown_video_addon</a></b>; CDECL; EXTERNAL ALLEGRO_VIDEO_LIB_NAME;</code></td>
+</tr>
+<tr class="list">
+<td class="itemcode"><code>FUNCTION <b><a  href="al5video.html#al_get_allegro_video_version">al_get_allegro_video_version</a></b>: <a  href="al5Base.html#AL_UINT32">AL_UINT32</a>; CDECL; EXTERNAL ALLEGRO_VIDEO_LIB_NAME;</code></td>
+</tr>
+<tr class="list2">
+<td class="itemcode"><code>FUNCTION <b><a  href="al5video.html#al_open_video">al_open_video</a></b> (filename: <a  href="al5Base.html#AL_STR">AL_STR</a>): <a  href="al5video.html#ALLEGRO_VIDEOptr">ALLEGRO_VIDEOptr</a>; CDECL; EXTERNAL ALLEGRO_VIDEO_LIB_NAME;</code></td>
+</tr>
+<tr class="list">
+<td class="itemcode"><code>PROCEDURE <b><a  href="al5video.html#al_close_video">al_close_video</a></b> (video: <a  href="al5video.html#ALLEGRO_VIDEOptr">ALLEGRO_VIDEOptr</a>); CDECL; EXTERNAL ALLEGRO_VIDEO_LIB_NAME;</code></td>
+</tr>
+<tr class="list2">
+<td class="itemcode"><code>PROCEDURE <b><a  href="al5video.html#al_start_video">al_start_video</a></b> (video: <a  href="al5video.html#ALLEGRO_VIDEOptr">ALLEGRO_VIDEOptr</a>; mixer: <a  href="al5audio.html#ALLEGRO_MIXERptr">ALLEGRO_MIXERptr</a>); CDECL; EXTERNAL ALLEGRO_VIDEO_LIB_NAME;</code></td>
+</tr>
+<tr class="list">
+<td class="itemcode"><code>PROCEDURE <b><a  href="al5video.html#al_start_video_with_voice">al_start_video_with_voice</a></b> (video: <a  href="al5video.html#ALLEGRO_VIDEOptr">ALLEGRO_VIDEOptr</a>; voice: <a  href="al5audio.html#ALLEGRO_VOICEptr">ALLEGRO_VOICEptr</a>); CDECL; EXTERNAL ALLEGRO_VIDEO_LIB_NAME;</code></td>
+</tr>
+<tr class="list2">
+<td class="itemcode"><code>FUNCTION <b><a  href="al5video.html#al_get_video_event_source">al_get_video_event_source</a></b> (video: <a  href="al5video.html#ALLEGRO_VIDEOptr">ALLEGRO_VIDEOptr</a>): <a  href="Allegro5.html#ALLEGRO_EVENT_SOURCEptr">ALLEGRO_EVENT_SOURCEptr</a>; CDECL; EXTERNAL ALLEGRO_VIDEO_LIB_NAME;</code></td>
+</tr>
+<tr class="list">
+<td class="itemcode"><code>PROCEDURE <b><a  href="al5video.html#al_set_video_playing">al_set_video_playing</a></b> (video: <a  href="al5video.html#ALLEGRO_VIDEOptr">ALLEGRO_VIDEOptr</a>; playing: <a  href="al5Base.html#AL_BOOL">AL_BOOL</a>); CDECL; EXTERNAL ALLEGRO_VIDEO_LIB_NAME;</code></td>
+</tr>
+<tr class="list2">
+<td class="itemcode"><code>FUNCTION <b><a  href="al5video.html#al_is_video_playing">al_is_video_playing</a></b> (video: <a  href="al5video.html#ALLEGRO_VIDEOptr">ALLEGRO_VIDEOptr</a>): <a  href="al5Base.html#AL_BOOL">AL_BOOL</a>; CDECL; EXTERNAL ALLEGRO_VIDEO_LIB_NAME;</code></td>
+</tr>
+<tr class="list">
+<td class="itemcode"><code>FUNCTION <b><a  href="al5video.html#al_get_video_audio_rate">al_get_video_audio_rate</a></b> (video: <a  href="al5video.html#ALLEGRO_VIDEOptr">ALLEGRO_VIDEOptr</a>): <a  href="al5Base.html#AL_DOUBLE">AL_DOUBLE</a>; CDECL; EXTERNAL ALLEGRO_VIDEO_LIB_NAME;</code></td>
+</tr>
+<tr class="list2">
+<td class="itemcode"><code>FUNCTION <b><a  href="al5video.html#al_get_video_fps">al_get_video_fps</a></b> (video: <a  href="al5video.html#ALLEGRO_VIDEOptr">ALLEGRO_VIDEOptr</a>): <a  href="al5Base.html#AL_DOUBLE">AL_DOUBLE</a>; CDECL; EXTERNAL ALLEGRO_VIDEO_LIB_NAME;</code></td>
+</tr>
+<tr class="list">
+<td class="itemcode"><code>FUNCTION <b><a  href="al5video.html#al_get_video_scaled_width">al_get_video_scaled_width</a></b> (video: <a  href="al5video.html#ALLEGRO_VIDEOptr">ALLEGRO_VIDEOptr</a>): <a  href="al5Base.html#AL_FLOAT">AL_FLOAT</a>; CDECL; EXTERNAL ALLEGRO_VIDEO_LIB_NAME;</code></td>
+</tr>
+<tr class="list2">
+<td class="itemcode"><code>FUNCTION <b><a  href="al5video.html#al_get_video_scaled_height">al_get_video_scaled_height</a></b> (video: <a  href="al5video.html#ALLEGRO_VIDEOptr">ALLEGRO_VIDEOptr</a>): <a  href="al5Base.html#AL_FLOAT">AL_FLOAT</a>; CDECL; EXTERNAL ALLEGRO_VIDEO_LIB_NAME;</code></td>
+</tr>
+<tr class="list">
+<td class="itemcode"><code>FUNCTION <b><a  href="al5video.html#al_get_video_frame">al_get_video_frame</a></b> (video: <a  href="al5video.html#ALLEGRO_VIDEOptr">ALLEGRO_VIDEOptr</a>): <a  href="Allegro5.html#ALLEGRO_BITMAPptr">ALLEGRO_BITMAPptr</a>; CDECL; EXTERNAL ALLEGRO_VIDEO_LIB_NAME;</code></td>
+</tr>
+<tr class="list2">
+<td class="itemcode"><code>FUNCTION <b><a  href="al5video.html#al_get_video_position">al_get_video_position</a></b> (video: <a  href="al5video.html#ALLEGRO_VIDEOptr">ALLEGRO_VIDEOptr</a>; which: <a  href="al5video.html#ALLEGRO_VIDEO_POSITION_TYPE">ALLEGRO_VIDEO_POSITION_TYPE</a>): <a  href="al5Base.html#AL_DOUBLE">AL_DOUBLE</a>; CDECL; EXTERNAL ALLEGRO_VIDEO_LIB_NAME;</code></td>
+</tr>
+<tr class="list">
+<td class="itemcode"><code>FUNCTION <b><a  href="al5video.html#al_seek_video">al_seek_video</a></b> (video: <a  href="al5video.html#ALLEGRO_VIDEOptr">ALLEGRO_VIDEOptr</a>; pos_in_seconds: <a  href="al5Base.html#AL_DOUBLE">AL_DOUBLE</a>): <a  href="al5Base.html#AL_BOOL">AL_BOOL</a>; CDECL; EXTERNAL ALLEGRO_VIDEO_LIB_NAME;</code></td>
+</tr>
+</table>
+<span id="PasDoc-Types"></span><h3 class="summary">Types</h3>
+<table class="summary wide_list">
+<tr class="list">
+<td class="itemcode"><code><b><a  href="al5video.html#ALLEGRO_VIDEO_POSITION_TYPE">ALLEGRO_VIDEO_POSITION_TYPE</a></b> = (...);</code></td>
+</tr>
+<tr class="list2">
+<td class="itemcode"><code><b><a  href="al5video.html#ALLEGRO_VIDEOptr">ALLEGRO_VIDEOptr</a></b> = <a  href="al5Base.html#AL_POINTER">AL_POINTER</a>;</code></td>
+</tr>
+</table>
+<span id="PasDoc-Constants"></span><h3 class="summary">Constants</h3>
+<table class="summary wide_list">
+<tr class="list">
+<td class="itemcode"><code><b><a  href="al5video.html#ALLEGRO_EVENT_VIDEO_FRAME_SHOW">ALLEGRO_EVENT_VIDEO_FRAME_SHOW</a></b> = 550;</code></td>
+</tr>
+<tr class="list2">
+<td class="itemcode"><code><b><a  href="al5video.html#ALLEGRO_EVENT_VIDEO_FINISHED">ALLEGRO_EVENT_VIDEO_FINISHED</a></b>   = 551;</code></td>
+</tr>
+</table>
+<h2 class="description">Description</h2>
+<h3 class="detail">Functions and Procedures</h3>
+<table class="detail wide_list">
+<tr class="list">
+<td class="itemcode"><span id="al_init_video_addon"></span><code>FUNCTION <b>al_init_video_addon</b>: <a  href="al5Base.html#AL_BOOL">AL_BOOL</a>; CDECL; EXTERNAL ALLEGRO_VIDEO_LIB_NAME;</code></td>
+</tr>
+<tr><td colspan="1">
+<p>
+Initializes the video addon.</p>
+</td></tr>
+</table>
+<table class="detail wide_list">
+<tr class="list">
+<td class="itemcode"><span id="al_shutdown_video_addon"></span><code>PROCEDURE <b>al_shutdown_video_addon</b>; CDECL; EXTERNAL ALLEGRO_VIDEO_LIB_NAME;</code></td>
+</tr>
+<tr><td colspan="1">
+<p>
+Shuts down the video addon. This is done automatically at program exit, but can be called any time the user wishes as well.</p>
+</td></tr>
+</table>
+<table class="detail wide_list">
+<tr class="list">
+<td class="itemcode"><span id="al_get_allegro_video_version"></span><code>FUNCTION <b>al_get_allegro_video_version</b>: <a  href="al5Base.html#AL_UINT32">AL_UINT32</a>; CDECL; EXTERNAL ALLEGRO_VIDEO_LIB_NAME;</code></td>
+</tr>
+<tr><td colspan="1">
+<p>
+Returns the (compiled) version of the addon, in the same format as <a class="normal" href="Allegro5.html#al_get_allegro_version">al_get_allegro_version</a>.</p>
+</td></tr>
+</table>
+<table class="detail wide_list">
+<tr class="list">
+<td class="itemcode"><span id="al_open_video"></span><code>FUNCTION <b>al_open_video</b> (filename: <a  href="al5Base.html#AL_STR">AL_STR</a>): <a  href="al5video.html#ALLEGRO_VIDEOptr">ALLEGRO_VIDEOptr</a>; CDECL; EXTERNAL ALLEGRO_VIDEO_LIB_NAME;</code></td>
+</tr>
+<tr><td colspan="1">
+<p>
+Reads a video file. This does not start streaming yet but reads the meta info so you can query e.g. the size or audio rate.  </p>
+<h6 class="description_section">See also</h6>
+<dl class="see_also">
+  <dt><a class="normal" href="al5video.html#al_close_video">al_close_video</a></dt>
+  <dd>Closes the video and frees all allocated resources.</dd>
+  <dt><a class="normal" href="al5video.html#al_start_video">al_start_video</a></dt>
+  <dd>Starts streaming the video from the beginning.</dd>
+</dl>
+</td></tr>
+</table>
+<table class="detail wide_list">
+<tr class="list">
+<td class="itemcode"><span id="al_close_video"></span><code>PROCEDURE <b>al_close_video</b> (video: <a  href="al5video.html#ALLEGRO_VIDEOptr">ALLEGRO_VIDEOptr</a>); CDECL; EXTERNAL ALLEGRO_VIDEO_LIB_NAME;</code></td>
+</tr>
+<tr><td colspan="1">
+<p>
+Closes the video and frees all allocated resources. The video pointer is invalid after the function returns. </p>
+<h6 class="description_section">See also</h6>
+<dl class="see_also">
+  <dt><a class="normal" href="al5video.html#al_open_video">al_open_video</a></dt>
+  <dd>Reads a video file.</dd>
+</dl>
+</td></tr>
+</table>
+<table class="detail wide_list">
+<tr class="list">
+<td class="itemcode"><span id="al_start_video"></span><code>PROCEDURE <b>al_start_video</b> (video: <a  href="al5video.html#ALLEGRO_VIDEOptr">ALLEGRO_VIDEOptr</a>; mixer: <a  href="al5audio.html#ALLEGRO_MIXERptr">ALLEGRO_MIXERptr</a>); CDECL; EXTERNAL ALLEGRO_VIDEO_LIB_NAME;</code></td>
+</tr>
+<tr><td colspan="1">
+<p>
+Starts streaming the video from the beginning.    </p>
+<h6 class="description_section">See also</h6>
+<dl class="see_also">
+  <dt><a class="normal" href="al5video.html#al_open_video">al_open_video</a></dt>
+  <dd>Reads a video file.</dd>
+  <dt><a class="normal" href="al5video.html#al_start_video_with_voice">al_start_video_with_voice</a></dt>
+  <dd>Like <a class="normal" href="al5video.html#al_start_video">al_start_video</a> but audio is routed to the provided voice.</dd>
+  <dt><a class="normal" href="al5video.html#al_get_video_event_source">al_get_video_event_source</a></dt>
+  <dd>Gets an event source for the video.</dd>
+  <dt><a class="normal" href="al5audio.html#al_set_voice_playing">al_set_voice_playing</a></dt>
+  <dd>Changes whether a voice is playing or not.</dd>
+</dl>
+</td></tr>
+</table>
+<table class="detail wide_list">
+<tr class="list">
+<td class="itemcode"><span id="al_start_video_with_voice"></span><code>PROCEDURE <b>al_start_video_with_voice</b> (video: <a  href="al5video.html#ALLEGRO_VIDEOptr">ALLEGRO_VIDEOptr</a>; voice: <a  href="al5audio.html#ALLEGRO_VOICEptr">ALLEGRO_VOICEptr</a>); CDECL; EXTERNAL ALLEGRO_VIDEO_LIB_NAME;</code></td>
+</tr>
+<tr><td colspan="1">
+<p>
+Like <a class="normal" href="al5video.html#al_start_video">al_start_video</a> but audio is routed to the provided voice.</p>
+</td></tr>
+</table>
+<table class="detail wide_list">
+<tr class="list">
+<td class="itemcode"><span id="al_get_video_event_source"></span><code>FUNCTION <b>al_get_video_event_source</b> (video: <a  href="al5video.html#ALLEGRO_VIDEOptr">ALLEGRO_VIDEOptr</a>): <a  href="Allegro5.html#ALLEGRO_EVENT_SOURCEptr">ALLEGRO_EVENT_SOURCEptr</a>; CDECL; EXTERNAL ALLEGRO_VIDEO_LIB_NAME;</code></td>
+</tr>
+<tr><td colspan="1">
+<p>
+Gets an event source for the video. The possible events are <a class="normal" href="al5video.html#ALLEGRO_EVENT_VIDEO_FRAME_SHOW">ALLEGRO_EVENT_VIDEO_FRAME_SHOW</a> and <a class="normal" href="al5video.html#ALLEGRO_EVENT_VIDEO_FINISHED">ALLEGRO_EVENT_VIDEO_FINISHED</a>.</p>
+</td></tr>
+</table>
+<table class="detail wide_list">
+<tr class="list">
+<td class="itemcode"><span id="al_set_video_playing"></span><code>PROCEDURE <b>al_set_video_playing</b> (video: <a  href="al5video.html#ALLEGRO_VIDEOptr">ALLEGRO_VIDEOptr</a>; playing: <a  href="al5Base.html#AL_BOOL">AL_BOOL</a>); CDECL; EXTERNAL ALLEGRO_VIDEO_LIB_NAME;</code></td>
+</tr>
+<tr><td colspan="1">
+<p>
+Paused or resumes playback. </p>
+<h6 class="description_section">See also</h6>
+<dl class="see_also">
+  <dt><a class="normal" href="al5video.html#al_is_video_playing">al_is_video_playing</a></dt>
+  <dd>Returns <code>True</code> if the video is currently playing.</dd>
+</dl>
+</td></tr>
+</table>
+<table class="detail wide_list">
+<tr class="list">
+<td class="itemcode"><span id="al_is_video_playing"></span><code>FUNCTION <b>al_is_video_playing</b> (video: <a  href="al5video.html#ALLEGRO_VIDEOptr">ALLEGRO_VIDEOptr</a>): <a  href="al5Base.html#AL_BOOL">AL_BOOL</a>; CDECL; EXTERNAL ALLEGRO_VIDEO_LIB_NAME;</code></td>
+</tr>
+<tr><td colspan="1">
+<p>
+Returns <code>True</code> if the video is currently playing.</p>
+</td></tr>
+</table>
+<table class="detail wide_list">
+<tr class="list">
+<td class="itemcode"><span id="al_get_video_audio_rate"></span><code>FUNCTION <b>al_get_video_audio_rate</b> (video: <a  href="al5video.html#ALLEGRO_VIDEOptr">ALLEGRO_VIDEOptr</a>): <a  href="al5Base.html#AL_DOUBLE">AL_DOUBLE</a>; CDECL; EXTERNAL ALLEGRO_VIDEO_LIB_NAME;</code></td>
+</tr>
+<tr><td colspan="1">
+<p>
+Returns the audio rate of the video, in Hz.</p>
+</td></tr>
+</table>
+<table class="detail wide_list">
+<tr class="list">
+<td class="itemcode"><span id="al_get_video_fps"></span><code>FUNCTION <b>al_get_video_fps</b> (video: <a  href="al5video.html#ALLEGRO_VIDEOptr">ALLEGRO_VIDEOptr</a>): <a  href="al5Base.html#AL_DOUBLE">AL_DOUBLE</a>; CDECL; EXTERNAL ALLEGRO_VIDEO_LIB_NAME;</code></td>
+</tr>
+<tr><td colspan="1">
+<p>
+Returns the speed of the video in frames per second. Often this will not be an integer value.</p>
+</td></tr>
+</table>
+<table class="detail wide_list">
+<tr class="list">
+<td class="itemcode"><span id="al_get_video_scaled_width"></span><code>FUNCTION <b>al_get_video_scaled_width</b> (video: <a  href="al5video.html#ALLEGRO_VIDEOptr">ALLEGRO_VIDEOptr</a>): <a  href="al5Base.html#AL_FLOAT">AL_FLOAT</a>; CDECL; EXTERNAL ALLEGRO_VIDEO_LIB_NAME;</code></td>
+</tr>
+<tr><td colspan="1">
+<p>
+Returns the width with which the video frame should be drawn. Videos often do not use square pixels, so this will may return a value larger than the width of the frame bitmap. </p>
+<h6 class="description_section">See also</h6>
+<dl class="see_also">
+  <dt><a class="normal" href="al5video.html#al_get_video_frame">al_get_video_frame</a></dt>
+  <dd>Returns the current video frame.</dd>
+</dl>
+</td></tr>
+</table>
+<table class="detail wide_list">
+<tr class="list">
+<td class="itemcode"><span id="al_get_video_scaled_height"></span><code>FUNCTION <b>al_get_video_scaled_height</b> (video: <a  href="al5video.html#ALLEGRO_VIDEOptr">ALLEGRO_VIDEOptr</a>): <a  href="al5Base.html#AL_FLOAT">AL_FLOAT</a>; CDECL; EXTERNAL ALLEGRO_VIDEO_LIB_NAME;</code></td>
+</tr>
+<tr><td colspan="1">
+<p>
+Returns the height with which the video frame should be drawn. Videos often do not use square pixels, so this will may return a value larger than the height of the frame bitmap. </p>
+<h6 class="description_section">See also</h6>
+<dl class="see_also">
+  <dt><a class="normal" href="al5video.html#al_get_video_frame">al_get_video_frame</a></dt>
+  <dd>Returns the current video frame.</dd>
+</dl>
+</td></tr>
+</table>
+<table class="detail wide_list">
+<tr class="list">
+<td class="itemcode"><span id="al_get_video_frame"></span><code>FUNCTION <b>al_get_video_frame</b> (video: <a  href="al5video.html#ALLEGRO_VIDEOptr">ALLEGRO_VIDEOptr</a>): <a  href="Allegro5.html#ALLEGRO_BITMAPptr">ALLEGRO_BITMAPptr</a>; CDECL; EXTERNAL ALLEGRO_VIDEO_LIB_NAME;</code></td>
+</tr>
+<tr><td colspan="1">
+<p>
+Returns the current video frame. The bitmap is owned by the video so do not attempt to free it. The bitmap will stay valid until the next call to <code>al_get_video_frame</code>.
+
+<p>Videos often do not use square pixels so the recommended way to draw a video frame would be using code like this: </p>
+
+<pre class="longcode">
+<span class="pascal_keyword">CONST</span>
+  Scale: <span class="pascal_float">1.0</span>; <span class="pascal_comment">{ Adjust this to fit your target bitmap dimensions. }</span>
+<span class="pascal_keyword">VAR</span>
+  Frame: ALLEGRO_BITMAPptr;
+  sw, sh, dw, dh: REAL;
+<span class="pascal_keyword">BEGIN</span>
+  frame = al_get_video_frame (Video);
+  sw = al_get_bitmap_width (Frame);
+  sh = al_get_bitmap_height (Frame);
+  dw = Scale * al_get_video_scaled_width (Video);
+  dh = Scale * al_get_video_scaled_height (Video);
+  al_draw_scaled_bitmap (Frame, <span class="pascal_numeric">0</span>, <span class="pascal_numeric">0</span>, sw, sh, <span class="pascal_numeric">0</span>, <span class="pascal_numeric">0</span>, dw, dh, <span class="pascal_numeric">0</span>);
+<span class="pascal_keyword">END</span>;</pre>
+
+<p>  </p>
+<h6 class="description_section">See also</h6>
+<dl class="see_also">
+  <dt><a class="normal" href="al5video.html#al_get_video_scaled_width">al_get_video_scaled_width</a></dt>
+  <dd>Returns the width with which the video frame should be drawn.</dd>
+  <dt><a class="normal" href="al5video.html#al_get_video_scaled_height">al_get_video_scaled_height</a></dt>
+  <dd>Returns the height with which the video frame should be drawn.</dd>
+</dl>
+</td></tr>
+</table>
+<table class="detail wide_list">
+<tr class="list">
+<td class="itemcode"><span id="al_get_video_position"></span><code>FUNCTION <b>al_get_video_position</b> (video: <a  href="al5video.html#ALLEGRO_VIDEOptr">ALLEGRO_VIDEOptr</a>; which: <a  href="al5video.html#ALLEGRO_VIDEO_POSITION_TYPE">ALLEGRO_VIDEO_POSITION_TYPE</a>): <a  href="al5Base.html#AL_DOUBLE">AL_DOUBLE</a>; CDECL; EXTERNAL ALLEGRO_VIDEO_LIB_NAME;</code></td>
+</tr>
+<tr><td colspan="1">
+<p>
+Returns the current position of the video stream in seconds since the beginning. The parameter is one of the <a class="normal" href="al5video.html#ALLEGRO_VIDEO_POSITION_TYPE">ALLEGRO_VIDEO_POSITION_TYPE</a> constants.</p>
+</td></tr>
+</table>
+<table class="detail wide_list">
+<tr class="list">
+<td class="itemcode"><span id="al_seek_video"></span><code>FUNCTION <b>al_seek_video</b> (video: <a  href="al5video.html#ALLEGRO_VIDEOptr">ALLEGRO_VIDEOptr</a>; pos_in_seconds: <a  href="al5Base.html#AL_DOUBLE">AL_DOUBLE</a>): <a  href="al5Base.html#AL_BOOL">AL_BOOL</a>; CDECL; EXTERNAL ALLEGRO_VIDEO_LIB_NAME;</code></td>
+</tr>
+<tr><td colspan="1">
+<p>
+Seeks to a different position in the video. Currently only seeking to the beginning of the video is supported.</p>
+</td></tr>
+</table>
+<h3 class="detail">Types</h3>
+<table class="detail wide_list">
+<tr class="list">
+<td class="itemcode"><span id="ALLEGRO_VIDEO_POSITION_TYPE"></span><code><b>ALLEGRO_VIDEO_POSITION_TYPE</b> = (...);</code></td>
+</tr>
+<tr><td colspan="1">
+<p>
+Used with <a class="normal" href="al5video.html#al_get_video_position">al_get_video_position</a> to specify which position to retrieve. If these get out of sync, audio and video may be out of sync in the display of the video.   </p>
+<h6 class="description_section">Values</h6>
+<ul>
+<li>
+<span id="ALLEGRO_VIDEO_POSITION_ACTUAL">ALLEGRO_VIDEO_POSITION_ACTUAL = 0</span>: The amount of time the video has been playing. If the video has audio then this value can be ahead of ALLEGRO_VIDEO_POSITION_VIDEO_DECODE when video decoding lags.</li>
+<li>
+<span id="ALLEGRO_VIDEO_POSITION_VIDEO_DECODE">ALLEGRO_VIDEO_POSITION_VIDEO_DECODE = 1</span>: The amount of video that has been decoded. This may lag behind the &quot;actual&quot; and audio positions if decoding is slower than realtime.</li>
+<li>
+<span id="ALLEGRO_VIDEO_POSITION_AUDIO_DECODE">ALLEGRO_VIDEO_POSITION_AUDIO_DECODE = 2</span>: The amount of audio that has been decoded. This may be the same as ALLEGRO_VIDEO_POSITION_ACTUAL if audio decode is driving the position, which is common to keep audio and video in sync.</li>
+</ul>
+</td></tr>
+</table>
+<table class="detail wide_list">
+<tr class="list">
+<td class="itemcode"><span id="ALLEGRO_VIDEOptr"></span><code><b>ALLEGRO_VIDEOptr</b> = <a  href="al5Base.html#AL_POINTER">AL_POINTER</a>;</code></td>
+</tr>
+<tr><td colspan="1">
+<p>
+Pointer to the video description.</p>
+</td></tr>
+</table>
+<h3 class="detail">Constants</h3>
+<table class="detail wide_list">
+<tr class="list">
+<td class="itemcode"><span id="ALLEGRO_EVENT_VIDEO_FRAME_SHOW"></span><code><b>ALLEGRO_EVENT_VIDEO_FRAME_SHOW</b> = 550;</code></td>
+</tr>
+<tr><td colspan="1">
+<p>
+This event is sent when it is time to show a new frame. Once you receive this event, you can draw the current frame (as returned by <a class="normal" href="al5video.html#al_get_video_frame">al_get_video_frame</a>). <code>al_get_video_frame</code> will continue returning the same frame until the next <code>ALLEGRO_EVENT_VIDEO_FRAME_SHOW</code> is sent.
+
+<p><code>user.data1</code> will contain a pointer to the video which generated the event.</p>
+</td></tr>
+</table>
+<table class="detail wide_list">
+<tr class="list">
+<td class="itemcode"><span id="ALLEGRO_EVENT_VIDEO_FINISHED"></span><code><b>ALLEGRO_EVENT_VIDEO_FINISHED</b>   = 551;</code></td>
+</tr>
+<tr><td colspan="1">
+<p>
+This event is sent when the video is finished. Depending on the backend, it may be possible to seek to an earlier part of the video and set the video to play to resume playback.
+
+<p><code>user.data1</code> will contain a pointer to the video which generated the event.</p>
+</td></tr>
+</table>
+<hr><span class="appinfo"><em>Generated by <a  href="https://github.com/pasdoc/pasdoc/wiki">PasDoc 0.15.0</a>. Generated on 2020-04-16 11:56:29.</em>
+</span>
+</td></tr></table></body></html>

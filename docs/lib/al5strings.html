@@ -1,0 +1,808 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<title>Allegro.pas 5.2.b.1: al5strings</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="generator" content="PasDoc 0.15.0">
+<meta http-equiv="content-type" content="text/html; charset=utf-8">
+<link rel="stylesheet" type="text/css" href="tipuesearch/tipuesearch.css">
+
+<link rel="StyleSheet" type="text/css" href="pasdoc.css">
+</head>
+<body>
+<table class="container"><tr><td class="navigation">
+<h2>Allegro.pas 5.2.b.1</h2><p><a href="introduction.html" class="navigation">Introduction</a></p><p><a href="AllUnits.html" class="navigation">Units</a></p><p><a href="ClassHierarchy.html" class="navigation">Class Hierarchy</a></p><p><a href="AllClasses.html" class="navigation">Classes, Interfaces, Objects and Records</a></p><p><a href="AllTypes.html" class="navigation">Types</a></p><p><a href="AllVariables.html" class="navigation">Variables</a></p><p><a href="AllConstants.html" class="navigation">Constants</a></p><p><a href="AllFunctions.html" class="navigation">Functions and Procedures</a></p><p><a href="AllIdentifiers.html" class="navigation">Identifiers</a></p><form class="search-form" action="_tipue_results.html"><div class="search-input"><input type="text" name="q" id="tipue_search_input"></div><div class="search-button"><input type="button" id="tipue_search_button" onclick="this.form.submit();"></div></form>
+<div style="clear: both"></div>
+
+<script type="text/javascript">
+$(document).ready(function() {
+    $('#tipue_search_input').tipuesearch({
+        /* 10 items to display seems standard */
+        'show': 10,
+        /* For PasDoc docs, showing urls is not very useful,
+           since the page title already shows the unit and identifier. */
+        'showURL': false
+    });
+});
+</script>
+</td><td class="content">
+<h1 class="unit">Unit al5strings</h1>
+<div class="sections">
+<div class="one_section"><a class="section" href="#PasDoc-Description">Description</a></div><div class="one_section">Uses</div><div class="one_section">Classes, Interfaces, Objects and Records</div><div class="one_section"><a class="section" href="#PasDoc-FuncsProcs">Functions and Procedures</a></div><div class="one_section"><a class="section" href="#PasDoc-Types">Types</a></div><div class="one_section">Constants</div><div class="one_section">Variables</div></div>
+<span id="PasDoc-Description"></span><h2 class="description">Description</h2>
+<p>
+Functions to integrate Pascal <code>STRING</code> with Allegro <a class="normal" href="al5Base.html#AL_STR">AL_STR</a>. Also implements Allegro's UNICODE support.
+
+<p><b>About string manipulation</b>
+
+<p>By default, Delphi RTL libraries defines <code>STRING</code> as <code>UNICODESTRING</code>. Since Allegro expects <code>ANSISTRING</code> this means you should use convert funcions as <code>UTFToString</code> and <code>UTF8Encode</code> to work properly, wich makes such operations non compatible with Free Pascal.
+
+<p>This unit defines a collection of functions and procedures that works like RTL string manipulation ones (i.e. <code>SysUtils</code> and <code>Strings</code> unit) but using the <code>AL_STR</code> type, ensuring your code will work both Delphi and Free Pascal without changes. It includes a few conversion functions as well if you need them. 
+
+<p><b>About UTF-8 string routines</b>
+
+<p>Some parts of the Allegro API, such as the font rountines, expect Unicode strings encoded in UTF-8. The UTF8 basic routines are provided to help you work with UTF-8 strings, however it does <i>not</i> mean you need to use them.
+
+<p>Briefly, Unicode is a standard consisting of a large character set of over 100,000 characters, and rules, such as how to sort strings. A code point is the integer value of a character, but not all code points are characters, as some code points have other uses. Unlike legacy character sets, the set of code points is open ended and more are assigned with time.
+
+<p>Clearly it is impossible to represent each code point with a 8-bit byte (limited to 256 code points) or even a 16-bit integer (limited to 65536 code points). It is possible to store code points in a 32-bit integers but it is space inefficient, and not actually that useful (at least, when handling the full complexity of Unicode; Allegro only does the very basics). There exist different Unicode Transformation Formats for encoding code points into smaller code units. The most important transformation formats are UTF-8 and UTF-16.
+
+<p>UTF-8 is a <i>variable-length</i> encoding which encodes each code point to between one and four 8-bit bytes each. UTF-8 has many nice properties, but the main advantages are that it is backwards compatible with C strings, and ASCII characters (code points in the range 0-127) are encoded in UTF-8 exactly as they would be in ASCII.
+
+<p>UTF-16 is another variable-length encoding, but encodes each code point to one or two 16-bit words each. It is, of course, not compatible with traditional C strings. Allegro does not generally use UTF-16 strings.
+
+<p>Here is a diagram of the representation of the word &quot;ål&quot;, with a NUL terminator, in both UTF-8 and UTF-16.
+
+<p></p>
+
+<table class="table_tag">
+  <tr class="head">
+    <th><p>String</p></th>
+    <th><p>å</p></th>
+    <th><p>l</p></th>
+    <th><p>NUL</p></th>
+  </tr>
+  <tr class="odd">
+    <td><p>Code points</p></td>
+    <td><p>U+00E5 (229)</p></td>
+    <td><p>U+006C (108)</p></td>
+    <td><p>U+0000 (0)</p></td>
+  </tr>
+  <tr class="even">
+    <td><p>UTF-8 bytes</p></td>
+    <td><p>0xC3, 0xA5</p></td>
+    <td><p>0x6C</p></td>
+    <td><p>0x00</p></td>
+  </tr>
+  <tr class="odd">
+    <td><p>UTF-16LE bytes</p></td>
+    <td><p>0xE5, 0x00</p></td>
+    <td><p>0x6C, 0x00</p></td>
+    <td><p>0x00, 0x00</p></td>
+  </tr>
+</table>
+
+<p>
+
+<p>You can see the aforementioned properties of UTF-8. The first code point U+00E5 (&quot;å&quot;) is outside of the ASCII range (0-127) so is encoded to multiple code units &ndash; it requires two bytes. U+006C (&quot;l&quot;) and U+0000 (NUL) both exist in the ASCII range so take exactly one byte each, as in a pure ASCII string. A zero byte never appears except to represent the NUL character, so many functions which expect C-style strings will work with UTF-8 strings without modification.
+
+<p>On the other hand, UTF-16 represents each code point by either one or two 16-bit code units (two or four bytes). The representation of each 16-bit code unit depends on the byte order; here we have demonstrated little endian.
+
+<p>Both UTF-8 and UTF-16 are self-synchronising. Starting from any offset within a string, it is efficient to find the beginning of the previous or next code point.
+
+<p>Not all sequences of bytes or 16-bit words are valid UTF-8 and UTF-16 strings respectively. UTF-8 also has an additional problem of overlong forms, where a code point value is encoded using more bytes than is strictly necessary. This is invalid and needs to be guarded against.
+
+<p>In the &quot;ustr&quot; functions, be careful whether a function takes code unit (byte) or code point indices. In general, all position parameters are in code unit offsets. This may be surprising, but if you think about it, it is required for good performance. (It also means some functions will work even if they do not contain UTF-8, since they only care about storing bytes, so you may actually store arbitrary data in the ALLEGRO_USTRs.)
+
+<p>For actual text processing, where you want to specify positions with code point indices, you should use <a class="normal" href="al5strings.html#al_ustr_offset">al_ustr_offset</a> to find the code unit offset position. However, most of the time you would probably just work with byte offsets. </p>
+<span id="PasDoc-Uses"></span><h2 class="overview">Overview</h2>
+<span id="PasDoc-FuncsProcs"></span><h3 class="summary">Functions and Procedures</h3>
+<table class="summary wide_list">
+<tr class="list">
+<td class="itemcode"><code>FUNCTION <b><a  href="al5strings.html#al_string_to_str">al_string_to_str</a></b> (CONST aString: SHORTSTRING): <a  href="al5Base.html#AL_STR">AL_STR</a>; OVERLOAD; INLINE;</code></td>
+</tr>
+<tr class="list2">
+<td class="itemcode"><code>FUNCTION <b><a  href="al5strings.html#al_string_to_str">al_string_to_str</a></b> (CONST aString: ANSISTRING): <a  href="al5Base.html#AL_STR">AL_STR</a>; OVERLOAD; INLINE;</code></td>
+</tr>
+<tr class="list">
+<td class="itemcode"><code>FUNCTION <b><a  href="al5strings.html#al_string_to_str">al_string_to_str</a></b> (CONST aString: UNICODESTRING): <a  href="al5Base.html#AL_STR">AL_STR</a>; OVERLOAD; INLINE;</code></td>
+</tr>
+<tr class="list2">
+<td class="itemcode"><code>FUNCTION <b><a  href="al5strings.html#al_str_to_string">al_str_to_string</a></b> (CONST aString: <a  href="al5Base.html#AL_STR">AL_STR</a>): STRING; OVERLOAD; INLINE;</code></td>
+</tr>
+<tr class="list">
+<td class="itemcode"><code>FUNCTION <b><a  href="al5strings.html#al_str_to_string">al_str_to_string</a></b> (CONST aString: <a  href="al5Base.html#AL_STRptr">AL_STRptr</a>): STRING; OVERLOAD; INLINE;</code></td>
+</tr>
+<tr class="list2">
+<td class="itemcode"><code>FUNCTION <b><a  href="al5strings.html#al_str_to_shortstring">al_str_to_shortstring</a></b> (CONST aString: <a  href="al5Base.html#AL_STR">AL_STR</a>): SHORTSTRING; OVERLOAD; INLINE;</code></td>
+</tr>
+<tr class="list">
+<td class="itemcode"><code>FUNCTION <b><a  href="al5strings.html#al_str_to_shortstring">al_str_to_shortstring</a></b> (CONST aString: <a  href="al5Base.html#AL_STRptr">AL_STRptr</a>): SHORTSTRING; OVERLOAD; INLINE;</code></td>
+</tr>
+<tr class="list2">
+<td class="itemcode"><code>FUNCTION <b><a  href="al5strings.html#al_str_to_ansistring">al_str_to_ansistring</a></b> (CONST aString: <a  href="al5Base.html#AL_STR">AL_STR</a>): ANSISTRING; OVERLOAD; INLINE;</code></td>
+</tr>
+<tr class="list">
+<td class="itemcode"><code>FUNCTION <b><a  href="al5strings.html#al_str_to_ansistring">al_str_to_ansistring</a></b> (CONST aString: <a  href="al5Base.html#AL_STRptr">AL_STRptr</a>): ANSISTRING; OVERLOAD; INLINE;</code></td>
+</tr>
+<tr class="list2">
+<td class="itemcode"><code>FUNCTION <b><a  href="al5strings.html#al_str_to_unicodestring">al_str_to_unicodestring</a></b> (CONST aString: <a  href="al5Base.html#AL_STR">AL_STR</a>): UNICODESTRING; OVERLOAD; INLINE;</code></td>
+</tr>
+<tr class="list">
+<td class="itemcode"><code>FUNCTION <b><a  href="al5strings.html#al_str_to_unicodestring">al_str_to_unicodestring</a></b> (CONST aString: <a  href="al5Base.html#AL_STRptr">AL_STRptr</a>): UNICODESTRING; OVERLOAD; INLINE;</code></td>
+</tr>
+<tr class="list2">
+<td class="itemcode"><code>FUNCTION <b><a  href="al5strings.html#al_str_format">al_str_format</a></b> (CONST Fmt: <a  href="al5Base.html#AL_STR">AL_STR</a>; CONST Args : ARRAY OF CONST) : <a  href="al5Base.html#AL_STR">AL_STR</a>;</code></td>
+</tr>
+<tr class="list">
+<td class="itemcode"><code>FUNCTION <b><a  href="al5strings.html#al_ustr_new">al_ustr_new</a></b> (CONST s: <a  href="al5Base.html#AL_STR">AL_STR</a>): <a  href="al5strings.html#ALLEGRO_USTRptr">ALLEGRO_USTRptr</a>; CDECL; EXTERNAL ALLEGRO_LIB_NAME;</code></td>
+</tr>
+<tr class="list2">
+<td class="itemcode"><code>FUNCTION <b><a  href="al5strings.html#al_ustr_new_from_buffer">al_ustr_new_from_buffer</a></b> (CONST s: <a  href="al5Base.html#AL_STRptr">AL_STRptr</a>; size: <a  href="al5Base.html#AL_SIZE_T">AL_SIZE_T</a>): <a  href="al5strings.html#ALLEGRO_USTRptr">ALLEGRO_USTRptr</a>; CDECL; EXTERNAL ALLEGRO_LIB_NAME;</code></td>
+</tr>
+<tr class="list">
+<td class="itemcode"><code>PROCEDURE <b><a  href="al5strings.html#al_ustr_free">al_ustr_free</a></b> (us: <a  href="al5strings.html#ALLEGRO_USTRptr">ALLEGRO_USTRptr</a>); CDECL; EXTERNAL ALLEGRO_LIB_NAME;</code></td>
+</tr>
+<tr class="list2">
+<td class="itemcode"><code>FUNCTION <b><a  href="al5strings.html#al_cstr">al_cstr</a></b> (CONST us: <a  href="al5strings.html#ALLEGRO_USTRptr">ALLEGRO_USTRptr</a>): <a  href="al5Base.html#AL_STRptr">AL_STRptr</a>; CDECL; EXTERNAL ALLEGRO_LIB_NAME;</code></td>
+</tr>
+<tr class="list">
+<td class="itemcode"><code>PROCEDURE <b><a  href="al5strings.html#al_ustr_to_buffer">al_ustr_to_buffer</a></b> (CONST us: <a  href="al5strings.html#ALLEGRO_USTRptr">ALLEGRO_USTRptr</a>; buffer: <a  href="al5Base.html#AL_STRptr">AL_STRptr</a>; size: <a  href="al5Base.html#AL_INT">AL_INT</a>); CDECL; EXTERNAL ALLEGRO_LIB_NAME;</code></td>
+</tr>
+<tr class="list2">
+<td class="itemcode"><code>FUNCTION <b><a  href="al5strings.html#al_cstr_dup">al_cstr_dup</a></b> (CONST us: <a  href="al5strings.html#ALLEGRO_USTRptr">ALLEGRO_USTRptr</a>): <a  href="al5Base.html#AL_STRptr">AL_STRptr</a>; CDECL; EXTERNAL ALLEGRO_LIB_NAME;</code></td>
+</tr>
+<tr class="list">
+<td class="itemcode"><code>FUNCTION <b><a  href="al5strings.html#al_ustr_dup">al_ustr_dup</a></b> (CONST us: <a  href="al5strings.html#ALLEGRO_USTRptr">ALLEGRO_USTRptr</a>): <a  href="al5strings.html#ALLEGRO_USTRptr">ALLEGRO_USTRptr</a>; CDECL; EXTERNAL ALLEGRO_LIB_NAME;</code></td>
+</tr>
+<tr class="list2">
+<td class="itemcode"><code>FUNCTION <b><a  href="al5strings.html#al_ustr_dup_substr">al_ustr_dup_substr</a></b> (CONST us: <a  href="al5strings.html#ALLEGRO_USTRptr">ALLEGRO_USTRptr</a>; start_pos, end_pos: <a  href="al5Base.html#AL_INT">AL_INT</a>): <a  href="al5strings.html#ALLEGRO_USTRptr">ALLEGRO_USTRptr</a>; CDECL; EXTERNAL ALLEGRO_LIB_NAME;</code></td>
+</tr>
+<tr class="list">
+<td class="itemcode"><code>FUNCTION <b><a  href="al5strings.html#al_ustr_empty_string">al_ustr_empty_string</a></b>: <a  href="al5strings.html#ALLEGRO_USTRptr">ALLEGRO_USTRptr</a>; CDECL; EXTERNAL ALLEGRO_LIB_NAME;</code></td>
+</tr>
+<tr class="list2">
+<td class="itemcode"><code>FUNCTION <b><a  href="al5strings.html#al_ref_cstr">al_ref_cstr</a></b> (OUT info: <a  href="al5strings.html#ALLEGRO_USTR_INFO">ALLEGRO_USTR_INFO</a>; CONST s: <a  href="al5Base.html#AL_STR">AL_STR</a>): <a  href="al5strings.html#ALLEGRO_USTRptr">ALLEGRO_USTRptr</a>; CDECL; EXTERNAL ALLEGRO_LIB_NAME;</code></td>
+</tr>
+<tr class="list">
+<td class="itemcode"><code>FUNCTION <b><a  href="al5strings.html#al_ref_buffer">al_ref_buffer</a></b> (OUT info: <a  href="al5strings.html#ALLEGRO_USTR_INFO">ALLEGRO_USTR_INFO</a>; CONST s: <a  href="al5Base.html#AL_STRptr">AL_STRptr</a>; size: <a  href="al5Base.html#AL_SIZE_T">AL_SIZE_T</a>): <a  href="al5strings.html#ALLEGRO_USTRptr">ALLEGRO_USTRptr</a>; CDECL; EXTERNAL ALLEGRO_LIB_NAME;</code></td>
+</tr>
+<tr class="list2">
+<td class="itemcode"><code>FUNCTION <b><a  href="al5strings.html#al_ref_ustr">al_ref_ustr</a></b> (OUT info: <a  href="al5strings.html#ALLEGRO_USTR_INFO">ALLEGRO_USTR_INFO</a>; CONST us: <a  href="al5strings.html#ALLEGRO_USTRptr">ALLEGRO_USTRptr</a>; star_pos, end_pos: <a  href="al5Base.html#AL_INT">AL_INT</a>): <a  href="al5strings.html#ALLEGRO_USTRptr">ALLEGRO_USTRptr</a>; CDECL; EXTERNAL ALLEGRO_LIB_NAME;</code></td>
+</tr>
+<tr class="list">
+<td class="itemcode"><code>FUNCTION <b><a  href="al5strings.html#al_ustr_size">al_ustr_size</a></b> (CONST us: <a  href="al5strings.html#ALLEGRO_USTRptr">ALLEGRO_USTRptr</a>): <a  href="al5Base.html#AL_SIZE_T">AL_SIZE_T</a>; CDECL; EXTERNAL ALLEGRO_LIB_NAME;</code></td>
+</tr>
+<tr class="list2">
+<td class="itemcode"><code>FUNCTION <b><a  href="al5strings.html#al_ustr_length">al_ustr_length</a></b> (CONST us: <a  href="al5strings.html#ALLEGRO_USTRptr">ALLEGRO_USTRptr</a>): <a  href="al5Base.html#AL_SIZE_T">AL_SIZE_T</a>; CDECL; EXTERNAL ALLEGRO_LIB_NAME;</code></td>
+</tr>
+<tr class="list">
+<td class="itemcode"><code>FUNCTION <b><a  href="al5strings.html#al_ustr_offset">al_ustr_offset</a></b> (CONST us: <a  href="al5strings.html#ALLEGRO_USTRptr">ALLEGRO_USTRptr</a>;index: <a  href="al5Base.html#AL_INT">AL_INT</a>): <a  href="al5Base.html#AL_INT">AL_INT</a>; CDECL; EXTERNAL ALLEGRO_LIB_NAME;</code></td>
+</tr>
+<tr class="list2">
+<td class="itemcode"><code>FUNCTION <b><a  href="al5strings.html#al_ustr_next">al_ustr_next</a></b> (CONST us: <a  href="al5strings.html#ALLEGRO_USTRptr">ALLEGRO_USTRptr</a>; VAR aPos: <a  href="al5Base.html#AL_INT">AL_INT</a>): <a  href="al5Base.html#AL_BOOL">AL_BOOL</a>; CDECL; EXTERNAL ALLEGRO_LIB_NAME;</code></td>
+</tr>
+<tr class="list">
+<td class="itemcode"><code>FUNCTION <b><a  href="al5strings.html#al_ustr_prev">al_ustr_prev</a></b> (CONST us: <a  href="al5strings.html#ALLEGRO_USTRptr">ALLEGRO_USTRptr</a>; VAR aPos: <a  href="al5Base.html#AL_INT">AL_INT</a>): <a  href="al5Base.html#AL_BOOL">AL_BOOL</a>; CDECL; EXTERNAL ALLEGRO_LIB_NAME;</code></td>
+</tr>
+<tr class="list2">
+<td class="itemcode"><code>FUNCTION <b><a  href="al5strings.html#al_ustr_insert_chr">al_ustr_insert_chr</a></b> (us1: <a  href="al5strings.html#ALLEGRO_USTRptr">ALLEGRO_USTRptr</a>; aPos: <a  href="al5Base.html#AL_INT">AL_INT</a>; c: <a  href="al5Base.html#AL_INT32">AL_INT32</a>) : <a  href="al5Base.html#AL_SIZE_T">AL_SIZE_T</a>; CDECL; EXTERNAL ALLEGRO_LIB_NAME;</code></td>
+</tr>
+<tr class="list">
+<td class="itemcode"><code>FUNCTION <b><a  href="al5strings.html#al_ustr_remove_chr">al_ustr_remove_chr</a></b> (us: <a  href="al5strings.html#ALLEGRO_USTRptr">ALLEGRO_USTRptr</a>; apos: <a  href="al5Base.html#AL_INT">AL_INT</a>): <a  href="al5Base.html#AL_BOOL">AL_BOOL</a>; CDECL; EXTERNAL ALLEGRO_LIB_NAME;</code></td>
+</tr>
+<tr class="list2">
+<td class="itemcode"><code>FUNCTION <b><a  href="al5strings.html#al_ustr_assign">al_ustr_assign</a></b> (us1: <a  href="al5strings.html#ALLEGRO_USTRptr">ALLEGRO_USTRptr</a>; CONST us2: <a  href="al5strings.html#ALLEGRO_USTRptr">ALLEGRO_USTRptr</a>): <a  href="al5Base.html#AL_BOOL">AL_BOOL</a>; CDECL; EXTERNAL ALLEGRO_LIB_NAME;</code></td>
+</tr>
+<tr class="list">
+<td class="itemcode"><code>FUNCTION <b><a  href="al5strings.html#al_ustr_assign_cstr">al_ustr_assign_cstr</a></b> (us1: <a  href="al5strings.html#ALLEGRO_USTRptr">ALLEGRO_USTRptr</a>; CONST s: <a  href="al5Base.html#AL_STR">AL_STR</a>): <a  href="al5Base.html#AL_BOOL">AL_BOOL</a>; CDECL; EXTERNAL ALLEGRO_LIB_NAME;</code></td>
+</tr>
+<tr class="list2">
+<td class="itemcode"><code>FUNCTION <b><a  href="al5strings.html#al_ustr_equal">al_ustr_equal</a></b> (CONST us1, us2: <a  href="al5strings.html#ALLEGRO_USTRptr">ALLEGRO_USTRptr</a>): <a  href="al5Base.html#AL_BOOL">AL_BOOL</a>; CDECL; EXTERNAL ALLEGRO_LIB_NAME;</code></td>
+</tr>
+<tr class="list">
+<td class="itemcode"><code>FUNCTION <b><a  href="al5strings.html#al_ustr_compare">al_ustr_compare</a></b> (CONST u, v: <a  href="al5strings.html#ALLEGRO_USTRptr">ALLEGRO_USTRptr</a>): <a  href="al5Base.html#AL_INT">AL_INT</a>; CDECL; EXTERNAL ALLEGRO_LIB_NAME;</code></td>
+</tr>
+<tr class="list2">
+<td class="itemcode"><code>FUNCTION <b><a  href="al5strings.html#al_ustr_ncompare">al_ustr_ncompare</a></b> (CONST u, v: <a  href="al5strings.html#ALLEGRO_USTRptr">ALLEGRO_USTRptr</a>): <a  href="al5Base.html#AL_INT">AL_INT</a>; CDECL; EXTERNAL ALLEGRO_LIB_NAME;</code></td>
+</tr>
+<tr class="list">
+<td class="itemcode"><code>FUNCTION <b><a  href="al5strings.html#al_utf8_width">al_utf8_width</a></b> (c: <a  href="al5Base.html#AL_INT32">AL_INT32</a>): <a  href="al5Base.html#AL_SIZE_T">AL_SIZE_T</a>; CDECL; EXTERNAL ALLEGRO_LIB_NAME;</code></td>
+</tr>
+</table>
+<span id="PasDoc-Types"></span><h3 class="summary">Types</h3>
+<table class="summary wide_list">
+<tr class="list">
+<td class="itemcode"><code><b><a  href="al5strings.html#ALLEGRO_USTRptr">ALLEGRO_USTRptr</a></b> = &circ;<a  href="al5strings.html#ALLEGRO_USTR">ALLEGRO_USTR</a>;</code></td>
+</tr>
+<tr class="list2">
+<td class="itemcode"><code><b><a  href="al5strings.html#ALLEGRO_USTR">ALLEGRO_USTR</a></b> = _al_tagbstring;</code></td>
+</tr>
+<tr class="list">
+<td class="itemcode"><code><b><a  href="al5strings.html#ALLEGRO_USTR_INFOptr">ALLEGRO_USTR_INFOptr</a></b> = &circ;<a  href="al5strings.html#ALLEGRO_USTR_INFO">ALLEGRO_USTR_INFO</a>;</code></td>
+</tr>
+<tr class="list2">
+<td class="itemcode"><code><b><a  href="al5strings.html#ALLEGRO_USTR_INFO">ALLEGRO_USTR_INFO</a></b> = _al_tagbstring;</code></td>
+</tr>
+</table>
+<h2 class="description">Description</h2>
+<h3 class="detail">Functions and Procedures</h3>
+<table class="detail wide_list">
+<tr class="list">
+<td class="itemcode"><span id="al_string_to_str"></span><code>FUNCTION <b>al_string_to_str</b> (CONST aString: SHORTSTRING): <a  href="al5Base.html#AL_STR">AL_STR</a>; OVERLOAD; INLINE;</code></td>
+</tr>
+<tr><td colspan="1">
+&nbsp;</td></tr>
+</table>
+<table class="detail wide_list">
+<tr class="list">
+<td class="itemcode"><span id="al_string_to_str"></span><code>FUNCTION <b>al_string_to_str</b> (CONST aString: ANSISTRING): <a  href="al5Base.html#AL_STR">AL_STR</a>; OVERLOAD; INLINE;</code></td>
+</tr>
+<tr><td colspan="1">
+&nbsp;</td></tr>
+</table>
+<table class="detail wide_list">
+<tr class="list">
+<td class="itemcode"><span id="al_string_to_str"></span><code>FUNCTION <b>al_string_to_str</b> (CONST aString: UNICODESTRING): <a  href="al5Base.html#AL_STR">AL_STR</a>; OVERLOAD; INLINE;</code></td>
+</tr>
+<tr><td colspan="1">
+<p>
+Converts Pascal strings to <a class="normal" href="al5Base.html#AL_STR">AL_STR</a>.</p>
+</td></tr>
+</table>
+<table class="detail wide_list">
+<tr class="list">
+<td class="itemcode"><span id="al_str_to_string"></span><code>FUNCTION <b>al_str_to_string</b> (CONST aString: <a  href="al5Base.html#AL_STR">AL_STR</a>): STRING; OVERLOAD; INLINE;</code></td>
+</tr>
+<tr><td colspan="1">
+&nbsp;</td></tr>
+</table>
+<table class="detail wide_list">
+<tr class="list">
+<td class="itemcode"><span id="al_str_to_string"></span><code>FUNCTION <b>al_str_to_string</b> (CONST aString: <a  href="al5Base.html#AL_STRptr">AL_STRptr</a>): STRING; OVERLOAD; INLINE;</code></td>
+</tr>
+<tr><td colspan="1">
+<p>
+Converts <a class="normal" href="al5Base.html#AL_STR">AL_STR</a> or <a class="normal" href="al5Base.html#AL_STRptr">AL_STRptr</a> to a <code>STRING</code>.</p>
+</td></tr>
+</table>
+<table class="detail wide_list">
+<tr class="list">
+<td class="itemcode"><span id="al_str_to_shortstring"></span><code>FUNCTION <b>al_str_to_shortstring</b> (CONST aString: <a  href="al5Base.html#AL_STR">AL_STR</a>): SHORTSTRING; OVERLOAD; INLINE;</code></td>
+</tr>
+<tr><td colspan="1">
+&nbsp;</td></tr>
+</table>
+<table class="detail wide_list">
+<tr class="list">
+<td class="itemcode"><span id="al_str_to_shortstring"></span><code>FUNCTION <b>al_str_to_shortstring</b> (CONST aString: <a  href="al5Base.html#AL_STRptr">AL_STRptr</a>): SHORTSTRING; OVERLOAD; INLINE;</code></td>
+</tr>
+<tr><td colspan="1">
+<p>
+Converts <a class="normal" href="al5Base.html#AL_STR">AL_STR</a> or <a class="normal" href="al5Base.html#AL_STRptr">AL_STRptr</a> to a Pascal string.</p>
+</td></tr>
+</table>
+<table class="detail wide_list">
+<tr class="list">
+<td class="itemcode"><span id="al_str_to_ansistring"></span><code>FUNCTION <b>al_str_to_ansistring</b> (CONST aString: <a  href="al5Base.html#AL_STR">AL_STR</a>): ANSISTRING; OVERLOAD; INLINE;</code></td>
+</tr>
+<tr><td colspan="1">
+&nbsp;</td></tr>
+</table>
+<table class="detail wide_list">
+<tr class="list">
+<td class="itemcode"><span id="al_str_to_ansistring"></span><code>FUNCTION <b>al_str_to_ansistring</b> (CONST aString: <a  href="al5Base.html#AL_STRptr">AL_STRptr</a>): ANSISTRING; OVERLOAD; INLINE;</code></td>
+</tr>
+<tr><td colspan="1">
+<p>
+Converts <a class="normal" href="al5Base.html#AL_STR">AL_STR</a> or <a class="normal" href="al5Base.html#AL_STRptr">AL_STRptr</a> to an <code>ANSISTRING</code>.</p>
+</td></tr>
+</table>
+<table class="detail wide_list">
+<tr class="list">
+<td class="itemcode"><span id="al_str_to_unicodestring"></span><code>FUNCTION <b>al_str_to_unicodestring</b> (CONST aString: <a  href="al5Base.html#AL_STR">AL_STR</a>): UNICODESTRING; OVERLOAD; INLINE;</code></td>
+</tr>
+<tr><td colspan="1">
+&nbsp;</td></tr>
+</table>
+<table class="detail wide_list">
+<tr class="list">
+<td class="itemcode"><span id="al_str_to_unicodestring"></span><code>FUNCTION <b>al_str_to_unicodestring</b> (CONST aString: <a  href="al5Base.html#AL_STRptr">AL_STRptr</a>): UNICODESTRING; OVERLOAD; INLINE;</code></td>
+</tr>
+<tr><td colspan="1">
+<p>
+Converts <a class="normal" href="al5Base.html#AL_STR">AL_STR</a> or <a class="normal" href="al5Base.html#AL_STRptr">AL_STRptr</a> to an <code>UNICODESTRING</code>.</p>
+</td></tr>
+</table>
+<table class="detail wide_list">
+<tr class="list">
+<td class="itemcode"><span id="al_str_format"></span><code>FUNCTION <b>al_str_format</b> (CONST Fmt: <a  href="al5Base.html#AL_STR">AL_STR</a>; CONST Args : ARRAY OF CONST) : <a  href="al5Base.html#AL_STR">AL_STR</a>;</code></td>
+</tr>
+<tr><td colspan="1">
+<p>
+Formats a string with given arguments.
+
+<p>It works exactly like RTL <code>SysUtils.Format</code> but using <a class="normal" href="al5Base.html#AL_STR">AL_STR</a> instead of <code>STRING</code>.</p>
+</td></tr>
+</table>
+<table class="detail wide_list">
+<tr class="list">
+<td class="itemcode"><span id="al_ustr_new"></span><code>FUNCTION <b>al_ustr_new</b> (CONST s: <a  href="al5Base.html#AL_STR">AL_STR</a>): <a  href="al5strings.html#ALLEGRO_USTRptr">ALLEGRO_USTRptr</a>; CDECL; EXTERNAL ALLEGRO_LIB_NAME;</code></td>
+</tr>
+<tr><td colspan="1">
+<p>
+Creates a new string containing a copy of the C-style string <code>s</code>. The string must eventually be freed with <a class="normal" href="al5strings.html#al_ustr_free">al_ustr_free</a>.   </p>
+<h6 class="description_section">See also</h6>
+<dl class="see_also">
+  <dt><a class="normal" href="al5strings.html#al_ustr_new_from_buffer">al_ustr_new_from_buffer</a></dt>
+  <dd>Creates a new string containing a copy of the buffer pointed to by <code>s</code> of the given <code>size</code> in bytes.</dd>
+  <dt><a class="normal" href="al5strings.html#al_ustr_assign">al_ustr_assign</a></dt>
+  <dd>Overwrites the string <code>us1</code> with another string <code>us2</code>.</dd>
+  <dt><a class="normal" href="al5strings.html#al_ustr_dup">al_ustr_dup</a></dt>
+  <dd>Returns a duplicate copy of a string.</dd>
+</dl>
+</td></tr>
+</table>
+<table class="detail wide_list">
+<tr class="list">
+<td class="itemcode"><span id="al_ustr_new_from_buffer"></span><code>FUNCTION <b>al_ustr_new_from_buffer</b> (CONST s: <a  href="al5Base.html#AL_STRptr">AL_STRptr</a>; size: <a  href="al5Base.html#AL_SIZE_T">AL_SIZE_T</a>): <a  href="al5strings.html#ALLEGRO_USTRptr">ALLEGRO_USTRptr</a>; CDECL; EXTERNAL ALLEGRO_LIB_NAME;</code></td>
+</tr>
+<tr><td colspan="1">
+<p>
+Creates a new string containing a copy of the buffer pointed to by <code>s</code> of the given <code>size</code> in bytes. The string must eventually be freed with <a class="normal" href="al5strings.html#al_ustr_free">al_ustr_free</a>. </p>
+<h6 class="description_section">See also</h6>
+<dl class="see_also">
+  <dt><a class="normal" href="al5strings.html#al_ustr_new">al_ustr_new</a></dt>
+  <dd>Creates a new string containing a copy of the C-style string <code>s</code>.</dd>
+</dl>
+</td></tr>
+</table>
+<table class="detail wide_list">
+<tr class="list">
+<td class="itemcode"><span id="al_ustr_free"></span><code>PROCEDURE <b>al_ustr_free</b> (us: <a  href="al5strings.html#ALLEGRO_USTRptr">ALLEGRO_USTRptr</a>); CDECL; EXTERNAL ALLEGRO_LIB_NAME;</code></td>
+</tr>
+<tr><td colspan="1">
+<p>
+Frees a previously allocated string. Does nothing if the argument is <code>Nil</code>.  </p>
+<h6 class="description_section">See also</h6>
+<dl class="see_also">
+  <dt><a class="normal" href="al5strings.html#al_ustr_new">al_ustr_new</a></dt>
+  <dd>Creates a new string containing a copy of the C-style string <code>s</code>.</dd>
+  <dt><a class="normal" href="al5strings.html#al_ustr_new_from_buffer">al_ustr_new_from_buffer</a></dt>
+  <dd>Creates a new string containing a copy of the buffer pointed to by <code>s</code> of the given <code>size</code> in bytes.</dd>
+</dl>
+</td></tr>
+</table>
+<table class="detail wide_list">
+<tr class="list">
+<td class="itemcode"><span id="al_cstr"></span><code>FUNCTION <b>al_cstr</b> (CONST us: <a  href="al5strings.html#ALLEGRO_USTRptr">ALLEGRO_USTRptr</a>): <a  href="al5Base.html#AL_STRptr">AL_STRptr</a>; CDECL; EXTERNAL ALLEGRO_LIB_NAME;</code></td>
+</tr>
+<tr><td colspan="1">
+<p>
+Get a <code>AL_STRptr</code> pointer to the data in a string. This pointer will only be valid while the <code>ALLEGRO_USTR</code> object is not modified and not destroyed. The pointer may be passed to functions expecting C-style strings, with the following caveats:</p>
+
+<ul class="paragraph_spacing">
+  <li><p><code>ALLEGRO_USTR</code>s are allowed to contain embedded <code>NUL</code> (<code>$00</code>) bytes. That means <code>al_ustr_size (u)</code> and <code>Length (al_cstr (u))</code> may not agree.</p></li>
+  <li><p>An <code>ALLEGRO_USTR</code> may be created in such a way that it is not <code>NUL</code> terminated. A string which is dynamically allocated will always be <code>NUL</code> terminated, but a string which references the middle of another string or region of memory will not be <code>NUL</code> terminated.</p></li>
+  <li><p>If the <code>ALLEGRO_USTR</code> references another string, the returned C string will point into the referenced string. Again, no <code>NUL</code> terminator will be added to the referenced string.</p></li>
+</ul>
+
+<p>   </p>
+<h6 class="description_section">See also</h6>
+<dl class="see_also">
+  <dt><a class="normal" href="al5strings.html#al_ustr_to_buffer">al_ustr_to_buffer</a></dt>
+  <dd>Writes the contents of the string into a pre-allocated buffer of the given size in bytes.</dd>
+  <dt><a class="normal" href="al5strings.html#al_cstr_dup">al_cstr_dup</a></dt>
+  <dd>Creates a <code>NUL</code> (<code>$00</code>) terminated copy of the string.</dd>
+  <dt><a class="normal" href="al5strings.html#al_ustr_assign_cstr">al_ustr_assign_cstr</a></dt>
+  <dd>Overwrites the string <code>us1</code> with the contents of the string <code>s</code>.</dd>
+</dl>
+</td></tr>
+</table>
+<table class="detail wide_list">
+<tr class="list">
+<td class="itemcode"><span id="al_ustr_to_buffer"></span><code>PROCEDURE <b>al_ustr_to_buffer</b> (CONST us: <a  href="al5strings.html#ALLEGRO_USTRptr">ALLEGRO_USTRptr</a>; buffer: <a  href="al5Base.html#AL_STRptr">AL_STRptr</a>; size: <a  href="al5Base.html#AL_INT">AL_INT</a>); CDECL; EXTERNAL ALLEGRO_LIB_NAME;</code></td>
+</tr>
+<tr><td colspan="1">
+<p>
+Writes the contents of the string into a pre-allocated buffer of the given size in bytes. The result will always be <code>NUL</code> terminated, so a maximum of <code>size - 1</code> bytes will be copied.  </p>
+<h6 class="description_section">See also</h6>
+<dl class="see_also">
+  <dt><a class="normal" href="al5strings.html#al_cstr">al_cstr</a></dt>
+  <dd>Get a <code>AL_STRptr</code> pointer to the data in a string.</dd>
+  <dt><a class="normal" href="al5strings.html#al_cstr_dup">al_cstr_dup</a></dt>
+  <dd>Creates a <code>NUL</code> (<code>$00</code>) terminated copy of the string.</dd>
+</dl>
+</td></tr>
+</table>
+<table class="detail wide_list">
+<tr class="list">
+<td class="itemcode"><span id="al_cstr_dup"></span><code>FUNCTION <b>al_cstr_dup</b> (CONST us: <a  href="al5strings.html#ALLEGRO_USTRptr">ALLEGRO_USTRptr</a>): <a  href="al5Base.html#AL_STRptr">AL_STRptr</a>; CDECL; EXTERNAL ALLEGRO_LIB_NAME;</code></td>
+</tr>
+<tr><td colspan="1">
+<p>
+Creates a <code>NUL</code> (<code>$00</code>) terminated copy of the string. Any embedded <code>NUL</code> bytes will still be presented in the returned string. The new string must eventually be freed with <code>al_free</code>.
+
+<p>If an error occurs <code>Nil</code> is returned.   </p>
+<h6 class="description_section">See also</h6>
+<dl class="see_also">
+  <dt><a class="normal" href="al5strings.html#al_cstr">al_cstr</a></dt>
+  <dd>Get a <code>AL_STRptr</code> pointer to the data in a string.</dd>
+  <dt><a class="normal" href="al5strings.html#al_ustr_to_buffer">al_ustr_to_buffer</a></dt>
+  <dd>Writes the contents of the string into a pre-allocated buffer of the given size in bytes.</dd>
+  <dt><a class="normal" href="Allegro5.html#al_free">al_free</a></dt>
+  <dd>Like <code>FreeMem</code>, releases the memory occupied by pointer <code>p</code>.</dd>
+</dl>
+</td></tr>
+</table>
+<table class="detail wide_list">
+<tr class="list">
+<td class="itemcode"><span id="al_ustr_dup"></span><code>FUNCTION <b>al_ustr_dup</b> (CONST us: <a  href="al5strings.html#ALLEGRO_USTRptr">ALLEGRO_USTRptr</a>): <a  href="al5strings.html#ALLEGRO_USTRptr">ALLEGRO_USTRptr</a>; CDECL; EXTERNAL ALLEGRO_LIB_NAME;</code></td>
+</tr>
+<tr><td colspan="1">
+<p>
+Returns a duplicate copy of a string. The new string will need to be freed with <code>al_ustr_free</code>.  </p>
+<h6 class="description_section">See also</h6>
+<dl class="see_also">
+  <dt><a class="normal" href="al5strings.html#al_ustr_dup_substr">al_ustr_dup_substr</a></dt>
+  <dd>Returns a new copy of a string, containing its contents in the byte interval <code>[start_pos, end_pos)</code>.</dd>
+  <dt><a class="normal" href="al5strings.html#al_ustr_free">al_ustr_free</a></dt>
+  <dd>Frees a previously allocated string.</dd>
+</dl>
+</td></tr>
+</table>
+<table class="detail wide_list">
+<tr class="list">
+<td class="itemcode"><span id="al_ustr_dup_substr"></span><code>FUNCTION <b>al_ustr_dup_substr</b> (CONST us: <a  href="al5strings.html#ALLEGRO_USTRptr">ALLEGRO_USTRptr</a>; start_pos, end_pos: <a  href="al5Base.html#AL_INT">AL_INT</a>): <a  href="al5strings.html#ALLEGRO_USTRptr">ALLEGRO_USTRptr</a>; CDECL; EXTERNAL ALLEGRO_LIB_NAME;</code></td>
+</tr>
+<tr><td colspan="1">
+<p>
+Returns a new copy of a string, containing its contents in the byte interval <code>[start_pos, end_pos)</code>. The new string will be <code>NUL</code> terminated and will need to be freed with <code>al_ustr_free</code>.
+
+<p>If necessary, use <a class="normal" href="al5strings.html#al_ustr_offset">al_ustr_offset</a> to find the byte offsets for a given code point that you are interested in.  
+
+<p><b>Note</b>
+
+<p>This is used because the way the C language works. I didn't test if Pascal do need this kind of stuff. Future versions of Allegro.pas would not include this function, so don't use it unless your really need to (and tell me if you really need it to remove this warning from documentation).</p>
+<h6 class="description_section">See also</h6>
+<dl class="see_also">
+  <dt><a class="normal" href="al5strings.html#al_ustr_dup">al_ustr_dup</a></dt>
+  <dd>Returns a duplicate copy of a string.</dd>
+  <dt><a class="normal" href="al5strings.html#al_ustr_free">al_ustr_free</a></dt>
+  <dd>Frees a previously allocated string.</dd>
+</dl>
+</td></tr>
+</table>
+<table class="detail wide_list">
+<tr class="list">
+<td class="itemcode"><span id="al_ustr_empty_string"></span><code>FUNCTION <b>al_ustr_empty_string</b>: <a  href="al5strings.html#ALLEGRO_USTRptr">ALLEGRO_USTRptr</a>; CDECL; EXTERNAL ALLEGRO_LIB_NAME;</code></td>
+</tr>
+<tr><td colspan="1">
+<p>
+Returns a pointer to a static empty string. The string is read only and must not be freed.</p>
+</td></tr>
+</table>
+<table class="detail wide_list">
+<tr class="list">
+<td class="itemcode"><span id="al_ref_cstr"></span><code>FUNCTION <b>al_ref_cstr</b> (OUT info: <a  href="al5strings.html#ALLEGRO_USTR_INFO">ALLEGRO_USTR_INFO</a>; CONST s: <a  href="al5Base.html#AL_STR">AL_STR</a>): <a  href="al5strings.html#ALLEGRO_USTRptr">ALLEGRO_USTRptr</a>; CDECL; EXTERNAL ALLEGRO_LIB_NAME;</code></td>
+</tr>
+<tr><td colspan="1">
+<p>
+Creates a string that references the storage of a C-style string. The information about the string (e.g. its size) is stored in the <code>info</code> parameter. The string will not have any other storage allocated of its own, so if you allocate the info structure on the stack then no explicit &quot;free&quot; operation is required.
+
+<p>The string is valid until the underlying C string disappears.
+
+<p>Example: </p>
+
+<pre class="longcode">
+<span class="pascal_keyword">VAR</span>
+  Info: ALLEGRO_USTR_INFO;
+  us: ALLEGRO_USTRptr;
+<span class="pascal_keyword">BEGIN</span>
+  us := al_ref_cstr (Info, <span class="pascal_string">'my string'</span>)
+<span class="pascal_keyword">END</span>;</pre>
+
+<p>  </p>
+<h6 class="description_section">See also</h6>
+<dl class="see_also">
+  <dt><a class="normal" href="al5strings.html#al_ref_buffer">al_ref_buffer</a></dt>
+  <dd>Creates a string that references the storage of an underlying buffer.</dd>
+  <dt><a class="normal" href="al5strings.html#al_ref_ustr">al_ref_ustr</a></dt>
+  <dd>Creates a read-only string that references the storage of another <a class="normal" href="al5strings.html#ALLEGRO_USTR">ALLEGRO_USTR</a> string.</dd>
+</dl>
+</td></tr>
+</table>
+<table class="detail wide_list">
+<tr class="list">
+<td class="itemcode"><span id="al_ref_buffer"></span><code>FUNCTION <b>al_ref_buffer</b> (OUT info: <a  href="al5strings.html#ALLEGRO_USTR_INFO">ALLEGRO_USTR_INFO</a>; CONST s: <a  href="al5Base.html#AL_STRptr">AL_STRptr</a>; size: <a  href="al5Base.html#AL_SIZE_T">AL_SIZE_T</a>): <a  href="al5strings.html#ALLEGRO_USTRptr">ALLEGRO_USTRptr</a>; CDECL; EXTERNAL ALLEGRO_LIB_NAME;</code></td>
+</tr>
+<tr><td colspan="1">
+<p>
+Creates a string that references the storage of an underlying buffer. The size of the buffer is given in bytes. You can use it to reference only part of a string or an arbitrary region of memory.
+
+<p>The string is valid while the underlying memory buffer is valid.  </p>
+<h6 class="description_section">See also</h6>
+<dl class="see_also">
+  <dt><a class="normal" href="al5strings.html#al_ref_cstr">al_ref_cstr</a></dt>
+  <dd>Creates a string that references the storage of a C-style string.</dd>
+  <dt><a class="normal" href="al5strings.html#al_ref_ustr">al_ref_ustr</a></dt>
+  <dd>Creates a read-only string that references the storage of another <a class="normal" href="al5strings.html#ALLEGRO_USTR">ALLEGRO_USTR</a> string.</dd>
+</dl>
+</td></tr>
+</table>
+<table class="detail wide_list">
+<tr class="list">
+<td class="itemcode"><span id="al_ref_ustr"></span><code>FUNCTION <b>al_ref_ustr</b> (OUT info: <a  href="al5strings.html#ALLEGRO_USTR_INFO">ALLEGRO_USTR_INFO</a>; CONST us: <a  href="al5strings.html#ALLEGRO_USTRptr">ALLEGRO_USTRptr</a>; star_pos, end_pos: <a  href="al5Base.html#AL_INT">AL_INT</a>): <a  href="al5strings.html#ALLEGRO_USTRptr">ALLEGRO_USTRptr</a>; CDECL; EXTERNAL ALLEGRO_LIB_NAME;</code></td>
+</tr>
+<tr><td colspan="1">
+<p>
+Creates a read-only string that references the storage of another <a class="normal" href="al5strings.html#ALLEGRO_USTR">ALLEGRO_USTR</a> string. The information about the string (e.g. its size) is stored in the structure pointed to by the <code>info</code> parameter. The new string will not have any other storage allocated of its own, so if you allocate the info structure on the stack then no explicit &quot;free&quot; operation is required.
+
+<p>The referenced interval is <code>[start_pos, end_pos)</code>. Both are byte offsets.
+
+<p>The string is valid until the underlying string is modified or destroyed.
+
+<p>If you need a range of code-points instead of bytes, use <a class="normal" href="al5strings.html#al_ustr_offset">al_ustr_offset</a> to find the byte offsets.  </p>
+<h6 class="description_section">See also</h6>
+<dl class="see_also">
+  <dt><a class="normal" href="al5strings.html#al_ref_cstr">al_ref_cstr</a></dt>
+  <dd>Creates a string that references the storage of a C-style string.</dd>
+  <dt><a class="normal" href="al5strings.html#al_ref_buffer">al_ref_buffer</a></dt>
+  <dd>Creates a string that references the storage of an underlying buffer.</dd>
+</dl>
+</td></tr>
+</table>
+<table class="detail wide_list">
+<tr class="list">
+<td class="itemcode"><span id="al_ustr_size"></span><code>FUNCTION <b>al_ustr_size</b> (CONST us: <a  href="al5strings.html#ALLEGRO_USTRptr">ALLEGRO_USTRptr</a>): <a  href="al5Base.html#AL_SIZE_T">AL_SIZE_T</a>; CDECL; EXTERNAL ALLEGRO_LIB_NAME;</code></td>
+</tr>
+<tr><td colspan="1">
+<p>
+Returns the size of the string in bytes. This is equal to the number of code points in the string if the string is empty or contains only 7-bit ASCII characters. </p>
+<h6 class="description_section">See also</h6>
+<dl class="see_also">
+  <dt><a class="normal" href="al5strings.html#al_ustr_length">al_ustr_length</a></dt>
+  <dd>Returns the number of code points in the string.</dd>
+</dl>
+</td></tr>
+</table>
+<table class="detail wide_list">
+<tr class="list">
+<td class="itemcode"><span id="al_ustr_length"></span><code>FUNCTION <b>al_ustr_length</b> (CONST us: <a  href="al5strings.html#ALLEGRO_USTRptr">ALLEGRO_USTRptr</a>): <a  href="al5Base.html#AL_SIZE_T">AL_SIZE_T</a>; CDECL; EXTERNAL ALLEGRO_LIB_NAME;</code></td>
+</tr>
+<tr><td colspan="1">
+<p>
+Returns the number of code points in the string.  </p>
+<h6 class="description_section">See also</h6>
+<dl class="see_also">
+  <dt><a class="normal" href="al5strings.html#al_ustr_size">al_ustr_size</a></dt>
+  <dd>Returns the size of the string in bytes.</dd>
+  <dt><a class="normal" href="al5strings.html#al_ustr_offset">al_ustr_offset</a></dt>
+  <dd>Returns the byte offset (from the start of the string) of the code point at the specified <code>index</code> in the string.</dd>
+</dl>
+</td></tr>
+</table>
+<table class="detail wide_list">
+<tr class="list">
+<td class="itemcode"><span id="al_ustr_offset"></span><code>FUNCTION <b>al_ustr_offset</b> (CONST us: <a  href="al5strings.html#ALLEGRO_USTRptr">ALLEGRO_USTRptr</a>;index: <a  href="al5Base.html#AL_INT">AL_INT</a>): <a  href="al5Base.html#AL_INT">AL_INT</a>; CDECL; EXTERNAL ALLEGRO_LIB_NAME;</code></td>
+</tr>
+<tr><td colspan="1">
+<p>
+Returns the byte offset (from the start of the string) of the code point at the specified <code>index</code> in the string. A zero index parameter will return the first character of the string. If <code>index</code> is negative, it counts backward from the end of the string, so an index of -1 will return an offset to the last code point.
+
+<p>If the <code>index</code> is past the end of the string, returns the offset of the end of the string. </p>
+<h6 class="description_section">See also</h6>
+<dl class="see_also">
+  <dt><a class="normal" href="al5strings.html#al_ustr_length">al_ustr_length</a></dt>
+  <dd>Returns the number of code points in the string.</dd>
+</dl>
+</td></tr>
+</table>
+<table class="detail wide_list">
+<tr class="list">
+<td class="itemcode"><span id="al_ustr_next"></span><code>FUNCTION <b>al_ustr_next</b> (CONST us: <a  href="al5strings.html#ALLEGRO_USTRptr">ALLEGRO_USTRptr</a>; VAR aPos: <a  href="al5Base.html#AL_INT">AL_INT</a>): <a  href="al5Base.html#AL_BOOL">AL_BOOL</a>; CDECL; EXTERNAL ALLEGRO_LIB_NAME;</code></td>
+</tr>
+<tr><td colspan="1">
+<p>
+Finds the byte offset of the next code point in string, beginning at <code>aPos</code>. <code>aPos</code> does not have to be at the beginning of a code point.
+
+<p>This function just looks for an appropriate byte; it doesn't check if found offset is the beginning of a valid code point. If you are working with possibly invalid UTF-8 strings then it could skip over some invalid bytes.  </p>
+<h6 class="description_section">Returns</h6>
+<p class="return"><code>True</code> on success, and <code>aPos</code> will be updated to the found offset. Otherwise returns <code>False</code> if <code>aPos</code> was already at the end of the string, and <code>aPos</code> is unmodified.</p><h6 class="description_section">See also</h6>
+<dl class="see_also">
+  <dt><a class="normal" href="al5strings.html#al_ustr_prev">al_ustr_prev</a></dt>
+  <dd>Finds the byte offset of the previous code point in string, before <code>aPos</code>.</dd>
+</dl>
+</td></tr>
+</table>
+<table class="detail wide_list">
+<tr class="list">
+<td class="itemcode"><span id="al_ustr_prev"></span><code>FUNCTION <b>al_ustr_prev</b> (CONST us: <a  href="al5strings.html#ALLEGRO_USTRptr">ALLEGRO_USTRptr</a>; VAR aPos: <a  href="al5Base.html#AL_INT">AL_INT</a>): <a  href="al5Base.html#AL_BOOL">AL_BOOL</a>; CDECL; EXTERNAL ALLEGRO_LIB_NAME;</code></td>
+</tr>
+<tr><td colspan="1">
+<p>
+Finds the byte offset of the previous code point in string, before <code>aPos</code>. <code>aPos</code> does not have to be at the beginning of a code point.
+
+<p>This function just looks for an appropriate byte; it doesn't check if found offset is the beginning of a valid code point. If you are working with possibly invalid UTF-8 strings then it could skip over some invalid bytes.  </p>
+<h6 class="description_section">Returns</h6>
+<p class="return"><code>True</code> on success, and <code>aPos</code> will be updated to the found offset. Otherwise returns <code>False</code> if <code>aPos</code> was already at the end of the string, and <code>aPos</code> is unmodified.</p><h6 class="description_section">See also</h6>
+<dl class="see_also">
+  <dt><a class="normal" href="al5strings.html#al_ustr_next">al_ustr_next</a></dt>
+  <dd>Finds the byte offset of the next code point in string, beginning at <code>aPos</code>.</dd>
+</dl>
+</td></tr>
+</table>
+<table class="detail wide_list">
+<tr class="list">
+<td class="itemcode"><span id="al_ustr_insert_chr"></span><code>FUNCTION <b>al_ustr_insert_chr</b> (us1: <a  href="al5strings.html#ALLEGRO_USTRptr">ALLEGRO_USTRptr</a>; aPos: <a  href="al5Base.html#AL_INT">AL_INT</a>; c: <a  href="al5Base.html#AL_INT32">AL_INT32</a>) : <a  href="al5Base.html#AL_SIZE_T">AL_SIZE_T</a>; CDECL; EXTERNAL ALLEGRO_LIB_NAME;</code></td>
+</tr>
+<tr><td colspan="1">
+<p>
+Inserts a code point into us beginning at byte offset <code>aPos</code>. <code>aPos</code> cannot be less than 0. If <code>aPos</code> is past the end of us then the space between the end of the string and <code>aPos</code> will be padded with <code>NUL</code> (<code>'\0'</code>) bytes.   </p>
+<h6 class="description_section">Returns</h6>
+<p class="return">The number of bytes inserted, or 0 on error.</p><h6 class="description_section">See also</h6>
+<dl class="see_also">
+  <dt><a class="normal" href="al5strings.html#al_ustr_offset">al_ustr_offset</a></dt>
+  <dd>Returns the byte offset (from the start of the string) of the code point at the specified <code>index</code> in the string.</dd>
+  <dt><a class="normal" href="al5strings.html#al_ustr_remove_chr">al_ustr_remove_chr</a></dt>
+  <dd>Removes the code point beginning at byte offset pos.</dd>
+</dl>
+</td></tr>
+</table>
+<table class="detail wide_list">
+<tr class="list">
+<td class="itemcode"><span id="al_ustr_remove_chr"></span><code>FUNCTION <b>al_ustr_remove_chr</b> (us: <a  href="al5strings.html#ALLEGRO_USTRptr">ALLEGRO_USTRptr</a>; apos: <a  href="al5Base.html#AL_INT">AL_INT</a>): <a  href="al5Base.html#AL_BOOL">AL_BOOL</a>; CDECL; EXTERNAL ALLEGRO_LIB_NAME;</code></td>
+</tr>
+<tr><td colspan="1">
+<p>
+Removes the code point beginning at byte offset pos.
+
+<p>Use <a class="normal" href="al5strings.html#al_ustr_offset">al_ustr_offset</a> to find the byte offset for a code-points offset.   </p>
+<h6 class="description_section">Returns</h6>
+<p class="return"><code>True</code> on success. If <code>apos</code> is out of range or <code>apos</code> is not the beginning of a valid code point, returns <code>False</code> leaving the string unmodified.</p><h6 class="description_section">See also</h6>
+<dl class="see_also">
+  <dt><a class="normal" href="al5strings.html#al_ustr_offset">al_ustr_offset</a></dt>
+  <dd>Returns the byte offset (from the start of the string) of the code point at the specified <code>index</code> in the string.</dd>
+  <dt><a class="normal" href="al5strings.html#al_ustr_insert_chr">al_ustr_insert_chr</a></dt>
+  <dd>Inserts a code point into us beginning at byte offset <code>aPos</code>.</dd>
+</dl>
+</td></tr>
+</table>
+<table class="detail wide_list">
+<tr class="list">
+<td class="itemcode"><span id="al_ustr_assign"></span><code>FUNCTION <b>al_ustr_assign</b> (us1: <a  href="al5strings.html#ALLEGRO_USTRptr">ALLEGRO_USTRptr</a>; CONST us2: <a  href="al5strings.html#ALLEGRO_USTRptr">ALLEGRO_USTRptr</a>): <a  href="al5Base.html#AL_BOOL">AL_BOOL</a>; CDECL; EXTERNAL ALLEGRO_LIB_NAME;</code></td>
+</tr>
+<tr><td colspan="1">
+<p>
+Overwrites the string <code>us1</code> with another string <code>us2</code>.  </p>
+<h6 class="description_section">Returns</h6>
+<p class="return"><code>True</code> on success, <code>False</code> on error.</p><h6 class="description_section">See also</h6>
+<dl class="see_also">
+  <dt><a class="normal" href="al5strings.html#al_ustr_assign_cstr">al_ustr_assign_cstr</a></dt>
+  <dd>Overwrites the string <code>us1</code> with the contents of the string <code>s</code>.</dd>
+</dl>
+</td></tr>
+</table>
+<table class="detail wide_list">
+<tr class="list">
+<td class="itemcode"><span id="al_ustr_assign_cstr"></span><code>FUNCTION <b>al_ustr_assign_cstr</b> (us1: <a  href="al5strings.html#ALLEGRO_USTRptr">ALLEGRO_USTRptr</a>; CONST s: <a  href="al5Base.html#AL_STR">AL_STR</a>): <a  href="al5Base.html#AL_BOOL">AL_BOOL</a>; CDECL; EXTERNAL ALLEGRO_LIB_NAME;</code></td>
+</tr>
+<tr><td colspan="1">
+<p>
+Overwrites the string <code>us1</code> with the contents of the string <code>s</code>.  </p>
+<h6 class="description_section">Returns</h6>
+<p class="return"><code>True</code> on success, <code>False</code> on error.</p><h6 class="description_section">See also</h6>
+<dl class="see_also">
+  <dt><a class="normal" href="al5strings.html#al_ustr_assign">al_ustr_assign</a></dt>
+  <dd>Overwrites the string <code>us1</code> with another string <code>us2</code>.</dd>
+</dl>
+</td></tr>
+</table>
+<table class="detail wide_list">
+<tr class="list">
+<td class="itemcode"><span id="al_ustr_equal"></span><code>FUNCTION <b>al_ustr_equal</b> (CONST us1, us2: <a  href="al5strings.html#ALLEGRO_USTRptr">ALLEGRO_USTRptr</a>): <a  href="al5Base.html#AL_BOOL">AL_BOOL</a>; CDECL; EXTERNAL ALLEGRO_LIB_NAME;</code></td>
+</tr>
+<tr><td colspan="1">
+<p>
+Returns <code>True</code> if the two strings are equal. This function is more efficient than <a class="normal" href="al5strings.html#al_ustr_compare">al_ustr_compare</a> so is preferable if ordering is not important. </p>
+<h6 class="description_section">See also</h6>
+<dl class="see_also">
+  <dt><a class="normal" href="al5strings.html#al_ustr_compare">al_ustr_compare</a></dt>
+  <dd>This function compares <code>us1</code> and <code>us2</code> by code point values.</dd>
+</dl>
+</td></tr>
+</table>
+<table class="detail wide_list">
+<tr class="list">
+<td class="itemcode"><span id="al_ustr_compare"></span><code>FUNCTION <b>al_ustr_compare</b> (CONST u, v: <a  href="al5strings.html#ALLEGRO_USTRptr">ALLEGRO_USTRptr</a>): <a  href="al5Base.html#AL_INT">AL_INT</a>; CDECL; EXTERNAL ALLEGRO_LIB_NAME;</code></td>
+</tr>
+<tr><td colspan="1">
+<p>
+This function compares <code>us1</code> and <code>us2</code> by code point values. It returns zero if the strings are equal, a positive number if <code>us1</code> comes after <code>us2</code>, else a negative number.
+
+<p>This does not take into account locale-specific sorting rules. For that you will need to use another library.  </p>
+<h6 class="description_section">See also</h6>
+<dl class="see_also">
+  <dt><a class="normal" href="al5strings.html#al_ustr_ncompare">al_ustr_ncompare</a></dt>
+  <dd>This function compares <code>us1</code> and <code>us2</code> by code point values.</dd>
+  <dt><a class="normal" href="al5strings.html#al_ustr_equal">al_ustr_equal</a></dt>
+  <dd>Returns <code>True</code> if the two strings are equal.</dd>
+</dl>
+</td></tr>
+</table>
+<table class="detail wide_list">
+<tr class="list">
+<td class="itemcode"><span id="al_ustr_ncompare"></span><code>FUNCTION <b>al_ustr_ncompare</b> (CONST u, v: <a  href="al5strings.html#ALLEGRO_USTRptr">ALLEGRO_USTRptr</a>): <a  href="al5Base.html#AL_INT">AL_INT</a>; CDECL; EXTERNAL ALLEGRO_LIB_NAME;</code></td>
+</tr>
+<tr><td colspan="1">
+<p>
+This function compares <code>us1</code> and <code>us2</code> by code point values. It returns zero if the strings are equal, a positive number if <code>us1</code> comes after <code>us2</code>, else a negative number.
+
+<p>This does not take into account locale-specific sorting rules. For that you will need to use another library.  </p>
+<h6 class="description_section">See also</h6>
+<dl class="see_also">
+  <dt><a class="normal" href="al5strings.html#al_ustr_ncompare">al_ustr_ncompare</a></dt>
+  <dd>This function compares <code>us1</code> and <code>us2</code> by code point values.</dd>
+  <dt><a class="normal" href="al5strings.html#al_ustr_equal">al_ustr_equal</a></dt>
+  <dd>Returns <code>True</code> if the two strings are equal.</dd>
+</dl>
+</td></tr>
+</table>
+<table class="detail wide_list">
+<tr class="list">
+<td class="itemcode"><span id="al_utf8_width"></span><code>FUNCTION <b>al_utf8_width</b> (c: <a  href="al5Base.html#AL_INT32">AL_INT32</a>): <a  href="al5Base.html#AL_SIZE_T">AL_SIZE_T</a>; CDECL; EXTERNAL ALLEGRO_LIB_NAME;</code></td>
+</tr>
+<tr><td colspan="1">
+<p>
+Returns the number of bytes that would be occupied by the specified code point when encoded in UTF-8. This is between 1 and 4 bytes for legal code point values. Otherwise returns 0.</p>
+</td></tr>
+</table>
+<h3 class="detail">Types</h3>
+<table class="detail wide_list">
+<tr class="list">
+<td class="itemcode"><span id="ALLEGRO_USTRptr"></span><code><b>ALLEGRO_USTRptr</b> = &circ;<a  href="al5strings.html#ALLEGRO_USTR">ALLEGRO_USTR</a>;</code></td>
+</tr>
+<tr><td colspan="1">
+<p>
+Pointer to <a class="normal" href="al5strings.html#ALLEGRO_USTR">ALLEGRO_USTR</a>.</p>
+</td></tr>
+</table>
+<table class="detail wide_list">
+<tr class="list">
+<td class="itemcode"><span id="ALLEGRO_USTR"></span><code><b>ALLEGRO_USTR</b> = _al_tagbstring;</code></td>
+</tr>
+<tr><td colspan="1">
+<p>
+An opaque type representing a string. <code>ALLEGRO_USTR</code>s normally contain UTF-8 encoded strings, but they may be used to hold any byte sequences, including <code>Nil</code>.</p>
+</td></tr>
+</table>
+<table class="detail wide_list">
+<tr class="list">
+<td class="itemcode"><span id="ALLEGRO_USTR_INFOptr"></span><code><b>ALLEGRO_USTR_INFOptr</b> = &circ;<a  href="al5strings.html#ALLEGRO_USTR_INFO">ALLEGRO_USTR_INFO</a>;</code></td>
+</tr>
+<tr><td colspan="1">
+<p>
+Pointer to <a class="normal" href="al5strings.html#ALLEGRO_USTR_INFO">ALLEGRO_USTR_INFO</a>.</p>
+</td></tr>
+</table>
+<table class="detail wide_list">
+<tr class="list">
+<td class="itemcode"><span id="ALLEGRO_USTR_INFO"></span><code><b>ALLEGRO_USTR_INFO</b> = _al_tagbstring;</code></td>
+</tr>
+<tr><td colspan="1">
+<p>
+A type that holds additional information for an <a class="normal" href="al5strings.html#ALLEGRO_USTR">ALLEGRO_USTR</a> that references an external memory buffer.   </p>
+<h6 class="description_section">See also</h6>
+<dl class="see_also">
+  <dt><a class="normal" href="al5strings.html#al_ref_cstr">al_ref_cstr</a></dt>
+  <dd>Creates a string that references the storage of a C-style string.</dd>
+  <dt><a class="normal" href="al5strings.html#al_ref_buffer">al_ref_buffer</a></dt>
+  <dd>Creates a string that references the storage of an underlying buffer.</dd>
+  <dt><a class="normal" href="al5strings.html#al_ref_ustr">al_ref_ustr</a></dt>
+  <dd>Creates a read-only string that references the storage of another <a class="normal" href="al5strings.html#ALLEGRO_USTR">ALLEGRO_USTR</a> string.</dd>
+</dl>
+</td></tr>
+</table>
+<hr><span class="appinfo"><em>Generated by <a  href="https://github.com/pasdoc/pasdoc/wiki">PasDoc 0.15.0</a>. Generated on 2020-04-16 11:56:29.</em>
+</span>
+</td></tr></table></body></html>

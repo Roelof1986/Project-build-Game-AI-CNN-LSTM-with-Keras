@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<title>Allegro.pas 5.2.b.1: Introduction</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="generator" content="PasDoc 0.15.0">
+<meta http-equiv="content-type" content="text/html; charset=utf-8">
+<link rel="stylesheet" type="text/css" href="tipuesearch/tipuesearch.css">
+
+<link rel="StyleSheet" type="text/css" href="pasdoc.css">
+</head>
+<body>
+<table class="container"><tr><td class="navigation">
+<h2>Allegro.pas 5.2.b.1</h2><p><a href="introduction.html" class="navigation">Introduction</a></p><p><a href="AllUnits.html" class="navigation">Units</a></p><p><a href="ClassHierarchy.html" class="navigation">Class Hierarchy</a></p><p><a href="AllClasses.html" class="navigation">Classes, Interfaces, Objects and Records</a></p><p><a href="AllTypes.html" class="navigation">Types</a></p><p><a href="AllVariables.html" class="navigation">Variables</a></p><p><a href="AllConstants.html" class="navigation">Constants</a></p><p><a href="AllFunctions.html" class="navigation">Functions and Procedures</a></p><p><a href="AllIdentifiers.html" class="navigation">Identifiers</a></p><form class="search-form" action="_tipue_results.html"><div class="search-input"><input type="text" name="q" id="tipue_search_input"></div><div class="search-button"><input type="button" id="tipue_search_button" onclick="this.form.submit();"></div></form>
+<div style="clear: both"></div>
+
+<script type="text/javascript">
+$(document).ready(function() {
+    $('#tipue_search_input').tipuesearch({
+        /* 10 items to display seems standard */
+        'show': 10,
+        /* For PasDoc docs, showing urls is not very useful,
+           since the page title already shows the unit and identifier. */
+        'showURL': false
+    });
+});
+</script>
+</td><td class="content">
+<h1 class="externalitem">Introduction</h1>
+ Welcome to Allegro 5!
+
+<p>Before to start, be sure you have read the <code>README</code> file. Then you can read the <a class="normal" href="introduction.html#getst">Getting Started</a> section and go to the <a href="./AllUnits.html">All units</a> list to start using Allegro.pas.
+
+<p><ol>
+<li><a href="#getst">Getting started</a>
+<ol>
+<li><a href="#getst_libstruct">Structure of the library and its addons</a>
+</li>
+<li><a href="#getst_init">Initialisation</a>
+</li>
+<li><a href="#getst_openwindow">Opening a window</a>
+</li>
+<li><a href="#getst_displaying">Displaying an image</a>
+</li>
+<li><a href="#getst_changetarget">Changing the drawing target</a>
+</li>
+<li><a href="#getst_events">Event queues and input</a>
+</li>
+<li><a href="#getst_text">Displaying some text</a>
+</li>
+<li><a href="#getst_drawingprims">Drawing primitives</a>
+</li>
+<li><a href="#getst_blending">Blending</a>
+</li>
+<li><a href="#getst_sound">Sound</a>
+</li>
+<li><a href="#getst_unstable">Unstable API</a>
+</li>
+</ol>
+</li>
+<li><a href="#cfg_files">Config files</a>
+</li>
+<li><a href="#displays">Displays</a>
+</li>
+<li><a href="#events">Events</a>
+</li>
+<li><a href="#alt_file_streams">Alternative file streams</a>
+</li>
+<li><a href="#keyboard">Keyboard</a>
+<ol>
+<li><a href="#keycodes">Key codes</a>
+</li>
+<li><a href="#kbdmodifiers">Keyboard modifier flags</a>
+</li>
+</ol>
+</li>
+<li><a href="#transformations">Transformations</a>
+</li>
+</ol>
+
+
+<p><h2 class=""><span id="getst"></span>Getting started</h2>
+ This short guide should point you at the parts of the API that you'll want to know about first. It's not a tutorial, as there isn't much discussion, only links into the manual. The rest you'll have to discover for yourself. Read the examples, and ask questions at <a href="http://www.pascalgamedevelopment.com">Pascal Game Development</a>, <a href="https://forum.lazarus.freepascal.org/index.php/board,74.0.html">Lazarus/FPC forums</a> or <a href="http://www.allegro.cc/">Allegro.cc</a>.
+
+<p><h3 class=""><span id="getst_libstruct"></span>Structure of the library and its addons</h3>
+ Allegro 5.0 is divided into a core library and multiple addons. The addons are bundled together and built at the same time as the core, but they are distinct and kept in separate libraries. The core doesn't depend on anything in the addons, but addons may depend on the core and other addons and additional third party libraries.
+
+<p>Here are the addons and their dependencies:
+
+<p></p>
+
+<pre class="preformatted">
+allegro_main -&gt; allegro
+
+allegro_image -&gt; allegro
+allegro_primitives -&gt; allegro
+allegro_color -&gt; allegro
+
+allegro_font -&gt; allegro
+allegro_ttf -&gt; allegro_font -&gt; allegro
+
+allegro_audio -&gt; allegro
+allegro_acodec -&gt; allegro_audio -&gt; allegro
+
+allegro_memfile -&gt; allegro
+allegro_physfs -&gt; allegro
+
+allegro_native_dialog -&gt; allegro</pre>
+
+<p>
+
+<p>The unit for the core library is <a class="normal" href="Allegro5.html">Allegro5</a>. The units for the addons are named <a class="normal" href="al5image.html">al5image</a>, <a class="normal" href="al5font.html">al5font</a>, etc. The <code>allegro_main</code> addon does not have an unit file.
+
+<p><h3 class=""><span id="getst_init"></span>Initialisation</h3>
+ Before using Allegro you must call <a class="normal" href="Allegro5.html#al_init">al_init</a>. Some addons have their own initialisation, e.g. <a class="normal" href="al5image.html#al_init_image_addon">al_init_image_addon</a>, <a class="normal" href="al5font.html#al_init_font_addon">al_init_font_addon</a>, <a class="normal" href="al5ttf.html#al_init_ttf_addon">al_init_ttf_addon</a>.
+
+<p>To receive input, you need to initialise some subsystems like <a class="normal" href="Allegro5.html#al_install_keyboard">al_install_keyboard</a>, <a class="normal" href="Allegro5.html#al_install_mouse">al_install_mouse</a>, <a class="normal" href="Allegro5.html#al_install_joystick">al_install_joystick</a>.
+
+<p><h3 class=""><span id="getst_openwindow"></span>Opening a window</h3>
+ <a class="normal" href="Allegro5.html#al_create_display">al_create_display</a> will open a window and return an <a class="normal" href="Allegro5.html#ALLEGRO_DISPLAYptr">ALLEGRO_DISPLAYptr</a>.
+
+<p>To clear the display, call <a class="normal" href="Allegro5.html#al_clear_to_color">al_clear_to_color</a>. Use <a class="normal" href="Allegro5.html#al_map_rgba">al_map_rgba</a> or <a class="normal" href="Allegro5.html#al_map_rgba_f">al_map_rgba_f</a> to obtain an <a class="normal" href="Allegro5.ALLEGRO_COLOR.html">ALLEGRO_COLOR</a> parameter.
+
+<p>Drawing operations are performed on a backbuffer. To make the operations visible, call <a class="normal" href="Allegro5.html#al_flip_display">al_flip_display</a>.
+
+<p>You can get more information about displays in the <a class="normal" href="introduction.html#displays">Displays</a> section.
+
+<p><h3 class=""><span id="getst_displaying"></span>Displaying an image</h3>
+ To load an image from disk, you need to have initialised the image I/O addon with <a class="normal" href="al5image.html#al_init_image_addon">al_init_image_addon</a>. Then use <a class="normal" href="Allegro5.html#al_load_bitmap">al_load_bitmap</a>, which returns an <a class="normal" href="Allegro5.html#ALLEGRO_BITMAPptr">ALLEGRO_BITMAPptr</a>.
+
+<p>Use <a class="normal" href="Allegro5.html#al_draw_bitmap">al_draw_bitmap</a>, <a class="normal" href="Allegro5.html#al_draw_scaled_bitmap">al_draw_scaled_bitmap</a> or <a class="normal" href="Allegro5.html#al_draw_scaled_rotated_bitmap">al_draw_scaled_rotated_bitmap</a> to draw the image to the backbuffer. Remember to call <a class="normal" href="Allegro5.html#al_flip_display">al_flip_display</a>.
+
+<p><h3 class=""><span id="getst_changetarget"></span>Changing the drawing target</h3>
+ Notice that <a class="normal" href="Allegro5.html#al_clear_to_color">al_clear_to_color</a> and <a class="normal" href="Allegro5.html#al_draw_bitmap">al_draw_bitmap</a> didn't take destination parameters: the destination is implicit. Allegro remembers the current <i>&quot;target bitmap&quot;</i> for the current thread. To change the target bitmap, call <a class="normal" href="Allegro5.html#al_set_target_bitmap">al_set_target_bitmap</a>.
+
+<p>The backbuffer of the display is also a bitmap. You can get it with <a class="normal" href="Allegro5.html#al_get_backbuffer">al_get_backbuffer</a> and then restore it as the target bitmap.
+
+<p>Other bitmaps can be created with <a class="normal" href="Allegro5.html#al_create_bitmap">al_create_bitmap</a>, with options which can be adjusted with <a class="normal" href="Allegro5.html#al_set_new_bitmap_flags">al_set_new_bitmap_flags</a> and <a class="normal" href="Allegro5.html#al_set_new_bitmap_format">al_set_new_bitmap_format</a>.
+
+<p><h3 class=""><span id="getst_events"></span>Event queues and input</h3>
+ Input comes from multiple sources: keyboard, mouse, joystick, timers, etc. Event queues aggregate events from all these sources, then you can query the queue for events.
+
+<p>Create an event queue with <a class="normal" href="Allegro5.html#al_create_event_queue">al_create_event_queue</a>, then tell input sources to place new events into that queue using <a class="normal" href="Allegro5.html#al_register_event_source">al_register_event_source</a>. The usual input event sources can be retrieved with <a class="normal" href="Allegro5.html#al_get_keyboard_event_source">al_get_keyboard_event_source</a>, <a class="normal" href="Allegro5.html#al_get_mouse_event_source">al_get_mouse_event_source</a> and <a class="normal" href="Allegro5.html#al_get_joystick_event_source">al_get_joystick_event_source</a>.
+
+<p>Events can be retrieved with <a class="normal" href="Allegro5.html#al_wait_for_event">al_wait_for_event</a> or <a class="normal" href="Allegro5.html#al_get_next_event">al_get_next_event</a>. Check the event type and other fields of <a class="normal" href="Allegro5.ALLEGRO_EVENT.html">ALLEGRO_EVENT</a> to react to the input.
+
+<p>Displays are also event sources, which emit events when they are closed or resized. To get these events you'll need to set some special flags with <a class="normal" href="Allegro5.html#al_set_new_display_flags">al_set_new_display_flags</a> before creating the display, then register the display with an event queue. When you get a resize event, call <a class="normal" href="Allegro5.html#al_acknowledge_resize">al_acknowledge_resize</a>.
+
+<p>Timers are event sources which <i>&quot;tick&quot;</i> periodically, causing an event to be inserted into the queues that the timer is registered with. Create some with <a class="normal" href="Allegro5.html#al_create_timer">al_create_timer</a>.
+
+<p><a class="normal" href="Allegro5.html#al_get_time">al_get_time</a> and <a class="normal" href="Allegro5.html#al_rest">al_rest</a> are more direct ways to deal with time.
+
+<p><h3 class=""><span id="getst_text"></span>Displaying some text</h3>
+ To display some text, initialise the image and font addons with <a class="normal" href="al5image.html#al_init_image_addon">al_init_image_addon</a> and <a class="normal" href="al5font.html#al_init_font_addon">al_init_font_addon</a>, then load a bitmap font with <a class="normal" href="al5font.html#al_load_font">al_load_font</a>. Use <a class="normal" href="al5font.html#al_draw_text">al_draw_text</a>.
+
+<p>For TrueType fonts, you'll need to initialise the TTF font addon with <a class="normal" href="al5ttf.html#al_init_ttf_addon">al_init_ttf_addon</a> and load a TTF font with <a class="normal" href="al5ttf.html#al_load_ttf_font">al_load_ttf_font</a>.
+
+<p>Note that Allegro uses <a class="normal" href="al5Base.html#AL_STR">AL_STR</a> (defined as <code>ANSISTRING</code>), so it will not manage <code>UNICODESTRING</code> or <code>WIDESTRING</code> correctly. That may conflict with some RTL functions and procedures (specially in modern Delphi), unit <a class="normal" href="al5strings.html">al5strings</a> defines functions and procedures to reduce such conflicts.
+
+<p><h3 class=""><span id="getst_drawingprims"></span>Drawing primitives</h3>
+ The primitives addon provides some handy routines to draw lines (<a class="normal" href="al5primitives.html#al_draw_line">al_draw_line</a>), rectangles (<a class="normal" href="al5primitives.html#al_draw_rectangle">al_draw_rectangle</a>), circles (<a class="normal" href="al5primitives.html#al_draw_circle">al_draw_circle</a>), etc.
+
+<p><h3 class=""><span id="getst_blending"></span>Blending</h3>
+ To draw translucent or tinted images or primitives, change the blender state with <a class="normal" href="Allegro5.html#al_set_blender">al_set_blender</a>.
+
+<p>As with <a class="normal" href="Allegro5.html#al_set_target_bitmap">al_set_target_bitmap</a>, this changes Allegro's internal state (for the current thread). Often you'll want to save some part of the state and restore it later. The functions <a class="normal" href="Allegro5.html#al_store_state">al_store_state</a> and <a class="normal" href="Allegro5.html#al_restore_state">al_restore_state</a> provide a convenient way to do that.
+
+<p><h3 class=""><span id="getst_sound"></span>Sound</h3>
+ Use <a class="normal" href="al5audio.html#al_install_audio">al_install_audio</a> to initialize sound. To load any sample formats, you will need to initialise the acodec addon with <a class="normal" href="al5acodec.html#al_init_acodec_addon">al_init_acodec_addon</a>.
+
+<p>After that, you can simply use <a class="normal" href="al5audio.html#al_reserve_samples">al_reserve_samples</a> and pass the number of sound effects typically playing at the same time. Then load your sound effects with <a class="normal" href="al5audio.html#al_load_sample">al_load_sample</a> and play them with <a class="normal" href="al5audio.html#al_play_sample">al_play_sample</a>. To stream large pieces of music from disk, you can use <a class="normal" href="al5audio.html#al_load_audio_stream">al_load_audio_stream</a> so the whole piece will not have to be pre-loaded into memory.
+
+<p>If the above sounds too simple and you can't help but think about clipping and latency issues, don't worry. Allegro gives you full control over how much or little you want its sound system to do. The <code>al_reserve_samples</code> function mentioned above only sets up a default mixer and a number of sample instances but you don't need to use it.
+
+<p>Instead, to get a <i>&quot;direct connection&quot;</i> to the sound system you would use an <a class="normal" href="al5audio.html#ALLEGRO_VOICEptr">ALLEGRO_VOICEptr</a> (but depending on the platform only one such voice is guaranteed to be available and it might require a specific format of audio data). Therefore all sound can be first routed through an <a class="normal" href="al5audio.html#ALLEGRO_MIXERptr">ALLEGRO_MIXERptr</a> which is connected to such a voice (or another mixer) and will mix together all sample data fed to it.
+
+<p>You can then directly stream real-time sample data to a mixer or a voice using an <a class="normal" href="al5audio.html#ALLEGRO_AUDIO_STREAMptr">ALLEGRO_AUDIO_STREAMptr</a> or play complete sounds using an <a class="normal" href="al5audio.html#ALLEGRO_SAMPLE_INSTANCEptr">ALLEGRO_SAMPLE_INSTANCEptr</a>. The latter simply points to an <a class="normal" href="al5audio.html#ALLEGRO_SAMPLEptr">ALLEGRO_SAMPLEptr</a> and will stream it for you.
+
+<p><h3 class=""><span id="getst_unstable"></span>Unstable API</h3>
+ Some of the original Allegro's API is marked as unstable, which means that future versions of Allegro it may change or even be removed entirely! That API isn't included in the Allegro.pas wrappers.  <h2 class=""><span id="cfg_files"></span>Config files</h2>
+ Allegro supports reading and writing of configuration files with a simple, INI file-like format. These files are fully compatible with the <code>TIniFile</code> objects defined by Delphi and Free Pascal. You can use <code>TIniFile</code>, but you should use Allegro's config procedures if you're writting your own Allegro add-on.
+
+<p>A configuration file consists of key-value pairs separated by newlines. Keys are separated from values by an equals sign (<code>=</code>). All whitespace before the key, after the value and immediately adjacent to the equals sign is ignored. Keys and values may have whitespace characters within them. Keys do not need to be unique, but all but the last one are ignored.
+
+<p>The hash (<code>#</code>) character is used a comment when it is the first non-whitespace character on the line. All characters following that character are ignored to the end of the line. The hash character anywhere else on the line has no special significance.
+
+<p>Key-value pairs can be optionally grouped into sections, which are declared by surrounding a section name with square brackets (<code>[</code> and <code>]</code>) on a single line. Whitespace before the opening bracket is ignored. All characters after the trailing bracket are also ignored.
+
+<p>All key-value pairs that follow a section declaration belong to the last declared section. Key-value pairs that don't follow any section declarations belong to the global section. Sections do not nest.
+
+<p>Here is an example configuration file:
+
+<p></p>
+
+<pre class="preformatted">
+#  Monster description
+monster name = Allegro Developer
+
+[weapon 0]
+damage = 443
+
+[weapon 1]
+damage = 503</pre>
+
+<p>
+
+<p>It can then be accessed like this (make sure to check for errors in an actual program):
+
+<p></p>
+
+<pre class="longcode">
+<span class="pascal_keyword">VAR</span>
+  Cfg: ALLEGRO_CONFIGptr;
+<span class="pascal_keyword">BEGIN</span>
+  cfg := al_load_config_file (<span class="pascal_string">'test.cfg'</span>);
+  WriteLn (al_get_config_value (Cfg, <span class="pascal_string">''</span>, <span class="pascal_string">'monster name'</span>)); <span class="pascal_comment">{ Prints: Allegro Developer }</span>
+  WriteLn (al_get_config_value (Cfg, <span class="pascal_string">'weapon 0'</span>, <span class="pascal_string">'damage'</span>)); <span class="pascal_comment">{ Prints: 443 }</span>
+  WriteLn (al_get_config_value (Cfg, <span class="pascal_string">'weapon 1'</span>, <span class="pascal_string">'damage'</span>)); <span class="pascal_comment">{ Prints: 503 }</span>
+  al_destroy_config (Cfg)
+<span class="pascal_keyword">END</span>.</pre>
+
+<p>
+
+<p><b>See also:</b> <a class="normal" href="Allegro5.html#al_load_config_file">al_load_config_file</a>  <h2 class=""><span id="displays"></span>Displays</h2>
+ All drawing operations end up being visible on a display which is the same as a window in windowed environments. Thus, before anything is displayed, a display needs to be created.
+
+<p>Before creating a display with <a class="normal" href="Allegro5.html#al_create_display">al_create_display</a>, flags and options can be set with <a class="normal" href="Allegro5.html#al_set_new_display_flags">al_set_new_display_flags</a> and <a class="normal" href="Allegro5.html#al_set_new_display_option">al_set_new_display_option</a>. For example, you can enable the use of shaders or choose between the OpenGL and Direct3D backends (on platforms that support both) with <code>al_set_new_display_flags</code>. Display options are rather optional settings that do not affect Allegro itself, e.g. they allow you to specify whether you want a depth buffer or enable multisampling.
+
+<p>The actual properties of a display that has been successfully created can be queried via <a class="normal" href="Allegro5.html#al_get_display_option">al_get_display_option</a>, <a class="normal" href="Allegro5.html#al_get_display_flags">al_get_display_flags</a>, <a class="normal" href="Allegro5.html#al_get_display_width">al_get_display_width</a> etc. Note that you can query some additional read-only properties such as the maximum allowed bitmap (i.e. texture) size via <a class="normal" href="Allegro5.html#al_get_display_option">al_get_display_option</a>.
+
+<p>Each display has a backbuffer associated to it which is the default target for any drawing operations. In order to make visible what has been drawn previously, you have to to call <a class="normal" href="Allegro5.html#al_flip_display">al_flip_display</a>. Note that it is generally advisable to redraw the whole screen (or clear it in advance) to avoid artefacts of uninitialised memory becoming visible with some drivers.
+
+<p>You don't have to use Allegro's drawing routines, however: since creating a display implies the creation of an OpenGL context or Direct3D device respectively, you can use these APIs directly if you prefer to do so. Allegro provides integration for both (see the OpenGL / Direct3D sections), so you can retrieve the underlying textures of <a class="normal" href="Allegro5.html#ALLEGRO_BITMAPptr">ALLEGRO_BITMAPs</a>, for example.
+
+<p>In order to write a well-behaved application, it is necessary to remember that displays will also inform you about important events via their event sources.  <h2 class=""><span id="events"></span>Events</h2>
+
+
+<p>Events are generated by event sources. Most notably, each of the input subsystems provides an event source, but also timers, displays, and audio streams will generate events.
+
+<p>Event sources are registered to event queues which aggregate events from multiple sources. A single event source can also be registered to multiple event queues.
+
+<p>Event queues can then be queried for events. In particular, it is possible to wait until events become available in order to save CPU time. You can combine this with timers to make your main-loop run at a specific speed without wasting CPU time or missing events.
+
+<p>In addition to the predefined event types, Allegro also allows for user-defined events that can be generated by user-defined event sources.
+
+<p>The appropriate reaction to an event is determined by examining the fields of the <a class="normal" href="Allegro5.ALLEGRO_EVENT.html">ALLEGRO_EVENT</a> union according to the event type.
+
+<p>In addition to the events sent by Allegro core, there's also events send by the addons, see <a class="normal" href="al5audio.html">al5audio</a> and <a class="normal" href="al5video.html">al5video</a>.  <h2 class=""><span id="alt_file_streams"></span>Alternative file streams</h2>
+
+
+<p>By default, the Allegro file I/O routines use the C library I/O routines, hence work with files on the local filesystem, but can be overridden so that you can read and write to other streams. For example, you can work with blocks of memory or sub-files inside .zip files.
+
+<p>There are two ways to get an <code>ALLEGRO_FILEptr</code> that doesn't use stdio. An addon library may provide a function that returns a new <code>ALLEGRO_FILEptr</code> directly, after which, all <code>al_f*</code> calls on that object will use overridden functions for that type of stream. Alternatively, <a class="normal" href="Allegro5.html#al_set_new_file_interface">al_set_new_file_interface</a> changes which function will handle the following <a class="normal" href="Allegro5.html#al_fopen">al_fopen</a> calls for the current thread.  <h2 class=""><span id="keyboard"></span>Keyboard</h2>
+
+
+<p><h3 class=""><span id="keycodes"></span>Key codes</h3>
+ The constant <code>ALLEGRO_KEY_MAX</code> is always one higher than the highest key code. So if you want to use the key code as array index you can do something like this:
+
+<p></p>
+
+<pre class="longcode">
+<span class="pascal_keyword">VAR</span>
+  PressedKeys: <span class="pascal_keyword">ARRAY</span>[<span class="pascal_numeric">0</span>..ALLEGRO_KEY_MAX] <span class="pascal_keyword">OF</span> BOOLEAN;
+<span class="pascal_numeric"></span>...
+  PressedKeys[KeyCode] := TRUE;</pre>
+
+<p>
+
+<p>These are the list of key codes used by Allegro, which are returned in the <code>event.keyboard.keycode</code> field of the <code>ALLEGRO_KEY_DOWN</code> and <code>ALLEGRO_KEY_UP</code> events and which you can pass to <a class="normal" href="Allegro5.html#al_key_down">al_key_down</a>:
+
+<p></p>
+
+<pre class="preformatted">
+ALLEGRO_KEY_A ... ALLEGRO_KEY_Z
+ALLEGRO_KEY_0 ... ALLEGRO_KEY_9
+ALLEGRO_KEY_PAD_0 ... ALLEGRO_KEY_PAD_9
+ALLEGRO_KEY_F1 ... ALLEGRO_KEY_F12
+ALLEGRO_KEY_ESCAPE
+ALLEGRO_KEY_TILDE
+ALLEGRO_KEY_MINUS
+ALLEGRO_KEY_EQUALS
+ALLEGRO_KEY_BACKSPACE
+ALLEGRO_KEY_TAB
+ALLEGRO_KEY_OPENBRACE
+ALLEGRO_KEY_CLOSEBRACE
+ALLEGRO_KEY_ENTER
+ALLEGRO_KEY_SEMICOLON
+ALLEGRO_KEY_QUOTE
+ALLEGRO_KEY_BACKSLASH
+ALLEGRO_KEY_BACKSLASH2
+ALLEGRO_KEY_COMMA
+ALLEGRO_KEY_FULLSTOP
+ALLEGRO_KEY_SLASH
+ALLEGRO_KEY_SPACE
+ALLEGRO_KEY_INSERT
+ALLEGRO_KEY_DELETE
+ALLEGRO_KEY_HOME
+ALLEGRO_KEY_END
+ALLEGRO_KEY_PGUP
+ALLEGRO_KEY_PGDN
+ALLEGRO_KEY_LEFT
+ALLEGRO_KEY_RIGHT
+ALLEGRO_KEY_UP
+ALLEGRO_KEY_DOWN
+ALLEGRO_KEY_PAD_SLASH
+ALLEGRO_KEY_PAD_ASTERISK
+ALLEGRO_KEY_PAD_MINUS
+ALLEGRO_KEY_PAD_PLUS
+ALLEGRO_KEY_PAD_DELETE
+ALLEGRO_KEY_PAD_ENTER
+ALLEGRO_KEY_PRINTSCREEN
+ALLEGRO_KEY_PAUSE
+ALLEGRO_KEY_ABNT_C1
+ALLEGRO_KEY_YEN
+ALLEGRO_KEY_KANA
+ALLEGRO_KEY_CONVERT
+ALLEGRO_KEY_NOCONVERT
+ALLEGRO_KEY_AT
+ALLEGRO_KEY_CIRCUMFLEX
+ALLEGRO_KEY_COLON2
+ALLEGRO_KEY_KANJI
+ALLEGRO_KEY_LSHIFT
+ALLEGRO_KEY_RSHIFT
+ALLEGRO_KEY_LCTRL
+ALLEGRO_KEY_RCTRL
+ALLEGRO_KEY_ALT
+ALLEGRO_KEY_ALTGR
+ALLEGRO_KEY_LWIN
+ALLEGRO_KEY_RWIN
+ALLEGRO_KEY_MENU
+ALLEGRO_KEY_SCROLLLOCK
+ALLEGRO_KEY_NUMLOCK
+ALLEGRO_KEY_CAPSLOCK
+ALLEGRO_KEY_PAD_EQUALS
+ALLEGRO_KEY_BACKQUOTE
+ALLEGRO_KEY_SEMICOLON2
+ALLEGRO_KEY_COMMAND
+
+(* Since: 5.1.1 *)
+(* Android only for now *)
+ALLEGRO_KEY_BACK
+
+(* Since: 5.1.2 *)
+(* Android only for now *)
+ALLEGRO_KEY_VOLUME_UP
+ALLEGRO_KEY_VOLUME_DOWN
+
+(* Since: 5.1.6 *)
+(* Android only for now *)
+ALLEGRO_KEY_SEARCH
+ALLEGRO_KEY_DPAD_CENTER
+ALLEGRO_KEY_BUTTON_X
+ALLEGRO_KEY_BUTTON_Y
+ALLEGRO_KEY_DPAD_UP
+ALLEGRO_KEY_DPAD_DOWN
+ALLEGRO_KEY_DPAD_LEFT
+ALLEGRO_KEY_DPAD_RIGHT
+ALLEGRO_KEY_SELECT
+ALLEGRO_KEY_START
+ALLEGRO_KEY_L1
+ALLEGRO_KEY_R1</pre>
+
+<p>
+
+<p><h3 class=""><span id="kbdmodifiers"></span>Keyboard modifier flags</h3>
+ The event field <code>keyboard.modifiers</code> is a bitfield composed of these constants. These indicate the modifier keys which were pressed at the time a character was typed.
+
+<p></p>
+
+<pre class="preformatted">
+ALLEGRO_KEYMOD_SHIFT
+ALLEGRO_KEYMOD_CTRL
+ALLEGRO_KEYMOD_ALT
+ALLEGRO_KEYMOD_LWIN
+ALLEGRO_KEYMOD_RWIN
+ALLEGRO_KEYMOD_MENU
+ALLEGRO_KEYMOD_ALTGR
+ALLEGRO_KEYMOD_COMMAND
+ALLEGRO_KEYMOD_SCROLLLOCK
+ALLEGRO_KEYMOD_NUMLOCK
+ALLEGRO_KEYMOD_CAPSLOCK
+ALLEGRO_KEYMOD_INALTSEQ
+ALLEGRO_KEYMOD_ACCENT1
+ALLEGRO_KEYMOD_ACCENT2
+ALLEGRO_KEYMOD_ACCENT3
+ALLEGRO_KEYMOD_ACCENT4</pre>
+
+<p>  <h2 class=""><span id="transformations"></span>Transformations</h2>
+ Transformations allow you to transform the coordinates you use for drawing operations without additional overhead. Scaling, rotating, translating, and combinations of these are possible as well as using custom transformations. There are two types of transformations that you can set, 'regular' transformations and projection transformations. The projection transform is rarely used in 2D games, but is common in 3D games to set up the projection from the 3D world to the 2D screen. Typically, you would use the regular transform for non-projective types of transformations (that is, translations, rotations, scales, skews... i.e. transformations that are linear), while the projection transform will be used for setting up perspective and possibly more advanced effects. It is possible to do everything with just using the projection transformation (that is, you'd compose the projection transformation with the non-projection transformations that, e.g., move the camera in the world), but it is more convenient to use both for two reasons:
+
+<p></p>
+
+<ul class="paragraph_spacing">
+  <li><p>Regular transformations can be changed while the bitmap drawing is held (see <a class="normal" href="Allegro5.html#al_hold_bitmap_drawing">al_hold_bitmap_drawing</a>).</p></li>
+  <li><p>Regular transformations work with memory bitmaps.</p></li>
+</ul>
+
+<p>
+
+<p>As a result, if you're making a 2D game, it's best to leave the projection transformations at their default values.
+
+<p>Both types of transformations are set per target-bitmap, i.e. a change of the target bitmap will also change the active transformation.
+
+<p>Allegro provides convenience functions to construct transformations in 2D and 3D variants (the latter with a _3d suffix), so you don't have to deal with the underlying matrix algebra yourself.
+
+<p>The transformations are combined in the order of the function invocations. Thus to create a transformation that first rotates a point and then translates it, you would (starting with an identity transformation) call <a class="normal" href="Allegro5.html#al_rotate_transform">al_rotate_transform</a> and then <a class="normal" href="Allegro5.html#al_translate_transform">al_translate_transform</a>. This approach is opposite of what OpenGL uses but similar to what Direct3D uses.
+
+<p>For those who know the matrix algebra going behind the scenes, what the transformation functions in Allegro do is &quot;pre-multiply&quot; the successive transformations. So, for example, if you have code that does:
+
+<p></p>
+
+<pre class="longcode">
+al_identity_transform (T);
+
+al_compose_transform (T, T1);
+al_compose_transform (T, T2);
+al_compose_transform (T, T3);
+al_compose_transform (T, T4);</pre>
+
+<p>
+
+<p>The resultant matrix multiplication expression will look like this:
+
+<p></p>
+
+<pre class="longcode">
+T := T4 * T3 * T2 * T1</pre>
+
+<p>
+
+<p>Since the point coordinate vector term will go on the right of that sequence of factors, the transformation that is called first, will also be applied first.
+
+<p>This means if you have code like this:
+
+<p></p>
+
+<pre class="longcode">
+al_identity_transform (T1);
+al_scale_transform (T1, <span class="pascal_numeric">2</span>, <span class="pascal_numeric">2</span>);
+
+al_identity_transform (T2);
+al_translate_transform (T2, <span class="pascal_numeric">100</span>, <span class="pascal_numeric">0</span>);
+
+al_identity_transform (T);
+al_compose_transform (T, T1);
+al_compose_transform (T, T2);
+
+al_use_transform (T);</pre>
+
+<p>
+
+<p>it does exactly the same as:
+
+<p></p>
+
+<pre class="longcode">
+al_identity_transform (T);
+al_scale_transform (T, <span class="pascal_numeric">2</span>, <span class="pascal_numeric">2</span>);
+al_translate_transform (T, <span class="pascal_numeric">100</span>, <span class="pascal_numeric">0</span>);
+al_use_transform (T);</pre>
+
+<p> <hr><span class="appinfo"><em>Generated by <a  href="https://github.com/pasdoc/pasdoc/wiki">PasDoc 0.15.0</a>. Generated on 2020-04-16 11:56:30.</em>
+</span>
+</td></tr></table></body></html>

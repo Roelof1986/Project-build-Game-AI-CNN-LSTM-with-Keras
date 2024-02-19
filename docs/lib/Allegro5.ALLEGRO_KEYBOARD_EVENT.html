@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<title>Allegro.pas 5.2.b.1: Allegro5: Record ALLEGRO_KEYBOARD_EVENT</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="generator" content="PasDoc 0.15.0">
+<meta http-equiv="content-type" content="text/html; charset=utf-8">
+<link rel="stylesheet" type="text/css" href="tipuesearch/tipuesearch.css">
+
+<link rel="StyleSheet" type="text/css" href="pasdoc.css">
+</head>
+<body>
+<table class="container"><tr><td class="navigation">
+<h2>Allegro.pas 5.2.b.1</h2><p><a href="introduction.html" class="navigation">Introduction</a></p><p><a href="AllUnits.html" class="navigation">Units</a></p><p><a href="ClassHierarchy.html" class="navigation">Class Hierarchy</a></p><p><a href="AllClasses.html" class="navigation">Classes, Interfaces, Objects and Records</a></p><p><a href="AllTypes.html" class="navigation">Types</a></p><p><a href="AllVariables.html" class="navigation">Variables</a></p><p><a href="AllConstants.html" class="navigation">Constants</a></p><p><a href="AllFunctions.html" class="navigation">Functions and Procedures</a></p><p><a href="AllIdentifiers.html" class="navigation">Identifiers</a></p><form class="search-form" action="_tipue_results.html"><div class="search-input"><input type="text" name="q" id="tipue_search_input"></div><div class="search-button"><input type="button" id="tipue_search_button" onclick="this.form.submit();"></div></form>
+<div style="clear: both"></div>
+
+<script type="text/javascript">
+$(document).ready(function() {
+    $('#tipue_search_input').tipuesearch({
+        /* 10 items to display seems standard */
+        'show': 10,
+        /* For PasDoc docs, showing urls is not very useful,
+           since the page title already shows the unit and identifier. */
+        'showURL': false
+    });
+});
+</script>
+</td><td class="content">
+<span id="ALLEGRO_KEYBOARD_EVENT"></span><h1 class="cio">Record ALLEGRO_KEYBOARD_EVENT</h1>
+<div class="sections">
+<div class="one_section"><a class="section" href="#PasDoc-Description">Description</a></div><div class="one_section">Hierarchy</div><div class="one_section"><a class="section" href="#PasDoc-Fields">Fields</a></div><div class="one_section">Methods</div><div class="one_section">Properties</div></div>
+<span id="PasDoc-Description"></span><h2 class="unit">Unit</h2>
+<p class="unitlink">
+<a  href="Allegro5.html">Allegro5</a></p>
+<h2 class="declaration">Declaration</h2>
+<p class="declaration">
+<code>type ALLEGRO_KEYBOARD_EVENT = record</code></p>
+<h2 class="description">Description</h2>
+<p>
+Contains the keyboard events information.   </p>
+<h6 class="description_section">See also</h6>
+<dl class="see_also">
+  <dt><a class="normal" href="Allegro5.ALLEGRO_EVENT.html">ALLEGRO_EVENT</a></dt>
+  <dd>An <code>ALLEGRO_EVENT</code> is an union of all builtin event structures, i.e.</dd>
+</dl>
+<h2 class="overview">Overview</h2>
+<span id="PasDoc-Fields"></span><h3 class="summary">Fields</h3>
+<table class="summary wide_list">
+<tr class="list">
+<td class="itemcode"><code><b><a  href="Allegro5.ALLEGRO_KEYBOARD_EVENT.html#ftype">ftype</a></b>: <a  href="Allegro5.html#ALLEGRO_EVENT_TYPE">ALLEGRO_EVENT_TYPE</a>;</code></td>
+</tr>
+<tr class="list2">
+<td class="itemcode"><code><b><a  href="Allegro5.ALLEGRO_KEYBOARD_EVENT.html#source">source</a></b>: <a  href="Allegro5.html#ALLEGRO_KEYBOARDptr">ALLEGRO_KEYBOARDptr</a>;</code></td>
+</tr>
+<tr class="list">
+<td class="itemcode"><code><b><a  href="Allegro5.ALLEGRO_KEYBOARD_EVENT.html#timestamp">timestamp</a></b>: <a  href="al5Base.html#AL_DOUBLE">AL_DOUBLE</a>;</code></td>
+</tr>
+<tr class="list2">
+<td class="itemcode"><code><b><a  href="Allegro5.ALLEGRO_KEYBOARD_EVENT.html#display">display</a></b>: <a  href="Allegro5.html#ALLEGRO_DISPLAYptr">ALLEGRO_DISPLAYptr</a>;</code></td>
+</tr>
+<tr class="list">
+<td class="itemcode"><code><b><a  href="Allegro5.ALLEGRO_KEYBOARD_EVENT.html#keycode">keycode</a></b>: <a  href="al5Base.html#AL_INT">AL_INT</a>;</code></td>
+</tr>
+<tr class="list2">
+<td class="itemcode"><code><b><a  href="Allegro5.ALLEGRO_KEYBOARD_EVENT.html#unichar">unichar</a></b>: <a  href="al5Base.html#AL_INT">AL_INT</a>;</code></td>
+</tr>
+<tr class="list">
+<td class="itemcode"><code><b><a  href="Allegro5.ALLEGRO_KEYBOARD_EVENT.html#modifiers">modifiers</a></b>: <a  href="al5Base.html#AL_UINT">AL_UINT</a>;</code></td>
+</tr>
+<tr class="list2">
+<td class="itemcode"><code><b><a  href="Allegro5.ALLEGRO_KEYBOARD_EVENT.html#frepeat">frepeat</a></b>: <a  href="al5Base.html#AL_BOOL">AL_BOOL</a>;</code></td>
+</tr>
+</table>
+<h2 class="description">Description</h2>
+<h3 class="detail">Fields</h3>
+<table class="detail wide_list">
+<tr class="list">
+<td class="itemcode"><span id="ftype"></span><code><b>ftype</b>: <a  href="Allegro5.html#ALLEGRO_EVENT_TYPE">ALLEGRO_EVENT_TYPE</a>;</code></td>
+</tr>
+<tr><td colspan="1">
+<p>
+Indicates the type of event.</p>
+</td></tr>
+</table>
+<table class="detail wide_list">
+<tr class="list">
+<td class="itemcode"><span id="source"></span><code><b>source</b>: <a  href="Allegro5.html#ALLEGRO_KEYBOARDptr">ALLEGRO_KEYBOARDptr</a>;</code></td>
+</tr>
+<tr><td colspan="1">
+<p>
+The keyboard which generated the event.</p>
+</td></tr>
+</table>
+<table class="detail wide_list">
+<tr class="list">
+<td class="itemcode"><span id="timestamp"></span><code><b>timestamp</b>: <a  href="al5Base.html#AL_DOUBLE">AL_DOUBLE</a>;</code></td>
+</tr>
+<tr><td colspan="1">
+<p>
+When the event was generated.</p>
+</td></tr>
+</table>
+<table class="detail wide_list">
+<tr class="list">
+<td class="itemcode"><span id="display"></span><code><b>display</b>: <a  href="Allegro5.html#ALLEGRO_DISPLAYptr">ALLEGRO_DISPLAYptr</a>;</code></td>
+</tr>
+<tr><td colspan="1">
+<p>
+The display which had keyboard focus when the event occurred.</p>
+</td></tr>
+</table>
+<table class="detail wide_list">
+<tr class="list">
+<td class="itemcode"><span id="keycode"></span><code><b>keycode</b>: <a  href="al5Base.html#AL_INT">AL_INT</a>;</code></td>
+</tr>
+<tr><td colspan="1">
+<p>
+The code corresponding to the physical key which was pressed or released. See the <a class="normal" href="introduction.html#keyboard">Keyboard</a> section for the list of <code>ALLEGRO_KEY_* </code> constants.</p>
+</td></tr>
+</table>
+<table class="detail wide_list">
+<tr class="list">
+<td class="itemcode"><span id="unichar"></span><code><b>unichar</b>: <a  href="al5Base.html#AL_INT">AL_INT</a>;</code></td>
+</tr>
+<tr><td colspan="1">
+<p>
+A Unicode code point (character). This may be zero or negative if the event was generated for a non-visible &quot;character&quot;, such as an arrow or Function key. In that case you can act upon the keycode field.
+
+<p>Some special keys will set the unichar field to their standard ASCII values: Tab=9, Return=13, Escape=27. In addition if you press the Control key together with A to Z the unichar field will have the values 1 to 26. For example Ctrl-A will set unichar to 1 and Ctrl-H will set it to 8.
+
+<p>As of Allegro 5.0.2 there are some inconsistencies in the treatment of Backspace (8 or 127) and Delete (127 or 0) keys on different platforms. These can be worked around by checking the keycode field.</p>
+</td></tr>
+</table>
+<table class="detail wide_list">
+<tr class="list">
+<td class="itemcode"><span id="modifiers"></span><code><b>modifiers</b>: <a  href="al5Base.html#AL_UINT">AL_UINT</a>;</code></td>
+</tr>
+<tr><td colspan="1">
+<p>
+This is a bitfield of the modifier keys which were pressed when the event occurred. See <a class="normal" href="introduction.html#keyboard">modifier flags</a> for the constants.</p>
+</td></tr>
+</table>
+<table class="detail wide_list">
+<tr class="list">
+<td class="itemcode"><span id="frepeat"></span><code><b>frepeat</b>: <a  href="al5Base.html#AL_BOOL">AL_BOOL</a>;</code></td>
+</tr>
+<tr><td colspan="1">
+<p>
+Indicates if this is a repeated character.</p>
+</td></tr>
+</table>
+<hr><span class="appinfo"><em>Generated by <a  href="https://github.com/pasdoc/pasdoc/wiki">PasDoc 0.15.0</a>. Generated on 2020-04-16 11:56:30.</em>
+</span>
+</td></tr></table></body></html>

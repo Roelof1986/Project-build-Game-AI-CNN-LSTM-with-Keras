@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<title>Allegro.pas 5.2.b.1: Allegro5: Record ALLEGRO_MEMORY_INTERFACE</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="generator" content="PasDoc 0.15.0">
+<meta http-equiv="content-type" content="text/html; charset=utf-8">
+<link rel="stylesheet" type="text/css" href="tipuesearch/tipuesearch.css">
+
+<link rel="StyleSheet" type="text/css" href="pasdoc.css">
+</head>
+<body>
+<table class="container"><tr><td class="navigation">
+<h2>Allegro.pas 5.2.b.1</h2><p><a href="introduction.html" class="navigation">Introduction</a></p><p><a href="AllUnits.html" class="navigation">Units</a></p><p><a href="ClassHierarchy.html" class="navigation">Class Hierarchy</a></p><p><a href="AllClasses.html" class="navigation">Classes, Interfaces, Objects and Records</a></p><p><a href="AllTypes.html" class="navigation">Types</a></p><p><a href="AllVariables.html" class="navigation">Variables</a></p><p><a href="AllConstants.html" class="navigation">Constants</a></p><p><a href="AllFunctions.html" class="navigation">Functions and Procedures</a></p><p><a href="AllIdentifiers.html" class="navigation">Identifiers</a></p><form class="search-form" action="_tipue_results.html"><div class="search-input"><input type="text" name="q" id="tipue_search_input"></div><div class="search-button"><input type="button" id="tipue_search_button" onclick="this.form.submit();"></div></form>
+<div style="clear: both"></div>
+
+<script type="text/javascript">
+$(document).ready(function() {
+    $('#tipue_search_input').tipuesearch({
+        /* 10 items to display seems standard */
+        'show': 10,
+        /* For PasDoc docs, showing urls is not very useful,
+           since the page title already shows the unit and identifier. */
+        'showURL': false
+    });
+});
+</script>
+</td><td class="content">
+<span id="ALLEGRO_MEMORY_INTERFACE"></span><h1 class="cio">Record ALLEGRO_MEMORY_INTERFACE</h1>
+<div class="sections">
+<div class="one_section"><a class="section" href="#PasDoc-Description">Description</a></div><div class="one_section">Hierarchy</div><div class="one_section"><a class="section" href="#PasDoc-Fields">Fields</a></div><div class="one_section">Methods</div><div class="one_section">Properties</div></div>
+<span id="PasDoc-Description"></span><h2 class="unit">Unit</h2>
+<p class="unitlink">
+<a  href="Allegro5.html">Allegro5</a></p>
+<h2 class="declaration">Declaration</h2>
+<p class="declaration">
+<code>type ALLEGRO_MEMORY_INTERFACE = record</code></p>
+<h2 class="description">Description</h2>
+<p>
+Used to define the memory management functions. </p>
+<h6 class="description_section">See also</h6>
+<dl class="see_also">
+  <dt><a class="normal" href="Allegro5.html#al_set_memory_interface">al_set_memory_interface</a></dt>
+  <dd>Overrides the memory management functions with implementations of <a class="normal" href="Allegro5.html#al_malloc_with_context">al_malloc_with_context</a>, <a class="normal" href="Allegro5.html#al_free_with_context">al_free_with_context</a>, <a class="normal" href="Allegro5.html#al_realloc_with_context">al_realloc_with_context</a> and <a class="normal" href="Allegro5.html#al_calloc_with_context">al_calloc_with_context</a>.</dd>
+</dl>
+<h2 class="overview">Overview</h2>
+<span id="PasDoc-Fields"></span><h3 class="summary">Fields</h3>
+<table class="summary wide_list">
+<tr class="list">
+<td class="itemcode"><code><b><a  href="Allegro5.ALLEGRO_MEMORY_INTERFACE.html#mi_malloc">mi_malloc</a></b>: FUNCTION(n: <a  href="al5Base.html#AL_SIZE_T">AL_SIZE_T</a>; line: <a  href="al5Base.html#AL_INT">AL_INT</a>; CONST afile, func: <a  href="al5Base.html#AL_STR">AL_STR</a>): <a  href="al5Base.html#AL_POINTER">AL_POINTER</a>; CDECL;</code></td>
+</tr>
+<tr class="list2">
+<td class="itemcode"><code><b><a  href="Allegro5.ALLEGRO_MEMORY_INTERFACE.html#mi_free">mi_free</a></b>: PROCEDURE(ptr: <a  href="al5Base.html#AL_POINTER">AL_POINTER</a>; line: <a  href="al5Base.html#AL_INT">AL_INT</a>; CONST afile, func: <a  href="al5Base.html#AL_STR">AL_STR</a>); CDECL;</code></td>
+</tr>
+<tr class="list">
+<td class="itemcode"><code><b><a  href="Allegro5.ALLEGRO_MEMORY_INTERFACE.html#mi_realloc">mi_realloc</a></b>: FUNCTION(ptr: <a  href="al5Base.html#AL_POINTER">AL_POINTER</a>; n: <a  href="al5Base.html#AL_SIZE_T">AL_SIZE_T</a>; line: <a  href="al5Base.html#AL_INT">AL_INT</a>; CONST afile, func: <a  href="al5Base.html#AL_STR">AL_STR</a>): <a  href="al5Base.html#AL_POINTER">AL_POINTER</a>; CDECL;</code></td>
+</tr>
+<tr class="list2">
+<td class="itemcode"><code><b><a  href="Allegro5.ALLEGRO_MEMORY_INTERFACE.html#mi_calloc">mi_calloc</a></b>: FUNCTION(n, count: <a  href="al5Base.html#AL_SIZE_T">AL_SIZE_T</a>; line: <a  href="al5Base.html#AL_INT">AL_INT</a>; CONST afile, func: <a  href="al5Base.html#AL_STR">AL_STR</a>): <a  href="al5Base.html#AL_POINTER">AL_POINTER</a>; CDECL;</code></td>
+</tr>
+</table>
+<h2 class="description">Description</h2>
+<h3 class="detail">Fields</h3>
+<table class="detail wide_list">
+<tr class="list">
+<td class="itemcode"><span id="mi_malloc"></span><code><b>mi_malloc</b>: FUNCTION(n: <a  href="al5Base.html#AL_SIZE_T">AL_SIZE_T</a>; line: <a  href="al5Base.html#AL_INT">AL_INT</a>; CONST afile, func: <a  href="al5Base.html#AL_STR">AL_STR</a>): <a  href="al5Base.html#AL_POINTER">AL_POINTER</a>; CDECL;</code></td>
+</tr>
+<tr><td colspan="1">
+&nbsp;</td></tr>
+</table>
+<table class="detail wide_list">
+<tr class="list">
+<td class="itemcode"><span id="mi_free"></span><code><b>mi_free</b>: PROCEDURE(ptr: <a  href="al5Base.html#AL_POINTER">AL_POINTER</a>; line: <a  href="al5Base.html#AL_INT">AL_INT</a>; CONST afile, func: <a  href="al5Base.html#AL_STR">AL_STR</a>); CDECL;</code></td>
+</tr>
+<tr><td colspan="1">
+&nbsp;</td></tr>
+</table>
+<table class="detail wide_list">
+<tr class="list">
+<td class="itemcode"><span id="mi_realloc"></span><code><b>mi_realloc</b>: FUNCTION(ptr: <a  href="al5Base.html#AL_POINTER">AL_POINTER</a>; n: <a  href="al5Base.html#AL_SIZE_T">AL_SIZE_T</a>; line: <a  href="al5Base.html#AL_INT">AL_INT</a>; CONST afile, func: <a  href="al5Base.html#AL_STR">AL_STR</a>): <a  href="al5Base.html#AL_POINTER">AL_POINTER</a>; CDECL;</code></td>
+</tr>
+<tr><td colspan="1">
+&nbsp;</td></tr>
+</table>
+<table class="detail wide_list">
+<tr class="list">
+<td class="itemcode"><span id="mi_calloc"></span><code><b>mi_calloc</b>: FUNCTION(n, count: <a  href="al5Base.html#AL_SIZE_T">AL_SIZE_T</a>; line: <a  href="al5Base.html#AL_INT">AL_INT</a>; CONST afile, func: <a  href="al5Base.html#AL_STR">AL_STR</a>): <a  href="al5Base.html#AL_POINTER">AL_POINTER</a>; CDECL;</code></td>
+</tr>
+<tr><td colspan="1">
+&nbsp;</td></tr>
+</table>
+<hr><span class="appinfo"><em>Generated by <a  href="https://github.com/pasdoc/pasdoc/wiki">PasDoc 0.15.0</a>. Generated on 2020-04-16 11:56:30.</em>
+</span>
+</td></tr></table></body></html>

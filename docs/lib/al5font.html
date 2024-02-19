@@ -1,0 +1,1000 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<title>Allegro.pas 5.2.b.1: al5font</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="generator" content="PasDoc 0.15.0">
+<meta http-equiv="content-type" content="text/html; charset=utf-8">
+<link rel="stylesheet" type="text/css" href="tipuesearch/tipuesearch.css">
+
+<link rel="StyleSheet" type="text/css" href="pasdoc.css">
+</head>
+<body>
+<table class="container"><tr><td class="navigation">
+<h2>Allegro.pas 5.2.b.1</h2><p><a href="introduction.html" class="navigation">Introduction</a></p><p><a href="AllUnits.html" class="navigation">Units</a></p><p><a href="ClassHierarchy.html" class="navigation">Class Hierarchy</a></p><p><a href="AllClasses.html" class="navigation">Classes, Interfaces, Objects and Records</a></p><p><a href="AllTypes.html" class="navigation">Types</a></p><p><a href="AllVariables.html" class="navigation">Variables</a></p><p><a href="AllConstants.html" class="navigation">Constants</a></p><p><a href="AllFunctions.html" class="navigation">Functions and Procedures</a></p><p><a href="AllIdentifiers.html" class="navigation">Identifiers</a></p><form class="search-form" action="_tipue_results.html"><div class="search-input"><input type="text" name="q" id="tipue_search_input"></div><div class="search-button"><input type="button" id="tipue_search_button" onclick="this.form.submit();"></div></form>
+<div style="clear: both"></div>
+
+<script type="text/javascript">
+$(document).ready(function() {
+    $('#tipue_search_input').tipuesearch({
+        /* 10 items to display seems standard */
+        'show': 10,
+        /* For PasDoc docs, showing urls is not very useful,
+           since the page title already shows the unit and identifier. */
+        'showURL': false
+    });
+});
+</script>
+</td><td class="content">
+<h1 class="unit">Unit al5font</h1>
+<div class="sections">
+<div class="one_section"><a class="section" href="#PasDoc-Description">Description</a></div><div class="one_section">Uses</div><div class="one_section">Classes, Interfaces, Objects and Records</div><div class="one_section"><a class="section" href="#PasDoc-FuncsProcs">Functions and Procedures</a></div><div class="one_section"><a class="section" href="#PasDoc-Types">Types</a></div><div class="one_section">Constants</div><div class="one_section">Variables</div></div>
+<span id="PasDoc-Description"></span><h2 class="description">Description</h2>
+<p>
+Text font management.
+
+<p><b>See also</b>
+
+<p><a class="normal" href="al5ttf.html">al5ttf</a></p>
+<span id="PasDoc-Uses"></span><h2 class="overview">Overview</h2>
+<span id="PasDoc-FuncsProcs"></span><h3 class="summary">Functions and Procedures</h3>
+<table class="summary wide_list">
+<tr class="list">
+<td class="itemcode"><code>FUNCTION <b><a  href="al5font.html#al_init_font_addon">al_init_font_addon</a></b>: <a  href="al5Base.html#AL_BOOL">AL_BOOL</a>; CDECL; EXTERNAL ALLEGRO_FONT_LIB_NAME;</code></td>
+</tr>
+<tr class="list2">
+<td class="itemcode"><code>PROCEDURE <b><a  href="al5font.html#al_shutdown_font_addon">al_shutdown_font_addon</a></b>; CDECL; EXTERNAL ALLEGRO_FONT_LIB_NAME;</code></td>
+</tr>
+<tr class="list">
+<td class="itemcode"><code>FUNCTION <b><a  href="al5font.html#al_get_allegro_font_version">al_get_allegro_font_version</a></b>: <a  href="al5Base.html#AL_UINT32">AL_UINT32</a>; CDECL; EXTERNAL ALLEGRO_FONT_LIB_NAME;</code></td>
+</tr>
+<tr class="list2">
+<td class="itemcode"><code>FUNCTION <b><a  href="al5font.html#al_load_bitmap_font">al_load_bitmap_font</a></b> (CONST filename: <a  href="al5Base.html#AL_STR">AL_STR</a>): <a  href="al5font.html#ALLEGRO_FONTptr">ALLEGRO_FONTptr</a>; CDECL; EXTERNAL ALLEGRO_FONT_LIB_NAME;</code></td>
+</tr>
+<tr class="list">
+<td class="itemcode"><code>FUNCTION <b><a  href="al5font.html#al_load_bitmap_font_flags">al_load_bitmap_font_flags</a></b> (CONST filename: <a  href="al5Base.html#AL_STR">AL_STR</a>; flags: <a  href="al5Base.html#AL_INT">AL_INT</a>): <a  href="al5font.html#ALLEGRO_FONTptr">ALLEGRO_FONTptr</a>; CDECL; EXTERNAL ALLEGRO_FONT_LIB_NAME;</code></td>
+</tr>
+<tr class="list2">
+<td class="itemcode"><code>FUNCTION <b><a  href="al5font.html#al_load_font">al_load_font</a></b> (CONST filename: <a  href="al5Base.html#AL_STR">AL_STR</a>; size, flags: <a  href="al5Base.html#AL_INT">AL_INT</a>): <a  href="al5font.html#ALLEGRO_FONTptr">ALLEGRO_FONTptr</a>; CDECL; EXTERNAL ALLEGRO_FONT_LIB_NAME;</code></td>
+</tr>
+<tr class="list">
+<td class="itemcode"><code>FUNCTION <b><a  href="al5font.html#al_grab_font_from_bitmap">al_grab_font_from_bitmap</a></b> (bmp: <a  href="Allegro5.html#ALLEGRO_BITMAPptr">ALLEGRO_BITMAPptr</a>; n: <a  href="al5Base.html#AL_INT">AL_INT</a>; VAR ranges: ARRAY OF <a  href="al5Base.html#AL_INT">AL_INT</a>): <a  href="al5font.html#ALLEGRO_FONTptr">ALLEGRO_FONTptr</a>; CDECL; EXTERNAL ALLEGRO_FONT_LIB_NAME;</code></td>
+</tr>
+<tr class="list2">
+<td class="itemcode"><code>FUNCTION <b><a  href="al5font.html#al_create_builtin_font">al_create_builtin_font</a></b>: <a  href="al5font.html#ALLEGRO_FONTptr">ALLEGRO_FONTptr</a>; CDECL; EXTERNAL ALLEGRO_FONT_LIB_NAME;</code></td>
+</tr>
+<tr class="list">
+<td class="itemcode"><code>PROCEDURE <b><a  href="al5font.html#al_draw_ustr">al_draw_ustr</a></b> (CONST font: <a  href="al5font.html#ALLEGRO_FONTptr">ALLEGRO_FONTptr</a>; color: <a  href="Allegro5.ALLEGRO_COLOR.html">ALLEGRO_COLOR</a>; x, y: <a  href="al5Base.html#AL_FLOAT">AL_FLOAT</a>; flags: <a  href="al5Base.html#AL_INT">AL_INT</a>; CONST ustr: <a  href="al5strings.html#ALLEGRO_USTRptr">ALLEGRO_USTRptr</a>); CDECL; EXTERNAL ALLEGRO_FONT_LIB_NAME;</code></td>
+</tr>
+<tr class="list2">
+<td class="itemcode"><code>PROCEDURE <b><a  href="al5font.html#al_draw_text">al_draw_text</a></b> (CONST font: <a  href="al5font.html#ALLEGRO_FONTptr">ALLEGRO_FONTptr</a>; color: <a  href="Allegro5.ALLEGRO_COLOR.html">ALLEGRO_COLOR</a>; x, y: <a  href="al5Base.html#AL_FLOAT">AL_FLOAT</a>; flags: <a  href="al5Base.html#AL_INT">AL_INT</a>; CONST str: <a  href="al5Base.html#AL_STR">AL_STR</a>); INLINE;</code></td>
+</tr>
+<tr class="list">
+<td class="itemcode"><code>PROCEDURE <b><a  href="al5font.html#al_draw_justified_text">al_draw_justified_text</a></b> (CONST font: <a  href="al5font.html#ALLEGRO_FONTptr">ALLEGRO_FONTptr</a>; color: <a  href="Allegro5.ALLEGRO_COLOR.html">ALLEGRO_COLOR</a>; x1, x2, y, diff: <a  href="al5Base.html#AL_FLOAT">AL_FLOAT</a>; flags: <a  href="al5Base.html#AL_INT">AL_INT</a>; CONST str: <a  href="al5Base.html#AL_STR">AL_STR</a>); INLINE;</code></td>
+</tr>
+<tr class="list2">
+<td class="itemcode"><code>PROCEDURE <b><a  href="al5font.html#al_draw_justified_ustr">al_draw_justified_ustr</a></b> (CONST font: <a  href="al5font.html#ALLEGRO_FONTptr">ALLEGRO_FONTptr</a>; color: <a  href="Allegro5.ALLEGRO_COLOR.html">ALLEGRO_COLOR</a>; x1, x2, y, diff: <a  href="al5Base.html#AL_FLOAT">AL_FLOAT</a>; flags: <a  href="al5Base.html#AL_INT">AL_INT</a>; CONST str: <a  href="al5strings.html#ALLEGRO_USTRptr">ALLEGRO_USTRptr</a>); CDECL; EXTERNAL ALLEGRO_FONT_LIB_NAME;</code></td>
+</tr>
+<tr class="list">
+<td class="itemcode"><code>PROCEDURE <b><a  href="al5font.html#al_draw_textf">al_draw_textf</a></b> (CONST font: <a  href="al5font.html#ALLEGRO_FONTptr">ALLEGRO_FONTptr</a>; color: <a  href="Allegro5.ALLEGRO_COLOR.html">ALLEGRO_COLOR</a>; x, y: <a  href="al5Base.html#AL_FLOAT">AL_FLOAT</a>; flags: <a  href="al5Base.html#AL_INT">AL_INT</a>; CONST fmt: <a  href="al5Base.html#AL_STR">AL_STR</a>; CONST values: ARRAY OF CONST);</code></td>
+</tr>
+<tr class="list2">
+<td class="itemcode"><code>PROCEDURE <b><a  href="al5font.html#al_draw_justified_textf">al_draw_justified_textf</a></b> (CONST font: <a  href="al5font.html#ALLEGRO_FONTptr">ALLEGRO_FONTptr</a>; color: <a  href="Allegro5.ALLEGRO_COLOR.html">ALLEGRO_COLOR</a>; x1, x2, y, diff: <a  href="al5Base.html#AL_FLOAT">AL_FLOAT</a>; flags: <a  href="al5Base.html#AL_INT">AL_INT</a>; CONST fmt: <a  href="al5Base.html#AL_STR">AL_STR</a>; CONST values: ARRAY OF CONST);</code></td>
+</tr>
+<tr class="list">
+<td class="itemcode"><code>FUNCTION <b><a  href="al5font.html#al_get_text_width">al_get_text_width</a></b> (CONST font: <a  href="al5font.html#ALLEGRO_FONTptr">ALLEGRO_FONTptr</a>; CONST str: <a  href="al5Base.html#AL_STR">AL_STR</a>): <a  href="al5Base.html#AL_INT">AL_INT</a>; INLINE;</code></td>
+</tr>
+<tr class="list2">
+<td class="itemcode"><code>FUNCTION <b><a  href="al5font.html#al_get_ustr_width">al_get_ustr_width</a></b> (CONST font: <a  href="al5font.html#ALLEGRO_FONTptr">ALLEGRO_FONTptr</a>; CONST ustr: <a  href="al5strings.html#ALLEGRO_USTRptr">ALLEGRO_USTRptr</a>): <a  href="al5Base.html#AL_INT">AL_INT</a>; CDECL; EXTERNAL ALLEGRO_FONT_LIB_NAME;</code></td>
+</tr>
+<tr class="list">
+<td class="itemcode"><code>FUNCTION <b><a  href="al5font.html#al_get_font_line_height">al_get_font_line_height</a></b> (CONST font: <a  href="al5font.html#ALLEGRO_FONTptr">ALLEGRO_FONTptr</a>): <a  href="al5Base.html#AL_INT">AL_INT</a>; CDECL; EXTERNAL ALLEGRO_FONT_LIB_NAME;</code></td>
+</tr>
+<tr class="list2">
+<td class="itemcode"><code>FUNCTION <b><a  href="al5font.html#al_get_font_ascent">al_get_font_ascent</a></b> (CONST font: <a  href="al5font.html#ALLEGRO_FONTptr">ALLEGRO_FONTptr</a>): <a  href="al5Base.html#AL_INT">AL_INT</a>; CDECL; EXTERNAL ALLEGRO_FONT_LIB_NAME;</code></td>
+</tr>
+<tr class="list">
+<td class="itemcode"><code>FUNCTION <b><a  href="al5font.html#al_get_font_descent">al_get_font_descent</a></b> (CONST font: <a  href="al5font.html#ALLEGRO_FONTptr">ALLEGRO_FONTptr</a>): <a  href="al5Base.html#AL_INT">AL_INT</a>; CDECL; EXTERNAL ALLEGRO_FONT_LIB_NAME;</code></td>
+</tr>
+<tr class="list2">
+<td class="itemcode"><code>PROCEDURE <b><a  href="al5font.html#al_destroy_font">al_destroy_font</a></b> (font: <a  href="al5font.html#ALLEGRO_FONTptr">ALLEGRO_FONTptr</a>); CDECL; EXTERNAL ALLEGRO_FONT_LIB_NAME;</code></td>
+</tr>
+<tr class="list">
+<td class="itemcode"><code>PROCEDURE <b><a  href="al5font.html#al_get_ustr_dimensions">al_get_ustr_dimensions</a></b> (CONST f: <a  href="al5font.html#ALLEGRO_FONTptr">ALLEGRO_FONTptr</a>; CONST str: <a  href="al5strings.html#ALLEGRO_USTRptr">ALLEGRO_USTRptr</a>; OUT bbx, bby, bbw, bbh: <a  href="al5Base.html#AL_INT">AL_INT</a>); CDECL; EXTERNAL ALLEGRO_FONT_LIB_NAME;</code></td>
+</tr>
+<tr class="list2">
+<td class="itemcode"><code>PROCEDURE <b><a  href="al5font.html#al_get_text_dimensions">al_get_text_dimensions</a></b> (CONST f: <a  href="al5font.html#ALLEGRO_FONTptr">ALLEGRO_FONTptr</a>; CONST str: <a  href="al5Base.html#AL_STR">AL_STR</a>; OUT bbx, bby, bbw, bbh: <a  href="al5Base.html#AL_INT">AL_INT</a>); INLINE;</code></td>
+</tr>
+<tr class="list">
+<td class="itemcode"><code>FUNCTION <b><a  href="al5font.html#al_get_font_ranges">al_get_font_ranges</a></b> (font: <a  href="al5font.html#ALLEGRO_FONTptr">ALLEGRO_FONTptr</a>; ranges_count: <a  href="al5Base.html#AL_INT">AL_INT</a>; VAR ranges: ARRAY OF <a  href="al5Base.html#AL_INT">AL_INT</a>): <a  href="al5Base.html#AL_INT">AL_INT</a>; CDECL; EXTERNAL ALLEGRO_FONT_LIB_NAME;</code></td>
+</tr>
+<tr class="list2">
+<td class="itemcode"><code>PROCEDURE <b><a  href="al5font.html#al_draw_glyph">al_draw_glyph</a></b> (CONST f: <a  href="al5font.html#ALLEGRO_FONTptr">ALLEGRO_FONTptr</a>; color: <a  href="Allegro5.ALLEGRO_COLOR.html">ALLEGRO_COLOR</a>; x, y: <a  href="al5Base.html#AL_FLOAT">AL_FLOAT</a>; codepoint: <a  href="al5Base.html#AL_INT">AL_INT</a>); CDECL; EXTERNAL ALLEGRO_FONT_LIB_NAME;</code></td>
+</tr>
+<tr class="list">
+<td class="itemcode"><code>FUNCTION <b><a  href="al5font.html#al_get_glyph_width">al_get_glyph_width</a></b> (CONST f: <a  href="al5font.html#ALLEGRO_FONTptr">ALLEGRO_FONTptr</a>; codepoint: <a  href="al5Base.html#AL_INT">AL_INT</a>): <a  href="al5Base.html#AL_INT">AL_INT</a>; CDECL; EXTERNAL ALLEGRO_FONT_LIB_NAME;</code></td>
+</tr>
+<tr class="list2">
+<td class="itemcode"><code>FUNCTION <b><a  href="al5font.html#al_get_glyph_dimensions">al_get_glyph_dimensions</a></b> (CONST f: <a  href="al5font.html#ALLEGRO_FONTptr">ALLEGRO_FONTptr</a>; codepoint: <a  href="al5Base.html#AL_INT">AL_INT</a>; OUT bbx, bby, bbw, bbh: <a  href="al5Base.html#AL_INT">AL_INT</a>): <a  href="al5Base.html#AL_BOOL">AL_BOOL</a>; CDECL; EXTERNAL ALLEGRO_FONT_LIB_NAME;</code></td>
+</tr>
+<tr class="list">
+<td class="itemcode"><code>FUNCTION <b><a  href="al5font.html#al_get_glyph_advance">al_get_glyph_advance</a></b> (CONST f: <a  href="al5font.html#ALLEGRO_FONTptr">ALLEGRO_FONTptr</a>; codepoint1, codepoint2: <a  href="al5Base.html#AL_INT">AL_INT</a>): <a  href="al5Base.html#AL_INT">AL_INT</a>; CDECL; EXTERNAL ALLEGRO_FONT_LIB_NAME;</code></td>
+</tr>
+<tr class="list2">
+<td class="itemcode"><code>PROCEDURE <b><a  href="al5font.html#al_draw_multiline_text">al_draw_multiline_text</a></b> (CONST font: <a  href="al5font.html#ALLEGRO_FONTptr">ALLEGRO_FONTptr</a>; color: <a  href="Allegro5.ALLEGRO_COLOR.html">ALLEGRO_COLOR</a>; x, y, max_width, line_height: <a  href="al5Base.html#AL_FLOAT">AL_FLOAT</a>; flags: <a  href="al5Base.html#AL_INT">AL_INT</a>; CONST str: <a  href="al5Base.html#AL_STR">AL_STR</a>); CDECL; EXTERNAL ALLEGRO_FONT_LIB_NAME;</code></td>
+</tr>
+<tr class="list">
+<td class="itemcode"><code>PROCEDURE <b><a  href="al5font.html#al_draw_multiline_textf">al_draw_multiline_textf</a></b> (CONST font: <a  href="al5font.html#ALLEGRO_FONTptr">ALLEGRO_FONTptr</a>; color: <a  href="Allegro5.ALLEGRO_COLOR.html">ALLEGRO_COLOR</a>; x, y, max_width, line_height: <a  href="al5Base.html#AL_FLOAT">AL_FLOAT</a>; flags: <a  href="al5Base.html#AL_INT">AL_INT</a>; CONST fmt: <a  href="al5Base.html#AL_STR">AL_STR</a>; CONST values: ARRAY OF CONST);</code></td>
+</tr>
+<tr class="list2">
+<td class="itemcode"><code>PROCEDURE <b><a  href="al5font.html#al_draw_multiline_ustr">al_draw_multiline_ustr</a></b> (CONST font: <a  href="al5font.html#ALLEGRO_FONTptr">ALLEGRO_FONTptr</a>; color: <a  href="Allegro5.ALLEGRO_COLOR.html">ALLEGRO_COLOR</a>; x, y, max_width, line_height: <a  href="al5Base.html#AL_FLOAT">AL_FLOAT</a>; flags: <a  href="al5Base.html#AL_INT">AL_INT</a>; CONST str: <a  href="al5strings.html#ALLEGRO_USTRptr">ALLEGRO_USTRptr</a>); CDECL; EXTERNAL ALLEGRO_FONT_LIB_NAME;</code></td>
+</tr>
+<tr class="list">
+<td class="itemcode"><code>PROCEDURE <b><a  href="al5font.html#al_do_multiline_text">al_do_multiline_text</a></b> (CONST font: <a  href="al5font.html#ALLEGRO_FONTptr">ALLEGRO_FONTptr</a>; max_width: <a  href="al5Base.html#AL_FLOAT">AL_FLOAT</a>; str: <a  href="al5Base.html#AL_STR">AL_STR</a>; cb: <a  href="al5font.html#ALFONT_CALLBACK_MULTILINE_TEXT">ALFONT_CALLBACK_MULTILINE_TEXT</a>; extra: <a  href="al5Base.html#AL_POINTER">AL_POINTER</a>); CDECL; EXTERNAL ALLEGRO_FONT_LIB_NAME;</code></td>
+</tr>
+<tr class="list2">
+<td class="itemcode"><code>PROCEDURE <b><a  href="al5font.html#al_do_multiline_ustr">al_do_multiline_ustr</a></b> (CONST font: <a  href="al5font.html#ALLEGRO_FONTptr">ALLEGRO_FONTptr</a>; max_width: <a  href="al5Base.html#AL_FLOAT">AL_FLOAT</a>; str: <a  href="al5strings.html#ALLEGRO_USTRptr">ALLEGRO_USTRptr</a>; cb: <a  href="al5font.html#ALFONT_CALLBACK_MULTILINE_USTR">ALFONT_CALLBACK_MULTILINE_USTR</a>; extra: <a  href="al5Base.html#AL_POINTER">AL_POINTER</a>); CDECL; EXTERNAL ALLEGRO_FONT_LIB_NAME;</code></td>
+</tr>
+<tr class="list">
+<td class="itemcode"><code>PROCEDURE <b><a  href="al5font.html#al_set_fallback_font">al_set_fallback_font</a></b> (font, fallback: <a  href="al5font.html#ALLEGRO_FONTptr">ALLEGRO_FONTptr</a>); CDECL; EXTERNAL ALLEGRO_FONT_LIB_NAME;</code></td>
+</tr>
+<tr class="list2">
+<td class="itemcode"><code>FUNCTION <b><a  href="al5font.html#al_get_fallback_font">al_get_fallback_font</a></b> (font: <a  href="al5font.html#ALLEGRO_FONTptr">ALLEGRO_FONTptr</a>): <a  href="al5font.html#ALLEGRO_FONTptr">ALLEGRO_FONTptr</a>; CDECL; EXTERNAL ALLEGRO_FONT_LIB_NAME;</code></td>
+</tr>
+</table>
+<span id="PasDoc-Types"></span><h3 class="summary">Types</h3>
+<table class="summary wide_list">
+<tr class="list">
+<td class="itemcode"><code><b><a  href="al5font.html#ALLEGRO_FONTptr">ALLEGRO_FONTptr</a></b> = <a  href="al5Base.html#AL_POINTER">AL_POINTER</a>;</code></td>
+</tr>
+<tr class="list2">
+<td class="itemcode"><code><b><a  href="al5font.html#ALFONT_CALLBACK_MULTILINE_TEXT">ALFONT_CALLBACK_MULTILINE_TEXT</a></b> = FUNCTION (line_num: <a  href="al5Base.html#AL_INT">AL_INT</a>; CONST line: <a  href="al5Base.html#AL_STRptr">AL_STRptr</a>; size: <a  href="al5Base.html#AL_INT">AL_INT</a>; extra: <a  href="al5Base.html#AL_POINTER">AL_POINTER</a>): <a  href="al5Base.html#AL_BOOL">AL_BOOL</a>; CDECL;</code></td>
+</tr>
+<tr class="list">
+<td class="itemcode"><code><b><a  href="al5font.html#ALFONT_CALLBACK_MULTILINE_USTR">ALFONT_CALLBACK_MULTILINE_USTR</a></b> = FUNCTION (line_num: <a  href="al5Base.html#AL_INT">AL_INT</a>; CONST line: <a  href="al5strings.html#ALLEGRO_USTRptr">ALLEGRO_USTRptr</a>; size: <a  href="al5Base.html#AL_INT">AL_INT</a>; extra: <a  href="al5Base.html#AL_POINTER">AL_POINTER</a>): <a  href="al5Base.html#AL_BOOL">AL_BOOL</a>; CDECL;</code></td>
+</tr>
+</table>
+<h2 class="description">Description</h2>
+<h3 class="detail">Functions and Procedures</h3>
+<table class="detail wide_list">
+<tr class="list">
+<td class="itemcode"><span id="al_init_font_addon"></span><code>FUNCTION <b>al_init_font_addon</b>: <a  href="al5Base.html#AL_BOOL">AL_BOOL</a>; CDECL; EXTERNAL ALLEGRO_FONT_LIB_NAME;</code></td>
+</tr>
+<tr><td colspan="1">
+<p>
+Initialises the font addon.
+
+<p>Note that if you intend to load bitmap fonts, you will need to initialise <a class="normal" href="al5image.html">al5image</a> separately (unless you are using another library to load images).
+
+<p>Similarly, if you wish to load truetype-fonts, do not forget to also call <a class="normal" href="al5ttf.html#al_init_ttf_addon">al_init_ttf_addon</a>.    </p>
+<h6 class="description_section">Returns</h6>
+<p class="return"><code>True</code> on success, <code>False</code> on failure.</p><h6 class="description_section">See also</h6>
+<dl class="see_also">
+  <dt><a class="normal" href="al5image.html#al_init_image_addon">al_init_image_addon</a></dt>
+  <dd></dd>
+  <dt><a class="normal" href="al5ttf.html#al_init_ttf_addon">al_init_ttf_addon</a></dt>
+  <dd>Initializes the TTF addon.</dd>
+  <dt><a class="normal" href="al5font.html#al_shutdown_font_addon">al_shutdown_font_addon</a></dt>
+  <dd>Shuts down the font addon.</dd>
+</dl>
+</td></tr>
+</table>
+<table class="detail wide_list">
+<tr class="list">
+<td class="itemcode"><span id="al_shutdown_font_addon"></span><code>PROCEDURE <b>al_shutdown_font_addon</b>; CDECL; EXTERNAL ALLEGRO_FONT_LIB_NAME;</code></td>
+</tr>
+<tr><td colspan="1">
+<p>
+Shuts down the font addon. This is done automatically at program exit, but can be called any time the user wishes as well. </p>
+<h6 class="description_section">See also</h6>
+<dl class="see_also">
+  <dt><a class="normal" href="al5font.html#al_init_font_addon">al_init_font_addon</a></dt>
+  <dd>Initialises the font addon.</dd>
+</dl>
+</td></tr>
+</table>
+<table class="detail wide_list">
+<tr class="list">
+<td class="itemcode"><span id="al_get_allegro_font_version"></span><code>FUNCTION <b>al_get_allegro_font_version</b>: <a  href="al5Base.html#AL_UINT32">AL_UINT32</a>; CDECL; EXTERNAL ALLEGRO_FONT_LIB_NAME;</code></td>
+</tr>
+<tr><td colspan="1">
+<p>
+Returns the (compiled) version of the addon, in the same format as <a class="normal" href="Allegro5.html#al_get_allegro_version">al_get_allegro_version</a>.</p>
+</td></tr>
+</table>
+<table class="detail wide_list">
+<tr class="list">
+<td class="itemcode"><span id="al_load_bitmap_font"></span><code>FUNCTION <b>al_load_bitmap_font</b> (CONST filename: <a  href="al5Base.html#AL_STR">AL_STR</a>): <a  href="al5font.html#ALLEGRO_FONTptr">ALLEGRO_FONTptr</a>; CDECL; EXTERNAL ALLEGRO_FONT_LIB_NAME;</code></td>
+</tr>
+<tr><td colspan="1">
+<p>
+Load a bitmap font from a file. This is done by first calling <a class="normal" href="Allegro5.html#al_load_bitmap_flags">al_load_bitmap_flags</a> and then <a class="normal" href="al5font.html#al_grab_font_from_bitmap">al_grab_font_from_bitmap</a>.
+
+<p>If you wanted to load an old A4 font, for example, it would be better to load the bitmap yourself in order to call <a class="normal" href="Allegro5.html#al_convert_mask_to_alpha">al_convert_mask_to_alpha</a> on it before passing it to <a class="normal" href="al5font.html#al_grab_font_from_bitmap">al_grab_font_from_bitmap</a>.   </p>
+<h6 class="description_section">See also</h6>
+<dl class="see_also">
+  <dt><a class="normal" href="al5font.html#al_load_bitmap_font_flags">al_load_bitmap_font_flags</a></dt>
+  <dd>Like <a class="normal" href="al5font.html#al_load_bitmap_font">al_load_bitmap_font</a> but additionally takes a flags parameter.</dd>
+  <dt><a class="normal" href="al5font.html#al_load_font">al_load_font</a></dt>
+  <dd>Loads a font from disk.</dd>
+  <dt><a class="normal" href="Allegro5.html#al_load_bitmap_flags">al_load_bitmap_flags</a></dt>
+  <dd>Loads an image file into a new <code>ALLEGRO_BITMAPptr</code>.</dd>
+</dl>
+</td></tr>
+</table>
+<table class="detail wide_list">
+<tr class="list">
+<td class="itemcode"><span id="al_load_bitmap_font_flags"></span><code>FUNCTION <b>al_load_bitmap_font_flags</b> (CONST filename: <a  href="al5Base.html#AL_STR">AL_STR</a>; flags: <a  href="al5Base.html#AL_INT">AL_INT</a>): <a  href="al5font.html#ALLEGRO_FONTptr">ALLEGRO_FONTptr</a>; CDECL; EXTERNAL ALLEGRO_FONT_LIB_NAME;</code></td>
+</tr>
+<tr><td colspan="1">
+<p>
+Like <a class="normal" href="al5font.html#al_load_bitmap_font">al_load_bitmap_font</a> but additionally takes a flags parameter. The flags parameter is a bitfield containing a combination of the following: </p>
+
+<dl class="paragraph_spacing">
+  <dt>ALLEGRO_NO_PREMULTIPLIED_ALPHA</dt>
+  <dd><p>The same meaning as for al_load_bitmap_flags.</p></dd>
+</dl>
+
+<p>  </p>
+<h6 class="description_section">See also</h6>
+<dl class="see_also">
+  <dt><a class="normal" href="al5font.html#al_load_bitmap_font">al_load_bitmap_font</a></dt>
+  <dd>Load a bitmap font from a file.</dd>
+  <dt><a class="normal" href="Allegro5.html#al_load_bitmap_flags">al_load_bitmap_flags</a></dt>
+  <dd>Loads an image file into a new <code>ALLEGRO_BITMAPptr</code>.</dd>
+</dl>
+</td></tr>
+</table>
+<table class="detail wide_list">
+<tr class="list">
+<td class="itemcode"><span id="al_load_font"></span><code>FUNCTION <b>al_load_font</b> (CONST filename: <a  href="al5Base.html#AL_STR">AL_STR</a>; size, flags: <a  href="al5Base.html#AL_INT">AL_INT</a>): <a  href="al5font.html#ALLEGRO_FONTptr">ALLEGRO_FONTptr</a>; CDECL; EXTERNAL ALLEGRO_FONT_LIB_NAME;</code></td>
+</tr>
+<tr><td colspan="1">
+<p>
+Loads a font from disk. This will use <a class="normal" href="al5font.html#al_load_bitmap_font_flags">al_load_bitmap_font_flags</a> if you pass the name of a known bitmap format, or else <a class="normal" href="al5ttf.html#al_load_ttf_font">al_load_ttf_font</a>.
+
+<p>The flags parameter is passed through to either of those functions. Bitmap and TTF fonts are also affected by the current bitmap flags at the time the font is loaded.    </p>
+<h6 class="description_section">See also</h6>
+<dl class="see_also">
+  <dt><a class="normal" href="al5font.html#al_destroy_font">al_destroy_font</a></dt>
+  <dd>Frees the memory being used by a font structure.</dd>
+  <dt><a class="normal" href="al5font.html#al_init_font_addon">al_init_font_addon</a></dt>
+  <dd>Initialises the font addon.</dd>
+  <dt><a class="normal" href="al5font.html#al_load_bitmap_font_flags">al_load_bitmap_font_flags</a></dt>
+  <dd>Like <a class="normal" href="al5font.html#al_load_bitmap_font">al_load_bitmap_font</a> but additionally takes a flags parameter.</dd>
+  <dt><a class="normal" href="al5ttf.html#al_load_ttf_font">al_load_ttf_font</a></dt>
+  <dd>Loads a TrueType font from a file using the FreeType library.</dd>
+</dl>
+</td></tr>
+</table>
+<table class="detail wide_list">
+<tr class="list">
+<td class="itemcode"><span id="al_grab_font_from_bitmap"></span><code>FUNCTION <b>al_grab_font_from_bitmap</b> (bmp: <a  href="Allegro5.html#ALLEGRO_BITMAPptr">ALLEGRO_BITMAPptr</a>; n: <a  href="al5Base.html#AL_INT">AL_INT</a>; VAR ranges: ARRAY OF <a  href="al5Base.html#AL_INT">AL_INT</a>): <a  href="al5font.html#ALLEGRO_FONTptr">ALLEGRO_FONTptr</a>; CDECL; EXTERNAL ALLEGRO_FONT_LIB_NAME;</code></td>
+</tr>
+<tr><td colspan="1">
+<p>
+Creates a new font from an Allegro bitmap. You can delete the bitmap after the function returns as the font will contain a copy for itself.
+
+<p>The bitmap format is as in the following example, which contains three glyphs for 1, 2 and 3. </p>
+
+<pre class="preformatted">
+.............
+. 1 .222.333.
+. 1 .  2.  3.
+. 1 .222.333.
+. 1 .2  .  3.
+. 1 .222.333.
+.............</pre>
+
+<p> In the above illustration, the dot is for pixels having the background color. It is determined by the color of the top left pixel in the bitmap. There should be a border of at least 1 pixel with this color to the bitmap edge and between all glyphs.
+
+<p>Each glyph is inside a rectangle of pixels not containing the background color. The height of all glyph rectangles should be the same, but the width can vary.
+
+<p>The placement of the rectangles does not matter, except that glyphs are scanned from left to right and top to bottom to match them to the specified unicode codepoints.
+
+<p>The glyphs will simply be drawn using <a class="normal" href="Allegro5.html#al_draw_bitmap">al_draw_bitmap</a>, so usually you will want the rectangles filled with full transparency and the glyphs drawn in opaque white.
+
+<p><b>Examples:</b> </p>
+
+<pre class="longcode">
+<span class="pascal_keyword">VAR</span>
+  Ranges: <span class="pascal_keyword">ARRAY</span> [<span class="pascal_numeric">0</span>..1] <span class="pascal_keyword">OF</span> AL_INT = (<span class="pascal_numeric">32</span>, <span class="pascal_numeric">126</span>);
+  TextFont: ALLEGRO_FONTptr;
+<span class="pascal_keyword">BEGIN</span>
+  TextFont := al_grab_font_from_bitmap (Bitmap, <span class="pascal_numeric">1</span>, Ranges)
+<span class="pascal_keyword">END</span>;
+
+<span class="pascal_keyword">VAR</span>
+  Ranges: <span class="pascal_keyword">ARRAY</span> [<span class="pascal_numeric">0</span>..7] <span class="pascal_keyword">OF</span> AL_INT = (
+    <span class="pascal_hex">$0020</span>, <span class="pascal_hex">$007F</span>,  <span class="pascal_comment">{ ASCII }</span>
+    <span class="pascal_hex">$00A1</span>, <span class="pascal_hex">$00FF</span>,  <span class="pascal_comment">{ Latin 1 }</span>
+    <span class="pascal_hex">$0100</span>, <span class="pascal_hex">$017F</span>,  <span class="pascal_comment">{ Extended-A }</span>
+    <span class="pascal_hex">$20AC</span>, <span class="pascal_hex">$20AC</span>   <span class="pascal_comment">{ Euro }</span>
+  );
+  TextFont: ALLEGRO_FONTptr;
+<span class="pascal_keyword">BEGIN</span>
+  TextFont := al_grab_font_from_bitmap (Bitmap, <span class="pascal_numeric">4</span>, Ranges)
+<span class="pascal_keyword">END</span>;</pre>
+
+<p> The first example will grab glyphs for the 95 standard printable ASCII characters, beginning with the space character (32) and ending with the tilde character (126). The second example will map the first 96 glyphs found in the bitmap to ASCII range, the next 95 glyphs to Latin 1, the next 128 glyphs to Extended-A, and the last glyph to the Euro character. (This is just the characters found in the Allegro 4 font.)    </p>
+<h6 class="description_section">Parameters</h6>
+<dl class="parameters">
+<dt>bmp</dt>
+<dd>The bitmap with the glyphs drawn onto it.</dd>
+<dt>n</dt>
+<dd>Number of unicode ranges in the bitmap.</dd>
+<dt>ranges</dt>
+<dd><i>n</i> pairs of first and last unicode point to map glyphs to for each range.</dd>
+</dl>
+<h6 class="description_section">See also</h6>
+<dl class="see_also">
+  <dt><a class="normal" href="Allegro5.html#al_load_bitmap">al_load_bitmap</a></dt>
+  <dd>Loads an image file into a new <code>ALLEGRO_BITMAPptr</code>.</dd>
+</dl>
+</td></tr>
+</table>
+<table class="detail wide_list">
+<tr class="list">
+<td class="itemcode"><span id="al_create_builtin_font"></span><code>FUNCTION <b>al_create_builtin_font</b>: <a  href="al5font.html#ALLEGRO_FONTptr">ALLEGRO_FONTptr</a>; CDECL; EXTERNAL ALLEGRO_FONT_LIB_NAME;</code></td>
+</tr>
+<tr><td colspan="1">
+<p>
+Creates a monochrome bitmap font (8x8 pixels per character).
+
+<p>This font is primarily intended to be used for displaying information in environments or during early runtime states where no external font data is available or loaded (e.g. for debugging).
+
+<p>The builtin font contains the following unicode character ranges: </p>
+
+<pre class="preformatted">
+0x0020 to 0x007F (ASCII)
+0x00A1 to 0x00FF (Latin 1)
+0x0100 to 0x017F (Extended A)
+0x20AC to 0x20AC (euro currency symbol)</pre>
+
+<p> The font memory must be freed the same way as for any other font, using <a class="normal" href="al5font.html#al_destroy_font">al_destroy_font</a>.   </p>
+<h6 class="description_section">Returns</h6>
+<p class="return"><code>Nil</code> on an error.</p><h6 class="description_section">See also</h6>
+<dl class="see_also">
+  <dt><a class="normal" href="al5font.html#al_load_bitmap_font">al_load_bitmap_font</a></dt>
+  <dd>Load a bitmap font from a file.</dd>
+  <dt><a class="normal" href="al5font.html#al_destroy_font">al_destroy_font</a></dt>
+  <dd>Frees the memory being used by a font structure.</dd>
+</dl>
+</td></tr>
+</table>
+<table class="detail wide_list">
+<tr class="list">
+<td class="itemcode"><span id="al_draw_ustr"></span><code>PROCEDURE <b>al_draw_ustr</b> (CONST font: <a  href="al5font.html#ALLEGRO_FONTptr">ALLEGRO_FONTptr</a>; color: <a  href="Allegro5.ALLEGRO_COLOR.html">ALLEGRO_COLOR</a>; x, y: <a  href="al5Base.html#AL_FLOAT">AL_FLOAT</a>; flags: <a  href="al5Base.html#AL_INT">AL_INT</a>; CONST ustr: <a  href="al5strings.html#ALLEGRO_USTRptr">ALLEGRO_USTRptr</a>); CDECL; EXTERNAL ALLEGRO_FONT_LIB_NAME;</code></td>
+</tr>
+<tr><td colspan="1">
+<p>
+Like <a class="normal" href="al5font.html#al_draw_text">al_draw_text</a>, except the text is passed as an <a class="normal" href="al5strings.html#ALLEGRO_USTR">ALLEGRO_USTR</a> instead of a <code>STRING</code>.   </p>
+<h6 class="description_section">See also</h6>
+<dl class="see_also">
+  <dt><a class="normal" href="al5font.html#al_draw_text">al_draw_text</a></dt>
+  <dd>Writes the string <code>str</code> onto the target bitmap at position <code>x</code>, <code>y</code>, using the specified <code>font</code>.</dd>
+  <dt><a class="normal" href="al5font.html#al_draw_justified_ustr">al_draw_justified_ustr</a></dt>
+  <dd>Like <a class="normal" href="al5font.html#al_draw_justified_text">al_draw_justified_text</a>, except the text is passed as an <a class="normal" href="al5strings.html#ALLEGRO_USTR">ALLEGRO_USTR</a> instead of a <code>STRING</code>.</dd>
+  <dt><a class="normal" href="al5font.html#al_draw_multiline_ustr">al_draw_multiline_ustr</a></dt>
+  <dd>Like <a class="normal" href="al5font.html#al_draw_multiline_text">al_draw_multiline_text</a>, except the text is passed as an <a class="normal" href="al5strings.html#ALLEGRO_USTR">ALLEGRO_USTR</a> instead of a <code>STRING</code>.</dd>
+</dl>
+</td></tr>
+</table>
+<table class="detail wide_list">
+<tr class="list">
+<td class="itemcode"><span id="al_draw_text"></span><code>PROCEDURE <b>al_draw_text</b> (CONST font: <a  href="al5font.html#ALLEGRO_FONTptr">ALLEGRO_FONTptr</a>; color: <a  href="Allegro5.ALLEGRO_COLOR.html">ALLEGRO_COLOR</a>; x, y: <a  href="al5Base.html#AL_FLOAT">AL_FLOAT</a>; flags: <a  href="al5Base.html#AL_INT">AL_INT</a>; CONST str: <a  href="al5Base.html#AL_STR">AL_STR</a>); INLINE;</code></td>
+</tr>
+<tr><td colspan="1">
+<p>
+Writes the string <code>str</code> onto the target bitmap at position <code>x</code>, <code>y</code>, using the specified <code>font</code>.
+
+<p>The flags parameter can be 0 or one of the following flags:</p>
+
+<ul class="paragraph_spacing">
+  <li><p><b><code>ALLEGRO_ALIGN_LEFT</code></b> - Draw the text left-aligned (same as 0).</p></li>
+  <li><p><b><code>ALLEGRO_ALIGN_CENTRE</code></b> - Draw the text centered around the given position.</p></li>
+  <li><p><b><code>ALLEGRO_ALIGN_RIGHT</code></b> - Draw the text right-aligned to the given position.</p></li>
+</ul>
+
+<p> It can also be combined with this flag:</p>
+
+<ul class="paragraph_spacing">
+  <li><p><b><code>ALLEGRO_ALIGN_INTEGER</code></b> - Always draw text aligned to an integer pixel position. This was formerly the default behaviour.</p></li>
+</ul>
+
+<p> This function does not support newline characters (#10), but you can use <a class="normal" href="al5font.html#al_draw_multiline_text">al_draw_multiline_text</a> for multi line text output.   </p>
+<h6 class="description_section">See also</h6>
+<dl class="see_also">
+  <dt><a class="normal" href="al5font.html#al_draw_ustr">al_draw_ustr</a></dt>
+  <dd>Like <a class="normal" href="al5font.html#al_draw_text">al_draw_text</a>, except the text is passed as an <a class="normal" href="al5strings.html#ALLEGRO_USTR">ALLEGRO_USTR</a> instead of a <code>STRING</code>.</dd>
+  <dt><a class="normal" href="al5font.html#al_draw_justified_text">al_draw_justified_text</a></dt>
+  <dd>Like <a class="normal" href="al5font.html#al_draw_text">al_draw_text</a>, but justifies the string to the region <code>x1-x2</code>.</dd>
+  <dt><a class="normal" href="al5font.html#al_draw_multiline_text">al_draw_multiline_text</a></dt>
+  <dd>Like <a class="normal" href="al5font.html#al_draw_text">al_draw_text</a>, but this function supports drawing multiple lines of text.</dd>
+</dl>
+</td></tr>
+</table>
+<table class="detail wide_list">
+<tr class="list">
+<td class="itemcode"><span id="al_draw_justified_text"></span><code>PROCEDURE <b>al_draw_justified_text</b> (CONST font: <a  href="al5font.html#ALLEGRO_FONTptr">ALLEGRO_FONTptr</a>; color: <a  href="Allegro5.ALLEGRO_COLOR.html">ALLEGRO_COLOR</a>; x1, x2, y, diff: <a  href="al5Base.html#AL_FLOAT">AL_FLOAT</a>; flags: <a  href="al5Base.html#AL_INT">AL_INT</a>; CONST str: <a  href="al5Base.html#AL_STR">AL_STR</a>); INLINE;</code></td>
+</tr>
+<tr><td colspan="1">
+<p>
+Like <a class="normal" href="al5font.html#al_draw_text">al_draw_text</a>, but justifies the string to the region <code>x1-x2</code>.
+
+<p>The <code>diff</code> parameter is the maximum amount of horizontal space to allow between words. If justisfying the text would exceed diff pixels, or the string contains less than two words, then the string will be drawn left aligned.
+
+<p>The <code>flags</code> parameter can be 0 or one of the following flags: </p>
+
+<ul class="paragraph_spacing">
+  <li><p><b>code(ALLEGRO_ALIGN_INTEGER)</b> - Draw text aligned to integer pixel positions.</p></li>
+</ul>
+
+<p>  </p>
+<h6 class="description_section">See also</h6>
+<dl class="see_also">
+  <dt><a class="normal" href="al5font.html#al_draw_justified_textf">al_draw_justified_textf</a></dt>
+  <dd>Formatted text output, using a <code>Format</code> style format string.</dd>
+  <dt><a class="normal" href="al5font.html#al_draw_justified_ustr">al_draw_justified_ustr</a></dt>
+  <dd>Like <a class="normal" href="al5font.html#al_draw_justified_text">al_draw_justified_text</a>, except the text is passed as an <a class="normal" href="al5strings.html#ALLEGRO_USTR">ALLEGRO_USTR</a> instead of a <code>STRING</code>.</dd>
+</dl>
+</td></tr>
+</table>
+<table class="detail wide_list">
+<tr class="list">
+<td class="itemcode"><span id="al_draw_justified_ustr"></span><code>PROCEDURE <b>al_draw_justified_ustr</b> (CONST font: <a  href="al5font.html#ALLEGRO_FONTptr">ALLEGRO_FONTptr</a>; color: <a  href="Allegro5.ALLEGRO_COLOR.html">ALLEGRO_COLOR</a>; x1, x2, y, diff: <a  href="al5Base.html#AL_FLOAT">AL_FLOAT</a>; flags: <a  href="al5Base.html#AL_INT">AL_INT</a>; CONST str: <a  href="al5strings.html#ALLEGRO_USTRptr">ALLEGRO_USTRptr</a>); CDECL; EXTERNAL ALLEGRO_FONT_LIB_NAME;</code></td>
+</tr>
+<tr><td colspan="1">
+<p>
+Like <a class="normal" href="al5font.html#al_draw_justified_text">al_draw_justified_text</a>, except the text is passed as an <a class="normal" href="al5strings.html#ALLEGRO_USTR">ALLEGRO_USTR</a> instead of a <code>STRING</code>.  </p>
+<h6 class="description_section">See also</h6>
+<dl class="see_also">
+  <dt><a class="normal" href="al5font.html#al_draw_justified_text">al_draw_justified_text</a></dt>
+  <dd>Like <a class="normal" href="al5font.html#al_draw_text">al_draw_text</a>, but justifies the string to the region <code>x1-x2</code>.</dd>
+  <dt><a class="normal" href="al5font.html#al_draw_justified_textf">al_draw_justified_textf</a></dt>
+  <dd>Formatted text output, using a <code>Format</code> style format string.</dd>
+</dl>
+</td></tr>
+</table>
+<table class="detail wide_list">
+<tr class="list">
+<td class="itemcode"><span id="al_draw_textf"></span><code>PROCEDURE <b>al_draw_textf</b> (CONST font: <a  href="al5font.html#ALLEGRO_FONTptr">ALLEGRO_FONTptr</a>; color: <a  href="Allegro5.ALLEGRO_COLOR.html">ALLEGRO_COLOR</a>; x, y: <a  href="al5Base.html#AL_FLOAT">AL_FLOAT</a>; flags: <a  href="al5Base.html#AL_INT">AL_INT</a>; CONST fmt: <a  href="al5Base.html#AL_STR">AL_STR</a>; CONST values: ARRAY OF CONST);</code></td>
+</tr>
+<tr><td colspan="1">
+<p>
+Formatted text output, using a <code>Format</code> style format string. All parameters have the same meaning as with <a class="normal" href="al5font.html#al_draw_text">al_draw_text</a> otherwise.  </p>
+<h6 class="description_section">See also</h6>
+<dl class="see_also">
+  <dt><a class="normal" href="al5font.html#al_draw_text">al_draw_text</a></dt>
+  <dd>Writes the string <code>str</code> onto the target bitmap at position <code>x</code>, <code>y</code>, using the specified <code>font</code>.</dd>
+  <dt><a class="normal" href="al5font.html#al_draw_ustr">al_draw_ustr</a></dt>
+  <dd>Like <a class="normal" href="al5font.html#al_draw_text">al_draw_text</a>, except the text is passed as an <a class="normal" href="al5strings.html#ALLEGRO_USTR">ALLEGRO_USTR</a> instead of a <code>STRING</code>.</dd>
+</dl>
+</td></tr>
+</table>
+<table class="detail wide_list">
+<tr class="list">
+<td class="itemcode"><span id="al_draw_justified_textf"></span><code>PROCEDURE <b>al_draw_justified_textf</b> (CONST font: <a  href="al5font.html#ALLEGRO_FONTptr">ALLEGRO_FONTptr</a>; color: <a  href="Allegro5.ALLEGRO_COLOR.html">ALLEGRO_COLOR</a>; x1, x2, y, diff: <a  href="al5Base.html#AL_FLOAT">AL_FLOAT</a>; flags: <a  href="al5Base.html#AL_INT">AL_INT</a>; CONST fmt: <a  href="al5Base.html#AL_STR">AL_STR</a>; CONST values: ARRAY OF CONST);</code></td>
+</tr>
+<tr><td colspan="1">
+<p>
+Formatted text output, using a <code>Format</code> style format string. All parameters have the same meaning as with <a class="normal" href="al5font.html#al_draw_justified_text">al_draw_justified_text</a> otherwise.  </p>
+<h6 class="description_section">See also</h6>
+<dl class="see_also">
+  <dt><a class="normal" href="al5font.html#al_draw_justified_text">al_draw_justified_text</a></dt>
+  <dd>Like <a class="normal" href="al5font.html#al_draw_text">al_draw_text</a>, but justifies the string to the region <code>x1-x2</code>.</dd>
+  <dt><a class="normal" href="al5font.html#al_draw_justified_ustr">al_draw_justified_ustr</a></dt>
+  <dd>Like <a class="normal" href="al5font.html#al_draw_justified_text">al_draw_justified_text</a>, except the text is passed as an <a class="normal" href="al5strings.html#ALLEGRO_USTR">ALLEGRO_USTR</a> instead of a <code>STRING</code>.</dd>
+</dl>
+</td></tr>
+</table>
+<table class="detail wide_list">
+<tr class="list">
+<td class="itemcode"><span id="al_get_text_width"></span><code>FUNCTION <b>al_get_text_width</b> (CONST font: <a  href="al5font.html#ALLEGRO_FONTptr">ALLEGRO_FONTptr</a>; CONST str: <a  href="al5Base.html#AL_STR">AL_STR</a>): <a  href="al5Base.html#AL_INT">AL_INT</a>; INLINE;</code></td>
+</tr>
+<tr><td colspan="1">
+<p>
+Calculates the length of a string in a particular font, in pixels.   </p>
+<h6 class="description_section">See also</h6>
+<dl class="see_also">
+  <dt><a class="normal" href="al5font.html#al_get_ustr_width">al_get_ustr_width</a></dt>
+  <dd>Like <a class="normal" href="al5font.html#al_get_text_width">al_get_text_width</a> but expects an <a class="normal" href="al5strings.html#ALLEGRO_USTR">ALLEGRO_USTR</a>.</dd>
+  <dt><a class="normal" href="al5font.html#al_get_font_line_height">al_get_font_line_height</a></dt>
+  <dd>Returns the usual height of a line of text in the specified font.</dd>
+  <dt><a class="normal" href="al5font.html#al_get_text_dimensions">al_get_text_dimensions</a></dt>
+  <dd>Sometimes, the <a class="normal" href="al5font.html#al_get_text_width">al_get_text_width</a> and <a class="normal" href="al5font.html#al_get_font_line_height">al_get_font_line_height</a> functions are not enough for exact text placement, so this function returns some additional information.</dd>
+</dl>
+</td></tr>
+</table>
+<table class="detail wide_list">
+<tr class="list">
+<td class="itemcode"><span id="al_get_ustr_width"></span><code>FUNCTION <b>al_get_ustr_width</b> (CONST font: <a  href="al5font.html#ALLEGRO_FONTptr">ALLEGRO_FONTptr</a>; CONST ustr: <a  href="al5strings.html#ALLEGRO_USTRptr">ALLEGRO_USTRptr</a>): <a  href="al5Base.html#AL_INT">AL_INT</a>; CDECL; EXTERNAL ALLEGRO_FONT_LIB_NAME;</code></td>
+</tr>
+<tr><td colspan="1">
+<p>
+Like <a class="normal" href="al5font.html#al_get_text_width">al_get_text_width</a> but expects an <a class="normal" href="al5strings.html#ALLEGRO_USTR">ALLEGRO_USTR</a>.  </p>
+<h6 class="description_section">See also</h6>
+<dl class="see_also">
+  <dt><a class="normal" href="al5font.html#al_get_text_width">al_get_text_width</a></dt>
+  <dd>Calculates the length of a string in a particular font, in pixels.</dd>
+  <dt><a class="normal" href="al5font.html#al_get_ustr_dimensions">al_get_ustr_dimensions</a></dt>
+  <dd>Like <a class="normal" href="al5font.html#al_get_text_dimensions">al_get_text_dimensions</a>, except the text is passed as an <a class="normal" href="al5strings.html#ALLEGRO_USTR">ALLEGRO_USTR</a> instead of <code>STRING</code>.</dd>
+</dl>
+</td></tr>
+</table>
+<table class="detail wide_list">
+<tr class="list">
+<td class="itemcode"><span id="al_get_font_line_height"></span><code>FUNCTION <b>al_get_font_line_height</b> (CONST font: <a  href="al5font.html#ALLEGRO_FONTptr">ALLEGRO_FONTptr</a>): <a  href="al5Base.html#AL_INT">AL_INT</a>; CDECL; EXTERNAL ALLEGRO_FONT_LIB_NAME;</code></td>
+</tr>
+<tr><td colspan="1">
+<p>
+Returns the usual height of a line of text in the specified font. For bitmap fonts this is simply the height of all glyph bitmaps. For truetype fonts it is whatever the font file specifies. In particular, some special glyphs may be higher than the height returned here.
+
+<p>If the X is the position you specify to draw text, the meaning of ascent and descent and the line height is like in the figure below. </p>
+
+<pre class="preformatted">
+X------------------------
+    /\         |        |
+   /  \        |        |
+  /____\       ascent   |
+ /      \      |        |
+/        \     |        height
+----------------        |
+               |        |
+               descent  |
+               |        |
+-------------------------</pre>
+
+<p>    </p>
+<h6 class="description_section">See also</h6>
+<dl class="see_also">
+  <dt><a class="normal" href="al5font.html#al_get_text_width">al_get_text_width</a></dt>
+  <dd>Calculates the length of a string in a particular font, in pixels.</dd>
+  <dt><a class="normal" href="al5font.html#al_get_text_dimensions">al_get_text_dimensions</a></dt>
+  <dd>Sometimes, the <a class="normal" href="al5font.html#al_get_text_width">al_get_text_width</a> and <a class="normal" href="al5font.html#al_get_font_line_height">al_get_font_line_height</a> functions are not enough for exact text placement, so this function returns some additional information.</dd>
+  <dt><a class="normal" href="al5font.html#al_get_font_ascent">al_get_font_ascent</a></dt>
+  <dd>Returns the ascent of the specified font.</dd>
+  <dt><a class="normal" href="al5font.html#al_get_font_descent">al_get_font_descent</a></dt>
+  <dd>Returns the descent of the specified font.</dd>
+</dl>
+</td></tr>
+</table>
+<table class="detail wide_list">
+<tr class="list">
+<td class="itemcode"><span id="al_get_font_ascent"></span><code>FUNCTION <b>al_get_font_ascent</b> (CONST font: <a  href="al5font.html#ALLEGRO_FONTptr">ALLEGRO_FONTptr</a>): <a  href="al5Base.html#AL_INT">AL_INT</a>; CDECL; EXTERNAL ALLEGRO_FONT_LIB_NAME;</code></td>
+</tr>
+<tr><td colspan="1">
+<p>
+Returns the ascent of the specified font.  </p>
+<h6 class="description_section">See also</h6>
+<dl class="see_also">
+  <dt><a class="normal" href="al5font.html#al_get_font_descent">al_get_font_descent</a></dt>
+  <dd>Returns the descent of the specified font.</dd>
+  <dt><a class="normal" href="al5font.html#al_get_font_line_height">al_get_font_line_height</a></dt>
+  <dd>Returns the usual height of a line of text in the specified font.</dd>
+</dl>
+</td></tr>
+</table>
+<table class="detail wide_list">
+<tr class="list">
+<td class="itemcode"><span id="al_get_font_descent"></span><code>FUNCTION <b>al_get_font_descent</b> (CONST font: <a  href="al5font.html#ALLEGRO_FONTptr">ALLEGRO_FONTptr</a>): <a  href="al5Base.html#AL_INT">AL_INT</a>; CDECL; EXTERNAL ALLEGRO_FONT_LIB_NAME;</code></td>
+</tr>
+<tr><td colspan="1">
+<p>
+Returns the descent of the specified font.  </p>
+<h6 class="description_section">See also</h6>
+<dl class="see_also">
+  <dt><a class="normal" href="al5font.html#al_get_font_ascent">al_get_font_ascent</a></dt>
+  <dd>Returns the ascent of the specified font.</dd>
+  <dt><a class="normal" href="al5font.html#al_get_font_line_height">al_get_font_line_height</a></dt>
+  <dd>Returns the usual height of a line of text in the specified font.</dd>
+</dl>
+</td></tr>
+</table>
+<table class="detail wide_list">
+<tr class="list">
+<td class="itemcode"><span id="al_destroy_font"></span><code>PROCEDURE <b>al_destroy_font</b> (font: <a  href="al5font.html#ALLEGRO_FONTptr">ALLEGRO_FONTptr</a>); CDECL; EXTERNAL ALLEGRO_FONT_LIB_NAME;</code></td>
+</tr>
+<tr><td colspan="1">
+<p>
+Frees the memory being used by a font structure. Does nothing if passed <code>Nil</code>. </p>
+<h6 class="description_section">See also</h6>
+<dl class="see_also">
+  <dt><a class="normal" href="al5font.html#al_load_font">al_load_font</a></dt>
+  <dd>Loads a font from disk.</dd>
+</dl>
+</td></tr>
+</table>
+<table class="detail wide_list">
+<tr class="list">
+<td class="itemcode"><span id="al_get_ustr_dimensions"></span><code>PROCEDURE <b>al_get_ustr_dimensions</b> (CONST f: <a  href="al5font.html#ALLEGRO_FONTptr">ALLEGRO_FONTptr</a>; CONST str: <a  href="al5strings.html#ALLEGRO_USTRptr">ALLEGRO_USTRptr</a>; OUT bbx, bby, bbw, bbh: <a  href="al5Base.html#AL_INT">AL_INT</a>); CDECL; EXTERNAL ALLEGRO_FONT_LIB_NAME;</code></td>
+</tr>
+<tr><td colspan="1">
+<p>
+Like <a class="normal" href="al5font.html#al_get_text_dimensions">al_get_text_dimensions</a>, except the text is passed as an <a class="normal" href="al5strings.html#ALLEGRO_USTR">ALLEGRO_USTR</a> instead of <code>STRING</code>. </p>
+<h6 class="description_section">See also</h6>
+<dl class="see_also">
+  <dt><a class="normal" href="al5font.html#al_get_text_dimensions">al_get_text_dimensions</a></dt>
+  <dd>Sometimes, the <a class="normal" href="al5font.html#al_get_text_width">al_get_text_width</a> and <a class="normal" href="al5font.html#al_get_font_line_height">al_get_font_line_height</a> functions are not enough for exact text placement, so this function returns some additional information.</dd>
+</dl>
+</td></tr>
+</table>
+<table class="detail wide_list">
+<tr class="list">
+<td class="itemcode"><span id="al_get_text_dimensions"></span><code>PROCEDURE <b>al_get_text_dimensions</b> (CONST f: <a  href="al5font.html#ALLEGRO_FONTptr">ALLEGRO_FONTptr</a>; CONST str: <a  href="al5Base.html#AL_STR">AL_STR</a>; OUT bbx, bby, bbw, bbh: <a  href="al5Base.html#AL_INT">AL_INT</a>); INLINE;</code></td>
+</tr>
+<tr><td colspan="1">
+<p>
+Sometimes, the <a class="normal" href="al5font.html#al_get_text_width">al_get_text_width</a> and <a class="normal" href="al5font.html#al_get_font_line_height">al_get_font_line_height</a> functions are not enough for exact text placement, so this function returns some additional information.
+
+<p>Returned variables (all in pixels): </p>
+
+<ul class="paragraph_spacing">
+  <li><p><b>x, y</b> - Offset to upper left corner of bounding box.</p></li>
+  <li><p><b>w, h</b> - Dimensions of bounding box.</p></li>
+</ul>
+
+<p> Note that glyphs may go to the left and upwards of the X, in which case <code>x</code> and <code>y</code> will have negative values.   </p>
+<h6 class="description_section">See also</h6>
+<dl class="see_also">
+  <dt><a class="normal" href="al5font.html#al_get_text_width">al_get_text_width</a></dt>
+  <dd>Calculates the length of a string in a particular font, in pixels.</dd>
+  <dt><a class="normal" href="al5font.html#al_get_font_line_height">al_get_font_line_height</a></dt>
+  <dd>Returns the usual height of a line of text in the specified font.</dd>
+  <dt><a class="normal" href="al5font.html#al_get_ustr_dimensions">al_get_ustr_dimensions</a></dt>
+  <dd>Like <a class="normal" href="al5font.html#al_get_text_dimensions">al_get_text_dimensions</a>, except the text is passed as an <a class="normal" href="al5strings.html#ALLEGRO_USTR">ALLEGRO_USTR</a> instead of <code>STRING</code>.</dd>
+</dl>
+</td></tr>
+</table>
+<table class="detail wide_list">
+<tr class="list">
+<td class="itemcode"><span id="al_get_font_ranges"></span><code>FUNCTION <b>al_get_font_ranges</b> (font: <a  href="al5font.html#ALLEGRO_FONTptr">ALLEGRO_FONTptr</a>; ranges_count: <a  href="al5Base.html#AL_INT">AL_INT</a>; VAR ranges: ARRAY OF <a  href="al5Base.html#AL_INT">AL_INT</a>): <a  href="al5Base.html#AL_INT">AL_INT</a>; CDECL; EXTERNAL ALLEGRO_FONT_LIB_NAME;</code></td>
+</tr>
+<tr><td colspan="1">
+<p>
+Gets information about all glyphs contained in a font, as a list of ranges. Ranges have the same format as with <code>al_grab_font_from_bitmap</code>.    </p>
+<h6 class="description_section">Parameters</h6>
+<dl class="parameters">
+<dt>ranges_count</dt>
+<dd>Is the maximum number of ranges that will be returned.</dd>
+<dt>ranges</dt>
+<dd>Should be an array with room for <code>ranges_count * 2</code> elements. The even integers are the first unicode point in a range, the odd integers the last unicode point in a range.</dd>
+</dl>
+<h6 class="description_section">Returns</h6>
+<p class="return">The number of ranges contained in the font (even if it is bigger than <code>ranges_count</code>).</p><h6 class="description_section">See also</h6>
+<dl class="see_also">
+  <dt><a class="normal" href="al5font.html#al_grab_font_from_bitmap">al_grab_font_from_bitmap</a></dt>
+  <dd>Creates a new font from an Allegro bitmap.</dd>
+</dl>
+</td></tr>
+</table>
+<table class="detail wide_list">
+<tr class="list">
+<td class="itemcode"><span id="al_draw_glyph"></span><code>PROCEDURE <b>al_draw_glyph</b> (CONST f: <a  href="al5font.html#ALLEGRO_FONTptr">ALLEGRO_FONTptr</a>; color: <a  href="Allegro5.ALLEGRO_COLOR.html">ALLEGRO_COLOR</a>; x, y: <a  href="al5Base.html#AL_FLOAT">AL_FLOAT</a>; codepoint: <a  href="al5Base.html#AL_INT">AL_INT</a>); CDECL; EXTERNAL ALLEGRO_FONT_LIB_NAME;</code></td>
+</tr>
+<tr><td colspan="1">
+<p>
+Draws the glyph that corresponds with codepoint in the given color using the given font. If font does not have such a glyph, nothing will be drawn.
+
+<p>To draw a string as left to right horizontal text you will need to use <a class="normal" href="al5font.html#al_get_glyph_advance">al_get_glyph_advance</a> to determine the position of each glyph. For drawing strings in other directions, such as top to down, use <a class="normal" href="al5font.html#al_get_glyph_dimensions">al_get_glyph_dimensions</a> to determine the size and position of each glyph.
+
+<p>If you have to draw many glyphs at the same time, use <a class="normal" href="Allegro5.html#al_hold_bitmap_drawing">al_hold_bitmap_drawing</a> with <code>True</code> as the parameter, before drawing the glyphs, and then call <a class="normal" href="Allegro5.html#al_hold_bitmap_drawing">al_hold_bitmap_drawing</a> again with <code>False</code> as a parameter when done drawing the glyphs to further enhance performance.   </p>
+<h6 class="description_section">See also</h6>
+<dl class="see_also">
+  <dt><a class="normal" href="al5font.html#al_get_glyph_width">al_get_glyph_width</a></dt>
+  <dd>This function returns the width in pixels of the glyph that corresponds with codepoint in the font font.</dd>
+  <dt><a class="normal" href="al5font.html#al_get_glyph_dimensions">al_get_glyph_dimensions</a></dt>
+  <dd>Sometimes, the <a class="normal" href="al5font.html#al_get_glyph_width">al_get_glyph_width</a> or <a class="normal" href="al5font.html#al_get_glyph_advance">al_get_glyph_advance</a> functions are not enough for exact glyph placement, so this function returns some additional information, particularly if you want to draw the font vertically.</dd>
+  <dt><a class="normal" href="al5font.html#al_get_glyph_advance">al_get_glyph_advance</a></dt>
+  <dd>This function returns by how much the x position should be advanced for left to right text drawing when the glyph that corresponds to <code>codepoint1</code> has been drawn, and the glyph that corresponds to <code>codepoint2</code> will be the next to be drawn.</dd>
+</dl>
+</td></tr>
+</table>
+<table class="detail wide_list">
+<tr class="list">
+<td class="itemcode"><span id="al_get_glyph_width"></span><code>FUNCTION <b>al_get_glyph_width</b> (CONST f: <a  href="al5font.html#ALLEGRO_FONTptr">ALLEGRO_FONTptr</a>; codepoint: <a  href="al5Base.html#AL_INT">AL_INT</a>): <a  href="al5Base.html#AL_INT">AL_INT</a>; CDECL; EXTERNAL ALLEGRO_FONT_LIB_NAME;</code></td>
+</tr>
+<tr><td colspan="1">
+<p>
+This function returns the width in pixels of the glyph that corresponds with codepoint in the font font. Returns zero if the font does not have such a glyph.   </p>
+<h6 class="description_section">See also</h6>
+<dl class="see_also">
+  <dt><a class="normal" href="al5font.html#al_draw_glyph">al_draw_glyph</a></dt>
+  <dd>Draws the glyph that corresponds with codepoint in the given color using the given font.</dd>
+  <dt><a class="normal" href="al5font.html#al_get_glyph_dimensions">al_get_glyph_dimensions</a></dt>
+  <dd>Sometimes, the <a class="normal" href="al5font.html#al_get_glyph_width">al_get_glyph_width</a> or <a class="normal" href="al5font.html#al_get_glyph_advance">al_get_glyph_advance</a> functions are not enough for exact glyph placement, so this function returns some additional information, particularly if you want to draw the font vertically.</dd>
+  <dt><a class="normal" href="al5font.html#al_get_glyph_advance">al_get_glyph_advance</a></dt>
+  <dd>This function returns by how much the x position should be advanced for left to right text drawing when the glyph that corresponds to <code>codepoint1</code> has been drawn, and the glyph that corresponds to <code>codepoint2</code> will be the next to be drawn.</dd>
+</dl>
+</td></tr>
+</table>
+<table class="detail wide_list">
+<tr class="list">
+<td class="itemcode"><span id="al_get_glyph_dimensions"></span><code>FUNCTION <b>al_get_glyph_dimensions</b> (CONST f: <a  href="al5font.html#ALLEGRO_FONTptr">ALLEGRO_FONTptr</a>; codepoint: <a  href="al5Base.html#AL_INT">AL_INT</a>; OUT bbx, bby, bbw, bbh: <a  href="al5Base.html#AL_INT">AL_INT</a>): <a  href="al5Base.html#AL_BOOL">AL_BOOL</a>; CDECL; EXTERNAL ALLEGRO_FONT_LIB_NAME;</code></td>
+</tr>
+<tr><td colspan="1">
+<p>
+Sometimes, the <a class="normal" href="al5font.html#al_get_glyph_width">al_get_glyph_width</a> or <a class="normal" href="al5font.html#al_get_glyph_advance">al_get_glyph_advance</a> functions are not enough for exact glyph placement, so this function returns some additional information, particularly if you want to draw the font vertically.
+
+<p>The function itself returns <code>True</code> if the character was present in font and <code>False</code> if the character was not present in font.
+
+<p>Returned variables (all in pixel):</p>
+
+<ul class="paragraph_spacing">
+  <li><p><b>bbx, bby</b> - Offset to upper left corner of bounding box.</p></li>
+  <li><p><b>bbw, bbh</b> - Dimensions of bounding box.</p></li>
+</ul>
+
+<p> These values are the same as <a class="normal" href="al5font.html#al_get_text_dimensions">al_get_text_dimensions</a> would return for a string of a single character equal to the glyph passed to this function. Note that glyphs may go to the left and upwards of the X, in which case x and y will have negative values.
+
+<p>If you want to draw a string verticallly, for Japanese or as a game effect, then you should leave <code>bby + bbh</code> space between the glyphs in the y direction for a regular placement.
+
+<p>If you want to draw a string horizontally in an extra compact way, then you should leave <code>bbx + bbw</code> space between the glyphs in the x direction for a compact placement.
+
+<p>In the figure below is an example of what <code>bbx</code> and <code>bby</code> may be like for a <code>2</code> glyph, and a <code>g</code> glyph of the same font compared to the result of <code>al_get_glyph_width</code>. </p>
+
+<pre class="preformatted">
+   al_get_glyph_width ()    al_get_glyph_width ()
+          __|___                   __|__
+         /      \                 /     \  
+     bbx    bbw                 bbx   bbw    
+    &lt;--&gt;+&lt;------&gt;+           &lt;--&gt;+&lt;-----&gt;+   X baseline
+    &circ;   |        |           &circ;   |       |   
+bby |   |        |       bby |   |       |   
+    v   |        |           |   |       |   
+    +---+--------+           |   |       |
+    &circ;   | *****  |           |   |       |
+    |   |*    ** |           v   |       |
+bbh |   |    **  |       bbh +---+-------+
+    |   |  **    |           &circ;   | ***** |
+    v   |********|           |   |*     *|
+    +---+--------+           |   | ***** |
+                             |   |      *|
+                             |   | *    *|
+                             v   |  **** |
+                             +---+-------+</pre>
+
+<p>    </p>
+<h6 class="description_section">See also</h6>
+<dl class="see_also">
+  <dt><a class="normal" href="al5font.html#al_draw_glyph">al_draw_glyph</a></dt>
+  <dd>Draws the glyph that corresponds with codepoint in the given color using the given font.</dd>
+  <dt><a class="normal" href="al5font.html#al_get_glyph_width">al_get_glyph_width</a></dt>
+  <dd>This function returns the width in pixels of the glyph that corresponds with codepoint in the font font.</dd>
+  <dt><a class="normal" href="al5font.html#al_get_glyph_advance">al_get_glyph_advance</a></dt>
+  <dd>This function returns by how much the x position should be advanced for left to right text drawing when the glyph that corresponds to <code>codepoint1</code> has been drawn, and the glyph that corresponds to <code>codepoint2</code> will be the next to be drawn.</dd>
+  <dt><a class="normal" href="al5font.html#al_get_glyph_advance">al_get_glyph_advance</a></dt>
+  <dd>This function returns by how much the x position should be advanced for left to right text drawing when the glyph that corresponds to <code>codepoint1</code> has been drawn, and the glyph that corresponds to <code>codepoint2</code> will be the next to be drawn.</dd>
+</dl>
+</td></tr>
+</table>
+<table class="detail wide_list">
+<tr class="list">
+<td class="itemcode"><span id="al_get_glyph_advance"></span><code>FUNCTION <b>al_get_glyph_advance</b> (CONST f: <a  href="al5font.html#ALLEGRO_FONTptr">ALLEGRO_FONTptr</a>; codepoint1, codepoint2: <a  href="al5Base.html#AL_INT">AL_INT</a>): <a  href="al5Base.html#AL_INT">AL_INT</a>; CDECL; EXTERNAL ALLEGRO_FONT_LIB_NAME;</code></td>
+</tr>
+<tr><td colspan="1">
+<p>
+This function returns by how much the x position should be advanced for left to right text drawing when the glyph that corresponds to <code>codepoint1</code> has been drawn, and the glyph that corresponds to <code>codepoint2</code> will be the next to be drawn. This takes into consideration the horizontal advance width of the glyph that corresponds with <code>codepoint1</code> as well as the kerning between the glyphs of <code>codepoint1</code> and <code>codepoint2</code>.
+
+<p>Kerning is the process of adjusting the spacing between glyphs in a font, to obtain a more visually pleasing result. Kerning adjusts the space between two individual glyphs with an offset determined by the author of the font.
+
+<p>If you pass <code>ALLEGRO_NO_KERNING</code> as <code>codepoint1</code> then <code>al_get_glyph_advance</code> will return <code>0</code>. this can be useful when drawing the first character of a string in a loop.
+
+<p>Pass <code>ALLEGRO_NO_KERNING</code> as <code>codepoint2</code> to get the horizontal advance width of the glyph that corresponds to <code>codepoint1</code> without taking any kerning into consideration. This can be used, for example, when drawing the last character of a string in a loop.
+
+<p>This function will return zero if the glyph of <code>codepoint1</code> is not present in the font. If the glyph of <code>codepoint2</code> is not present in the font, the horizontal advance width of the glyph that corresponds to <code>codepoint1</code> without taking any kerning into consideration is returned.
+
+<p>When drawing a string one glyph at the time from the left to the right with kerning, the x position of the glyph should be incremented by the result of <code>al_get_glyph_advance</code> applied to the previous glyph drawn and the next glyph to draw.
+
+<p>Note that the return value of this function is a recommended advance for optimal readability for left to right text determined by the author of the font. However, if you like, you may want to draw the glyphs of the font narrower or wider to each other than what <code>al_get_glyph_advance</code> returns for style or effect.
+
+<p>In the figure below is an example of what the result of <code>al_get_glyph_advance</code> may be like for two glypphs <code>A</code> and <code>l</code> of the same font that has kerning for the <code>&quot;Al&quot;</code> pair, without and with the <code>ALLEGRO_NO_KERNING</code> flag. </p>
+
+<pre class="preformatted">
+al_get_glyph_advance (font, ORD ('A'), ORD ('l'))
+     ___|___
+    /       \
+    -------------
+        /\   -|
+       /  \   |
+      /____\  |
+     /      \ |
+    /        \ \_
+    -------------
+
+
+al_get_glyph_advance (font, ORD ('A'), ALLEGRO_NO_KERNING)
+     ____|____
+    /         \
+    ---------------
+        /\     -|
+       /  \     |
+      /____\    |
+     /      \   |
+    /        \   \_
+    ---------------</pre>
+
+<p>   </p>
+<h6 class="description_section">See also</h6>
+<dl class="see_also">
+  <dt><a class="normal" href="al5font.html#al_draw_glyph">al_draw_glyph</a></dt>
+  <dd>Draws the glyph that corresponds with codepoint in the given color using the given font.</dd>
+  <dt><a class="normal" href="al5font.html#al_get_glyph_width">al_get_glyph_width</a></dt>
+  <dd>This function returns the width in pixels of the glyph that corresponds with codepoint in the font font.</dd>
+  <dt><a class="normal" href="al5font.html#al_get_glyph_dimensions">al_get_glyph_dimensions</a></dt>
+  <dd>Sometimes, the <a class="normal" href="al5font.html#al_get_glyph_width">al_get_glyph_width</a> or <a class="normal" href="al5font.html#al_get_glyph_advance">al_get_glyph_advance</a> functions are not enough for exact glyph placement, so this function returns some additional information, particularly if you want to draw the font vertically.</dd>
+</dl>
+</td></tr>
+</table>
+<table class="detail wide_list">
+<tr class="list">
+<td class="itemcode"><span id="al_draw_multiline_text"></span><code>PROCEDURE <b>al_draw_multiline_text</b> (CONST font: <a  href="al5font.html#ALLEGRO_FONTptr">ALLEGRO_FONTptr</a>; color: <a  href="Allegro5.ALLEGRO_COLOR.html">ALLEGRO_COLOR</a>; x, y, max_width, line_height: <a  href="al5Base.html#AL_FLOAT">AL_FLOAT</a>; flags: <a  href="al5Base.html#AL_INT">AL_INT</a>; CONST str: <a  href="al5Base.html#AL_STR">AL_STR</a>); CDECL; EXTERNAL ALLEGRO_FONT_LIB_NAME;</code></td>
+</tr>
+<tr><td colspan="1">
+<p>
+Like <a class="normal" href="al5font.html#al_draw_text">al_draw_text</a>, but this function supports drawing multiple lines of text. It will break text in lines based on its contents and the max_width parameter. The lines are then layed out vertically depending on the <code>line_height</code> parameter and drawn each as if <a class="normal" href="al5font.html#al_draw_text">al_draw_text</a> was called on them.
+
+<p>A newline <code>#10</code> in the text will cause a <i>&quot;hard&quot;</i> line break after its occurrence in the string. The text after a hard break is placed on a new line. Carriage return <code>#12</code> is not supported, will not cause a line break, and will likely be drawn as a square or a space depending on the font.
+
+<p>The <code>max_width</code> parameter controls the maximum desired width of the lines. This function will try to introduce a <i>&quot;soft&quot;</i> line break after the longest possible series of words that will fit in <code>max_length</code> when drawn with the given font. A <i>&quot;soft&quot;</i> line break can occur either on a space or tab (<code>#7</code>) character.
+
+<p>However, it is possible that <code>max_width</code> is too small, or the words in text are too long to fit <code>max_width</code> when drawn with font. In that case, the word that is too wide will simply be drawn completely on a line by itself. If you don't want the text that overflows <code>max_width</code> to be visible, then use <a class="normal" href="Allegro5.html#al_set_clipping_rectangle">al_set_clipping_rectangle</a> to clip it off and hide it.
+
+<p>The lines <code>str</code> was split into will each be drawn using the <code>font</code>, <code>x</code>, <code>color</code> and <code>flags</code> parameters, vertically starting at <code>y</code> and with a distance of <code>line_height</code> between them. If <code>line_height</code> is zero (<code>0</code>), the value returned by calling <a class="normal" href="al5font.html#al_get_font_line_height">al_get_font_line_height</a> on font will be used as a default instead.
+
+<p>The flags <code>ALLEGRO_ALIGN_LEFT</code>, <code>ALLEGRO_ALIGN_CENTRE</code>, <code>ALLEGRO_ALIGN_RIGHT</code> and <code>ALLEGRO_ALIGN_INTEGER</code> will be honoured by this function.
+
+<p>If you want to calculate the size of what this function will draw without actually drawing it, or if you need a complex and/or custom layout, you can use <a class="normal" href="al5font.html#al_do_multiline_text">al_do_multiline_text</a>.   </p>
+<h6 class="description_section">See also</h6>
+<dl class="see_also">
+  <dt><a class="normal" href="al5font.html#al_do_multiline_text">al_do_multiline_text</a></dt>
+  <dd>This function processes the text and splits it into lines as <a class="normal" href="al5font.html#al_draw_multiline_text">al_draw_multiline_text</a> would, and then calls the callback <code>cb</code> once for every line.</dd>
+  <dt><a class="normal" href="al5font.html#al_draw_multiline_ustr">al_draw_multiline_ustr</a></dt>
+  <dd>Like <a class="normal" href="al5font.html#al_draw_multiline_text">al_draw_multiline_text</a>, except the text is passed as an <a class="normal" href="al5strings.html#ALLEGRO_USTR">ALLEGRO_USTR</a> instead of a <code>STRING</code>.</dd>
+  <dt><a class="normal" href="al5font.html#al_draw_multiline_textf">al_draw_multiline_textf</a></dt>
+  <dd>Formatted text output, using a <code>Format</code> style format string.</dd>
+</dl>
+</td></tr>
+</table>
+<table class="detail wide_list">
+<tr class="list">
+<td class="itemcode"><span id="al_draw_multiline_textf"></span><code>PROCEDURE <b>al_draw_multiline_textf</b> (CONST font: <a  href="al5font.html#ALLEGRO_FONTptr">ALLEGRO_FONTptr</a>; color: <a  href="Allegro5.ALLEGRO_COLOR.html">ALLEGRO_COLOR</a>; x, y, max_width, line_height: <a  href="al5Base.html#AL_FLOAT">AL_FLOAT</a>; flags: <a  href="al5Base.html#AL_INT">AL_INT</a>; CONST fmt: <a  href="al5Base.html#AL_STR">AL_STR</a>; CONST values: ARRAY OF CONST);</code></td>
+</tr>
+<tr><td colspan="1">
+<p>
+Formatted text output, using a <code>Format</code> style format string. All parameters have the same meaning as with <a class="normal" href="al5font.html#al_draw_multiline_text">al_draw_multiline_text</a> otherwise.   </p>
+<h6 class="description_section">See also</h6>
+<dl class="see_also">
+  <dt><a class="normal" href="al5font.html#al_draw_multiline_text">al_draw_multiline_text</a></dt>
+  <dd>Like <a class="normal" href="al5font.html#al_draw_text">al_draw_text</a>, but this function supports drawing multiple lines of text.</dd>
+  <dt><a class="normal" href="al5font.html#al_draw_multiline_ustr">al_draw_multiline_ustr</a></dt>
+  <dd>Like <a class="normal" href="al5font.html#al_draw_multiline_text">al_draw_multiline_text</a>, except the text is passed as an <a class="normal" href="al5strings.html#ALLEGRO_USTR">ALLEGRO_USTR</a> instead of a <code>STRING</code>.</dd>
+  <dt><a class="normal" href="al5font.html#al_do_multiline_text">al_do_multiline_text</a></dt>
+  <dd>This function processes the text and splits it into lines as <a class="normal" href="al5font.html#al_draw_multiline_text">al_draw_multiline_text</a> would, and then calls the callback <code>cb</code> once for every line.</dd>
+</dl>
+</td></tr>
+</table>
+<table class="detail wide_list">
+<tr class="list">
+<td class="itemcode"><span id="al_draw_multiline_ustr"></span><code>PROCEDURE <b>al_draw_multiline_ustr</b> (CONST font: <a  href="al5font.html#ALLEGRO_FONTptr">ALLEGRO_FONTptr</a>; color: <a  href="Allegro5.ALLEGRO_COLOR.html">ALLEGRO_COLOR</a>; x, y, max_width, line_height: <a  href="al5Base.html#AL_FLOAT">AL_FLOAT</a>; flags: <a  href="al5Base.html#AL_INT">AL_INT</a>; CONST str: <a  href="al5strings.html#ALLEGRO_USTRptr">ALLEGRO_USTRptr</a>); CDECL; EXTERNAL ALLEGRO_FONT_LIB_NAME;</code></td>
+</tr>
+<tr><td colspan="1">
+<p>
+Like <a class="normal" href="al5font.html#al_draw_multiline_text">al_draw_multiline_text</a>, except the text is passed as an <a class="normal" href="al5strings.html#ALLEGRO_USTR">ALLEGRO_USTR</a> instead of a <code>STRING</code>.   </p>
+<h6 class="description_section">See also</h6>
+<dl class="see_also">
+  <dt><a class="normal" href="al5font.html#al_draw_multiline_text">al_draw_multiline_text</a></dt>
+  <dd>Like <a class="normal" href="al5font.html#al_draw_text">al_draw_text</a>, but this function supports drawing multiple lines of text.</dd>
+  <dt><a class="normal" href="al5font.html#al_draw_multiline_textf">al_draw_multiline_textf</a></dt>
+  <dd>Formatted text output, using a <code>Format</code> style format string.</dd>
+  <dt><a class="normal" href="al5font.html#al_do_multiline_text">al_do_multiline_text</a></dt>
+  <dd>This function processes the text and splits it into lines as <a class="normal" href="al5font.html#al_draw_multiline_text">al_draw_multiline_text</a> would, and then calls the callback <code>cb</code> once for every line.</dd>
+</dl>
+</td></tr>
+</table>
+<table class="detail wide_list">
+<tr class="list">
+<td class="itemcode"><span id="al_do_multiline_text"></span><code>PROCEDURE <b>al_do_multiline_text</b> (CONST font: <a  href="al5font.html#ALLEGRO_FONTptr">ALLEGRO_FONTptr</a>; max_width: <a  href="al5Base.html#AL_FLOAT">AL_FLOAT</a>; str: <a  href="al5Base.html#AL_STR">AL_STR</a>; cb: <a  href="al5font.html#ALFONT_CALLBACK_MULTILINE_TEXT">ALFONT_CALLBACK_MULTILINE_TEXT</a>; extra: <a  href="al5Base.html#AL_POINTER">AL_POINTER</a>); CDECL; EXTERNAL ALLEGRO_FONT_LIB_NAME;</code></td>
+</tr>
+<tr><td colspan="1">
+<p>
+This function processes the text and splits it into lines as <a class="normal" href="al5font.html#al_draw_multiline_text">al_draw_multiline_text</a> would, and then calls the callback <code>cb</code> once for every line. This is useful for custom drawing of multiline text, or for calculating the size of multiline text ahead of time. See the documentation on <a class="normal" href="al5font.html#al_draw_multiline_text">al_draw_multiline_text</a> for an explanation of the splitting algorithm.
+
+<p>For every line that this function splits text into the callback <code>cb</code> will be called once with the following parameters: </p>
+
+<ul class="paragraph_spacing">
+  <li><p><b><code>line_num</code></b> - the number of the line starting from zero and counting up.</p></li>
+  <li><p><b><code>line</code></b> - a pointer to the beginning character of the line (see below).</p></li>
+  <li><p><b><code>size</code></b> - the size of the line (0 for empty lines).</p></li>
+  <li><p><b><code>extra</code></b> - the same pointer that was passed to <code>al_do_multiline_text</code>.</p></li>
+</ul>
+
+<p> Note that line is not guaranteed to be a <i>NUL-terminated</i> string (i.e. <code>ANSISTRING</code>), but will merely point to a character within text or to an empty string in case of an empty line. If you need a <i>NUL-terminated</i> string, you will have to copy line to a buffer and <i>NUL-terminate</i> it yourself (TODO: Check if it is done by the compiler when using <code>ANSISTRING</code>). You will also have to make your own copy if you need the contents of line after <code>cb</code> has returned, as line is not guaranteed to be valid after that. Remember that in some cases <code>STRING</code> is <i>reference-counted</i> by Pascal/Delphi.
+
+<p>If the callback <code>cb</code> returns <code>False</code>, <code>al_do_multiline_text</code> will stop immediately, otherwise it will continue on to the next line. </p>
+<h6 class="description_section">See also</h6>
+<dl class="see_also">
+  <dt><a class="normal" href="al5font.html#al_draw_multiline_text">al_draw_multiline_text</a></dt>
+  <dd>Like <a class="normal" href="al5font.html#al_draw_text">al_draw_text</a>, but this function supports drawing multiple lines of text.</dd>
+</dl>
+</td></tr>
+</table>
+<table class="detail wide_list">
+<tr class="list">
+<td class="itemcode"><span id="al_do_multiline_ustr"></span><code>PROCEDURE <b>al_do_multiline_ustr</b> (CONST font: <a  href="al5font.html#ALLEGRO_FONTptr">ALLEGRO_FONTptr</a>; max_width: <a  href="al5Base.html#AL_FLOAT">AL_FLOAT</a>; str: <a  href="al5strings.html#ALLEGRO_USTRptr">ALLEGRO_USTRptr</a>; cb: <a  href="al5font.html#ALFONT_CALLBACK_MULTILINE_USTR">ALFONT_CALLBACK_MULTILINE_USTR</a>; extra: <a  href="al5Base.html#AL_POINTER">AL_POINTER</a>); CDECL; EXTERNAL ALLEGRO_FONT_LIB_NAME;</code></td>
+</tr>
+<tr><td colspan="1">
+<p>
+Like <a class="normal" href="al5font.html#al_do_multiline_text">al_do_multiline_text</a>, but using <a class="normal" href="al5strings.html#ALLEGRO_USTR">ALLEGRO_USTR</a> instead of a <code>STRING</code> for text. </p>
+<h6 class="description_section">See also</h6>
+<dl class="see_also">
+  <dt><a class="normal" href="al5font.html#al_draw_multiline_ustr">al_draw_multiline_ustr</a></dt>
+  <dd>Like <a class="normal" href="al5font.html#al_draw_multiline_text">al_draw_multiline_text</a>, except the text is passed as an <a class="normal" href="al5strings.html#ALLEGRO_USTR">ALLEGRO_USTR</a> instead of a <code>STRING</code>.</dd>
+</dl>
+</td></tr>
+</table>
+<table class="detail wide_list">
+<tr class="list">
+<td class="itemcode"><span id="al_set_fallback_font"></span><code>PROCEDURE <b>al_set_fallback_font</b> (font, fallback: <a  href="al5font.html#ALLEGRO_FONTptr">ALLEGRO_FONTptr</a>); CDECL; EXTERNAL ALLEGRO_FONT_LIB_NAME;</code></td>
+</tr>
+<tr><td colspan="1">
+<p>
+Sets a font which is used instead if a character is not present. Can be chained, but make sure there is no loop as that would crash the application! Pass <code>Nil</code> to remove a fallback font again.    </p>
+<h6 class="description_section">See also</h6>
+<dl class="see_also">
+  <dt><a class="normal" href="al5font.html#al_get_fallback_font">al_get_fallback_font</a></dt>
+  <dd>Retrieves the fallback font for this font or <code>Nil</code>.</dd>
+  <dt><a class="normal" href="al5font.html#al_draw_glyph">al_draw_glyph</a></dt>
+  <dd>Draws the glyph that corresponds with codepoint in the given color using the given font.</dd>
+  <dt><a class="normal" href="al5font.html#al_draw_text">al_draw_text</a></dt>
+  <dd>Writes the string <code>str</code> onto the target bitmap at position <code>x</code>, <code>y</code>, using the specified <code>font</code>.</dd>
+  <dt><a class="normal" href="al5font.html#al_get_fallback_font">al_get_fallback_font</a></dt>
+  <dd>Retrieves the fallback font for this font or <code>Nil</code>.</dd>
+</dl>
+</td></tr>
+</table>
+<table class="detail wide_list">
+<tr class="list">
+<td class="itemcode"><span id="al_get_fallback_font"></span><code>FUNCTION <b>al_get_fallback_font</b> (font: <a  href="al5font.html#ALLEGRO_FONTptr">ALLEGRO_FONTptr</a>): <a  href="al5font.html#ALLEGRO_FONTptr">ALLEGRO_FONTptr</a>; CDECL; EXTERNAL ALLEGRO_FONT_LIB_NAME;</code></td>
+</tr>
+<tr><td colspan="1">
+<p>
+Retrieves the fallback font for this font or <code>Nil</code>. </p>
+<h6 class="description_section">See also</h6>
+<dl class="see_also">
+  <dt><a class="normal" href="al5font.html#al_set_fallback_font">al_set_fallback_font</a></dt>
+  <dd>Sets a font which is used instead if a character is not present.</dd>
+</dl>
+</td></tr>
+</table>
+<h3 class="detail">Types</h3>
+<table class="detail wide_list">
+<tr class="list">
+<td class="itemcode"><span id="ALLEGRO_FONTptr"></span><code><b>ALLEGRO_FONTptr</b> = <a  href="al5Base.html#AL_POINTER">AL_POINTER</a>;</code></td>
+</tr>
+<tr><td colspan="1">
+<p>
+A handle identifying any kind of font. Usually you will create it with <a class="normal" href="al5font.html#al_load_font">al_load_font</a> which supports loading all kinds of TrueType fonts supported by the FreeType library. If you instead pass the filename of a bitmap file, it will be loaded with <a class="normal" href="Allegro5.html#al_load_bitmap">al_load_bitmap</a> and a font in Allegro's bitmap font format will be created from it with <a class="normal" href="al5font.html#al_grab_font_from_bitmap">al_grab_font_from_bitmap</a>.</p>
+</td></tr>
+</table>
+<table class="detail wide_list">
+<tr class="list">
+<td class="itemcode"><span id="ALFONT_CALLBACK_MULTILINE_TEXT"></span><code><b>ALFONT_CALLBACK_MULTILINE_TEXT</b> = FUNCTION (line_num: <a  href="al5Base.html#AL_INT">AL_INT</a>; CONST line: <a  href="al5Base.html#AL_STRptr">AL_STRptr</a>; size: <a  href="al5Base.html#AL_INT">AL_INT</a>; extra: <a  href="al5Base.html#AL_POINTER">AL_POINTER</a>): <a  href="al5Base.html#AL_BOOL">AL_BOOL</a>; CDECL;</code></td>
+</tr>
+<tr><td colspan="1">
+<p>
+Callback declaration for <a class="normal" href="al5font.html#al_do_multiline_text">al_do_multiline_text</a>.</p>
+</td></tr>
+</table>
+<table class="detail wide_list">
+<tr class="list">
+<td class="itemcode"><span id="ALFONT_CALLBACK_MULTILINE_USTR"></span><code><b>ALFONT_CALLBACK_MULTILINE_USTR</b> = FUNCTION (line_num: <a  href="al5Base.html#AL_INT">AL_INT</a>; CONST line: <a  href="al5strings.html#ALLEGRO_USTRptr">ALLEGRO_USTRptr</a>; size: <a  href="al5Base.html#AL_INT">AL_INT</a>; extra: <a  href="al5Base.html#AL_POINTER">AL_POINTER</a>): <a  href="al5Base.html#AL_BOOL">AL_BOOL</a>; CDECL;</code></td>
+</tr>
+<tr><td colspan="1">
+<p>
+Callback declaration for <a class="normal" href="al5font.html#al_do_multiline_ustr">al_do_multiline_ustr</a>.</p>
+</td></tr>
+</table>
+<hr><span class="appinfo"><em>Generated by <a  href="https://github.com/pasdoc/pasdoc/wiki">PasDoc 0.15.0</a>. Generated on 2020-04-16 11:56:29.</em>
+</span>
+</td></tr></table></body></html>

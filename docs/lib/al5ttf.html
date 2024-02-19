@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<title>Allegro.pas 5.2.b.1: al5ttf</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="generator" content="PasDoc 0.15.0">
+<meta http-equiv="content-type" content="text/html; charset=utf-8">
+<link rel="stylesheet" type="text/css" href="tipuesearch/tipuesearch.css">
+
+<link rel="StyleSheet" type="text/css" href="pasdoc.css">
+</head>
+<body>
+<table class="container"><tr><td class="navigation">
+<h2>Allegro.pas 5.2.b.1</h2><p><a href="introduction.html" class="navigation">Introduction</a></p><p><a href="AllUnits.html" class="navigation">Units</a></p><p><a href="ClassHierarchy.html" class="navigation">Class Hierarchy</a></p><p><a href="AllClasses.html" class="navigation">Classes, Interfaces, Objects and Records</a></p><p><a href="AllTypes.html" class="navigation">Types</a></p><p><a href="AllVariables.html" class="navigation">Variables</a></p><p><a href="AllConstants.html" class="navigation">Constants</a></p><p><a href="AllFunctions.html" class="navigation">Functions and Procedures</a></p><p><a href="AllIdentifiers.html" class="navigation">Identifiers</a></p><form class="search-form" action="_tipue_results.html"><div class="search-input"><input type="text" name="q" id="tipue_search_input"></div><div class="search-button"><input type="button" id="tipue_search_button" onclick="this.form.submit();"></div></form>
+<div style="clear: both"></div>
+
+<script type="text/javascript">
+$(document).ready(function() {
+    $('#tipue_search_input').tipuesearch({
+        /* 10 items to display seems standard */
+        'show': 10,
+        /* For PasDoc docs, showing urls is not very useful,
+           since the page title already shows the unit and identifier. */
+        'showURL': false
+    });
+});
+</script>
+</td><td class="content">
+<h1 class="unit">Unit al5ttf</h1>
+<div class="sections">
+<div class="one_section"><a class="section" href="#PasDoc-Description">Description</a></div><div class="one_section">Uses</div><div class="one_section">Classes, Interfaces, Objects and Records</div><div class="one_section"><a class="section" href="#PasDoc-FuncsProcs">Functions and Procedures</a></div><div class="one_section">Types</div><div class="one_section">Constants</div><div class="one_section">Variables</div></div>
+<span id="PasDoc-Description"></span><h2 class="description">Description</h2>
+<p>
+Allows to use TrueType Font format.</p>
+<span id="PasDoc-Uses"></span><h2 class="overview">Overview</h2>
+<span id="PasDoc-FuncsProcs"></span><h3 class="summary">Functions and Procedures</h3>
+<table class="summary wide_list">
+<tr class="list">
+<td class="itemcode"><code>FUNCTION <b><a  href="al5ttf.html#al_init_ttf_addon">al_init_ttf_addon</a></b>: <a  href="al5Base.html#AL_BOOL">AL_BOOL</a>; CDECL; EXTERNAL ALLEGRO_TTF_LIB_NAME;</code></td>
+</tr>
+<tr class="list2">
+<td class="itemcode"><code>PROCEDURE <b><a  href="al5ttf.html#al_shutdown_ttf_addon">al_shutdown_ttf_addon</a></b>; CDECL; EXTERNAL ALLEGRO_TTF_LIB_NAME;</code></td>
+</tr>
+<tr class="list">
+<td class="itemcode"><code>FUNCTION <b><a  href="al5ttf.html#al_get_allegro_ttf_version">al_get_allegro_ttf_version</a></b>: <a  href="al5Base.html#AL_UINT32">AL_UINT32</a>; CDECL; EXTERNAL ALLEGRO_TTF_LIB_NAME;</code></td>
+</tr>
+<tr class="list2">
+<td class="itemcode"><code>FUNCTION <b><a  href="al5ttf.html#al_load_ttf_font">al_load_ttf_font</a></b> (CONST filename: <a  href="al5Base.html#AL_STR">AL_STR</a>; size, flags: <a  href="al5Base.html#AL_INT">AL_INT</a>): <a  href="al5font.html#ALLEGRO_FONTptr">ALLEGRO_FONTptr</a>; CDECL; EXTERNAL ALLEGRO_TTF_LIB_NAME;</code></td>
+</tr>
+<tr class="list">
+<td class="itemcode"><code>FUNCTION <b><a  href="al5ttf.html#al_load_ttf_font_f">al_load_ttf_font_f</a></b> (afile: <a  href="Allegro5.html#ALLEGRO_FILEptr">ALLEGRO_FILEptr</a>; CONST filename: <a  href="al5Base.html#AL_STR">AL_STR</a>; size, flags: <a  href="al5Base.html#AL_INT">AL_INT</a>): <a  href="al5font.html#ALLEGRO_FONTptr">ALLEGRO_FONTptr</a>; CDECL; EXTERNAL ALLEGRO_TTF_LIB_NAME;</code></td>
+</tr>
+<tr class="list2">
+<td class="itemcode"><code>FUNCTION <b><a  href="al5ttf.html#al_load_ttf_font_stretch">al_load_ttf_font_stretch</a></b> (CONST filename: <a  href="al5Base.html#AL_STR">AL_STR</a>; w, h, flags: <a  href="al5Base.html#AL_INT">AL_INT</a>): <a  href="al5font.html#ALLEGRO_FONTptr">ALLEGRO_FONTptr</a>; CDECL; EXTERNAL ALLEGRO_TTF_LIB_NAME;</code></td>
+</tr>
+<tr class="list">
+<td class="itemcode"><code>FUNCTION <b><a  href="al5ttf.html#al_load_ttf_font_stretch_f">al_load_ttf_font_stretch_f</a></b> (afile: <a  href="Allegro5.html#ALLEGRO_FILEptr">ALLEGRO_FILEptr</a>; CONST filename: <a  href="al5Base.html#AL_STR">AL_STR</a>; w, h, flags: <a  href="al5Base.html#AL_INT">AL_INT</a>): <a  href="al5font.html#ALLEGRO_FONTptr">ALLEGRO_FONTptr</a>; CDECL; EXTERNAL ALLEGRO_TTF_LIB_NAME;</code></td>
+</tr>
+</table>
+<h2 class="description">Description</h2>
+<h3 class="detail">Functions and Procedures</h3>
+<table class="detail wide_list">
+<tr class="list">
+<td class="itemcode"><span id="al_init_ttf_addon"></span><code>FUNCTION <b>al_init_ttf_addon</b>: <a  href="al5Base.html#AL_BOOL">AL_BOOL</a>; CDECL; EXTERNAL ALLEGRO_TTF_LIB_NAME;</code></td>
+</tr>
+<tr><td colspan="1">
+<p>
+Initializes the TTF addon. Call this after <a class="normal" href="al5font.html#al_init_font_addon">al_init_font_addon</a> to make <a class="normal" href="al5font.html#al_load_font">al_load_font</a> recognize &quot;.ttf&quot; and other formats supported by <a class="normal" href="al5ttf.html#al_load_ttf_font">al_load_ttf_font</a>. </p>
+<h6 class="description_section">Returns</h6>
+<p class="return"><code>True</code> on success, <code>False</code> on failure.</p></td></tr>
+</table>
+<table class="detail wide_list">
+<tr class="list">
+<td class="itemcode"><span id="al_shutdown_ttf_addon"></span><code>PROCEDURE <b>al_shutdown_ttf_addon</b>; CDECL; EXTERNAL ALLEGRO_TTF_LIB_NAME;</code></td>
+</tr>
+<tr><td colspan="1">
+<p>
+Unloads the TTF addon. You normally don't need to call this.</p>
+</td></tr>
+</table>
+<table class="detail wide_list">
+<tr class="list">
+<td class="itemcode"><span id="al_get_allegro_ttf_version"></span><code>FUNCTION <b>al_get_allegro_ttf_version</b>: <a  href="al5Base.html#AL_UINT32">AL_UINT32</a>; CDECL; EXTERNAL ALLEGRO_TTF_LIB_NAME;</code></td>
+</tr>
+<tr><td colspan="1">
+<p>
+Returns the (compiled) version of the addon, in the same format as <a class="normal" href="Allegro5.html#al_get_allegro_version">al_get_allegro_version</a>.</p>
+</td></tr>
+</table>
+<table class="detail wide_list">
+<tr class="list">
+<td class="itemcode"><span id="al_load_ttf_font"></span><code>FUNCTION <b>al_load_ttf_font</b> (CONST filename: <a  href="al5Base.html#AL_STR">AL_STR</a>; size, flags: <a  href="al5Base.html#AL_INT">AL_INT</a>): <a  href="al5font.html#ALLEGRO_FONTptr">ALLEGRO_FONTptr</a>; CDECL; EXTERNAL ALLEGRO_TTF_LIB_NAME;</code></td>
+</tr>
+<tr><td colspan="1">
+<p>
+Loads a TrueType font from a file using the FreeType library. Quoting from the FreeType FAQ this means support for many different font formats:
+
+<p><i>TrueType, OpenType, Type1, CID, CFF, Windows FON/FNT, X11 PCF, and others</i>
+
+<p>The <code>size</code> parameter determines the size the font will be rendered at, specified in pixels. The standard font size is measured in <i>units per EM</i>, if you instead want to specify the size as the total height of glyphs in pixels, pass it as a negative value.
+
+<p><b>Note</b>
+
+<p>If you want to display text at multiple sizes, load the font multiple times with different size parameters.
+
+<p>The following flags are supported: </p>
+
+<ul class="paragraph_spacing">
+  <li><p><code>ALLEGRO_TTF_NO_KERNING</code> - Do not use any kerning even if the font file supports it.</p></li>
+  <li><p><code>ALLEGRO_TTF_MONOCHROME</code> - Load as a monochrome font (which means no anti-aliasing of the font is done).</p></li>
+  <li><p><code>ALLEGRO_TTF_NO_AUTOHINT</code> - Disable the Auto Hinter which is enabled by default in newer versions of FreeType.</p></li>
+</ul>
+
+<p>  </p>
+<h6 class="description_section">See also</h6>
+<dl class="see_also">
+  <dt><a class="normal" href="al5ttf.html#al_init_ttf_addon">al_init_ttf_addon</a></dt>
+  <dd>Initializes the TTF addon.</dd>
+  <dt><a class="normal" href="al5ttf.html#al_load_ttf_font_f">al_load_ttf_font_f</a></dt>
+  <dd>Like <a class="normal" href="al5ttf.html#al_load_ttf_font">al_load_ttf_font</a>, but the font is read from the file handle.</dd>
+</dl>
+</td></tr>
+</table>
+<table class="detail wide_list">
+<tr class="list">
+<td class="itemcode"><span id="al_load_ttf_font_f"></span><code>FUNCTION <b>al_load_ttf_font_f</b> (afile: <a  href="Allegro5.html#ALLEGRO_FILEptr">ALLEGRO_FILEptr</a>; CONST filename: <a  href="al5Base.html#AL_STR">AL_STR</a>; size, flags: <a  href="al5Base.html#AL_INT">AL_INT</a>): <a  href="al5font.html#ALLEGRO_FONTptr">ALLEGRO_FONTptr</a>; CDECL; EXTERNAL ALLEGRO_TTF_LIB_NAME;</code></td>
+</tr>
+<tr><td colspan="1">
+<p>
+Like <a class="normal" href="al5ttf.html#al_load_ttf_font">al_load_ttf_font</a>, but the font is read from the file handle. The <code>filename</code> is only used to find possible additional files next to a font file.
+
+<p><b>Note</b>
+
+<p>The file handle is owned by the returned <code>ALLEGRO_FONTptr</code> object and must not be freed by the caller, as FreeType expects to be able to read from it at a later time.</p>
+</td></tr>
+</table>
+<table class="detail wide_list">
+<tr class="list">
+<td class="itemcode"><span id="al_load_ttf_font_stretch"></span><code>FUNCTION <b>al_load_ttf_font_stretch</b> (CONST filename: <a  href="al5Base.html#AL_STR">AL_STR</a>; w, h, flags: <a  href="al5Base.html#AL_INT">AL_INT</a>): <a  href="al5font.html#ALLEGRO_FONTptr">ALLEGRO_FONTptr</a>; CDECL; EXTERNAL ALLEGRO_TTF_LIB_NAME;</code></td>
+</tr>
+<tr><td colspan="1">
+<p>
+Like <a class="normal" href="al5ttf.html#al_load_ttf_font">al_load_ttf_font</a>, except it takes separate width (<code>w</code>) and height (<code>h</code>) parameters instead of a single size parameter.
+
+<p>If the height is a positive value, and the width zero or positive, then font will be stretched according to those parameters. The width must not be negative if the height is positive.
+
+<p>As with <a class="normal" href="al5ttf.html#al_load_ttf_font">al_load_ttf_font</a>, the height may be a negative value to specify the total height in pixels. Then the width must also be a negative value, or zero.   </p>
+<h6 class="description_section">Returns</h6>
+<p class="return"><code>Nil</code> if the height is positive while width is negative, or if the height is negative while the width is positive.</p><h6 class="description_section">See also</h6>
+<dl class="see_also">
+  <dt><a class="normal" href="al5ttf.html#al_load_ttf_font">al_load_ttf_font</a></dt>
+  <dd>Loads a TrueType font from a file using the FreeType library.</dd>
+  <dt><a class="normal" href="al5ttf.html#al_load_ttf_font_stretch_f">al_load_ttf_font_stretch_f</a></dt>
+  <dd>Like <a class="normal" href="al5ttf.html#al_load_ttf_font_stretch">al_load_ttf_font_stretch</a>, but the font is read from the file handle.</dd>
+</dl>
+</td></tr>
+</table>
+<table class="detail wide_list">
+<tr class="list">
+<td class="itemcode"><span id="al_load_ttf_font_stretch_f"></span><code>FUNCTION <b>al_load_ttf_font_stretch_f</b> (afile: <a  href="Allegro5.html#ALLEGRO_FILEptr">ALLEGRO_FILEptr</a>; CONST filename: <a  href="al5Base.html#AL_STR">AL_STR</a>; w, h, flags: <a  href="al5Base.html#AL_INT">AL_INT</a>): <a  href="al5font.html#ALLEGRO_FONTptr">ALLEGRO_FONTptr</a>; CDECL; EXTERNAL ALLEGRO_TTF_LIB_NAME;</code></td>
+</tr>
+<tr><td colspan="1">
+<p>
+Like <a class="normal" href="al5ttf.html#al_load_ttf_font_stretch">al_load_ttf_font_stretch</a>, but the font is read from the file handle. The <code>filename</code> is only used to find possible additional files next to a font file.
+
+<p><b>Note</b>
+
+<p>The file handle is owned by the returned <code>ALLEGRO_FONTptr</code> object and must not be freed by the caller, as FreeType expects to be able to read from it at a later time. </p>
+<h6 class="description_section">See also</h6>
+<dl class="see_also">
+  <dt><a class="normal" href="al5ttf.html#al_load_ttf_font_stretch">al_load_ttf_font_stretch</a></dt>
+  <dd>Like <a class="normal" href="al5ttf.html#al_load_ttf_font">al_load_ttf_font</a>, except it takes separate width (<code>w</code>) and height (<code>h</code>) parameters instead of a single size parameter.</dd>
+</dl>
+</td></tr>
+</table>
+<hr><span class="appinfo"><em>Generated by <a  href="https://github.com/pasdoc/pasdoc/wiki">PasDoc 0.15.0</a>. Generated on 2020-04-16 11:56:29.</em>
+</span>
+</td></tr></table></body></html>

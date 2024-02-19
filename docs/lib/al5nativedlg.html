@@ -1,0 +1,1070 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<title>Allegro.pas 5.2.b.1: al5nativedlg</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="generator" content="PasDoc 0.15.0">
+<meta http-equiv="content-type" content="text/html; charset=utf-8">
+<link rel="stylesheet" type="text/css" href="tipuesearch/tipuesearch.css">
+
+<link rel="StyleSheet" type="text/css" href="pasdoc.css">
+</head>
+<body>
+<table class="container"><tr><td class="navigation">
+<h2>Allegro.pas 5.2.b.1</h2><p><a href="introduction.html" class="navigation">Introduction</a></p><p><a href="AllUnits.html" class="navigation">Units</a></p><p><a href="ClassHierarchy.html" class="navigation">Class Hierarchy</a></p><p><a href="AllClasses.html" class="navigation">Classes, Interfaces, Objects and Records</a></p><p><a href="AllTypes.html" class="navigation">Types</a></p><p><a href="AllVariables.html" class="navigation">Variables</a></p><p><a href="AllConstants.html" class="navigation">Constants</a></p><p><a href="AllFunctions.html" class="navigation">Functions and Procedures</a></p><p><a href="AllIdentifiers.html" class="navigation">Identifiers</a></p><form class="search-form" action="_tipue_results.html"><div class="search-input"><input type="text" name="q" id="tipue_search_input"></div><div class="search-button"><input type="button" id="tipue_search_button" onclick="this.form.submit();"></div></form>
+<div style="clear: both"></div>
+
+<script type="text/javascript">
+$(document).ready(function() {
+    $('#tipue_search_input').tipuesearch({
+        /* 10 items to display seems standard */
+        'show': 10,
+        /* For PasDoc docs, showing urls is not very useful,
+           since the page title already shows the unit and identifier. */
+        'showURL': false
+    });
+});
+</script>
+</td><td class="content">
+<h1 class="unit">Unit al5nativedlg</h1>
+<div class="sections">
+<div class="one_section"><a class="section" href="#PasDoc-Description">Description</a></div><div class="one_section">Uses</div><div class="one_section"><a class="section" href="#PasDoc-Classes">Classes, Interfaces, Objects and Records</a></div><div class="one_section"><a class="section" href="#PasDoc-FuncsProcs">Functions and Procedures</a></div><div class="one_section"><a class="section" href="#PasDoc-Types">Types</a></div><div class="one_section">Constants</div><div class="one_section">Variables</div></div>
+<span id="PasDoc-Description"></span><h2 class="description">Description</h2>
+<p>
+Defines an API that allows to use native dialogs and menus in a cross-platform way. This includes message dialogs, file choosers, main menu and more.
+
+<p> You should not use these dialogs if your app is running in full-screen modes.
+
+<p>Note that this isn't integrated with VCL, CLX, LCL nor fpGUI packages. Integration isn't even planned.
+
+<p><h3 id="native-menus">Native menus</h3>
+
+<p>Menus are implemented on Windows, X and OS X. Menus on X are implemented with GTK, and have a special requirement: you must set the <code><a class="normal" href="Allegro5.html#al_set_new_display_flags">ALLEGRO_GTK_TOPLEVEL</a></code> <a class="normal" href="Allegro5.html#al_set_new_display_flags">display flag</a> prior to creating the display which will have menus attached.
+
+<p>A menu can be attached to a single display window or popped up as a context menu. If you wish to use the same menu on multiple displays or use a sub-menu as a context menu, you must make a copy via <a class="normal" href="al5nativedlg.html#al_clone_menu">al_clone_menu</a> or <a class="normal" href="al5nativedlg.html#al_clone_menu_for_popup">al_clone_menu_for_popup</a>.
+
+<p>Top level items in a non-popup menu must have at least one sub-item, or the behavior is undefined.
+
+<p>Each menu item can be given an ID of any 16-bit integer greater than zero. When a user clicks on a menu item, an event will be generated only if it has an ID. This ID should be unique per menu; if you duplicate IDs, then there will be no way for you to determine exactly which item generated the event.
+
+<p>There are many functions that take pos as a parameter used for locating a particular menu item. In those cases, it represents one of two things: an ID or a zero-based index. Any value greater than zero will always be treated as an ID. Anything else (including zero) will be considered an index based on the absolute value. In other words, <code>0</code> is the first menu item, <code>-1</code> is the second menu item, <code>-2</code> is the third menu item, and so on.
+
+<p>The event type is <code>ALLEGRO_EVENT_MENU_CLICK</code>. It contains three fields:
+
+<p></p>
+
+<pre class="longcode">
+event.user.data1 := id;
+event.user.data2 := AL_INTPTR_T (display);
+event.user.data3 := AL_INTPTR_T (menu);</pre>
+
+<p>
+
+<p>The display and menu may be <code>Nil</code> if it was not possible to tell exactly which item generated the event.
+
+<p>A basic example:
+
+<p></p>
+
+<pre class="longcode">
+<span class="pascal_keyword">CONST</span>
+  FILE_EXIT_ID = <span class="pascal_numeric">1</span>;
+<span class="pascal_keyword">VAR</span>
+  Menu, FileMenu: ALLEGRO_MENUptr;
+  <span class="pascal_numeric"></span>...
+<span class="pascal_keyword">BEGIN</span>
+  Menu := al_create_menu;
+  FileMenu := al_create_menu;
+  al_append_menu_item (FileMenu, <span class="pascal_string">'Exit'</span>, FILE_EXIT_ID, <span class="pascal_numeric">0</span>, <span class="pascal_keyword">NIL</span>, <span class="pascal_keyword">NIL</span>);
+  al_append_menu_item (Menu, <span class="pascal_string">'File'</span>, <span class="pascal_numeric">0</span>, <span class="pascal_numeric">0</span>, <span class="pascal_keyword">NIL</span>, FileMenu);
+  al_set_display_menu (Display, Menu);
+  al_register_event_source (Queue, al_get_default_menu_event_source);
+  <span class="pascal_numeric"></span>...
+  al_wait_for_event (Queue, Event);
+  <span class="pascal_keyword">IF</span> Event._type = ALLEGRO_EVENT_MENU_CLICK <span class="pascal_keyword">THEN</span>
+    <span class="pascal_keyword">IF</span> Event.user.data1 = FILE_EXIT_ID <span class="pascal_keyword">THEN</span>
+     ExitProgram;
+  <span class="pascal_numeric"></span>...
+<span class="pascal_keyword">END</span>;</pre>
+
+<p>
+
+<p>Because there is no <code>DISPLAY_DESTROYED</code> event, you must call <code><a class="normal" href="al5nativedlg.html#al_set_display_menu">al_set_display_menu</a> (Display, NIL)</code> before destroying any display with a menu attached, to avoid leaking resources. </p>
+<span id="PasDoc-Uses"></span><h2 class="overview">Overview</h2>
+<span id="PasDoc-Classes"></span><h3 class="cio">Classes, Interfaces, Objects and Records</h3>
+<table class="classestable wide_list">
+<tr class="listheader">
+<th class="itemname">Name</th>
+<th class="itemdesc">Description</th>
+</tr>
+<tr class="list">
+<td class="itemname">Record&nbsp;<a class="bold" href="al5nativedlg.ALLEGRO_MENU_INFO.html"><code>ALLEGRO_MENU_INFO</code></a></td>
+<td class="itemdesc">A structure that defines how to create a complete menu system.</td>
+</tr>
+</table>
+<span id="PasDoc-FuncsProcs"></span><h3 class="summary">Functions and Procedures</h3>
+<table class="summary wide_list">
+<tr class="list">
+<td class="itemcode"><code>FUNCTION <b><a  href="al5nativedlg.html#ALLEGRO_ITEM_OF_MENU">ALLEGRO_ITEM_OF_MENU</a></b> ( CONST caption: <a  href="al5Base.html#AL_STRptr">AL_STRptr</a>; id, flags: <a  href="al5Base.html#AL_INT">AL_INT</a>; icon: <a  href="Allegro5.html#ALLEGRO_BITMAPptr">ALLEGRO_BITMAPptr</a> ): <a  href="al5nativedlg.ALLEGRO_MENU_INFO.html">ALLEGRO_MENU_INFO</a>; INLINE;</code></td>
+</tr>
+<tr class="list2">
+<td class="itemcode"><code>FUNCTION <b><a  href="al5nativedlg.html#ALLEGRO_MENU_SEPARATOR">ALLEGRO_MENU_SEPARATOR</a></b>: <a  href="al5nativedlg.ALLEGRO_MENU_INFO.html">ALLEGRO_MENU_INFO</a>; INLINE;</code></td>
+</tr>
+<tr class="list">
+<td class="itemcode"><code>FUNCTION <b><a  href="al5nativedlg.html#ALLEGRO_END_OF_MENU">ALLEGRO_END_OF_MENU</a></b>: <a  href="al5nativedlg.ALLEGRO_MENU_INFO.html">ALLEGRO_MENU_INFO</a>;</code></td>
+</tr>
+<tr class="list2">
+<td class="itemcode"><code>FUNCTION <b><a  href="al5nativedlg.html#al_init_native_dialog_addon">al_init_native_dialog_addon</a></b>: <a  href="al5Base.html#AL_BOOL">AL_BOOL</a>; CDECL; EXTERNAL ALLEGRO_NATIVE_DLG_LIB_NAME;</code></td>
+</tr>
+<tr class="list">
+<td class="itemcode"><code>PROCEDURE <b><a  href="al5nativedlg.html#al_shutdown_native_dialog_addon">al_shutdown_native_dialog_addon</a></b>; CDECL; EXTERNAL ALLEGRO_NATIVE_DLG_LIB_NAME;</code></td>
+</tr>
+<tr class="list2">
+<td class="itemcode"><code>FUNCTION <b><a  href="al5nativedlg.html#al_create_native_file_dialog">al_create_native_file_dialog</a></b> (CONST initial_path, title, patterns: <a  href="al5Base.html#AL_STR">AL_STR</a>; Mode: <a  href="al5Base.html#AL_INT">AL_INT</a>) : <a  href="al5nativedlg.html#ALLEGRO_FILECHOOSERptr">ALLEGRO_FILECHOOSERptr</a>; CDECL; EXTERNAL ALLEGRO_NATIVE_DLG_LIB_NAME;</code></td>
+</tr>
+<tr class="list">
+<td class="itemcode"><code>FUNCTION <b><a  href="al5nativedlg.html#al_show_native_file_dialog">al_show_native_file_dialog</a></b> (display: <a  href="Allegro5.html#ALLEGRO_DISPLAYptr">ALLEGRO_DISPLAYptr</a>; dialog: <a  href="al5nativedlg.html#ALLEGRO_FILECHOOSERptr">ALLEGRO_FILECHOOSERptr</a>): <a  href="al5Base.html#AL_BOOL">AL_BOOL</a>; CDECL; EXTERNAL ALLEGRO_NATIVE_DLG_LIB_NAME;</code></td>
+</tr>
+<tr class="list2">
+<td class="itemcode"><code>FUNCTION <b><a  href="al5nativedlg.html#al_get_native_file_dialog_count">al_get_native_file_dialog_count</a></b> (CONST dialog: <a  href="al5nativedlg.html#ALLEGRO_FILECHOOSERptr">ALLEGRO_FILECHOOSERptr</a>): <a  href="al5Base.html#AL_INT">AL_INT</a>; CDECL; EXTERNAL ALLEGRO_NATIVE_DLG_LIB_NAME;</code></td>
+</tr>
+<tr class="list">
+<td class="itemcode"><code>FUNCTION <b><a  href="al5nativedlg.html#al_get_native_file_dialog_path">al_get_native_file_dialog_path</a></b> (CONST dialog: <a  href="al5nativedlg.html#ALLEGRO_FILECHOOSERptr">ALLEGRO_FILECHOOSERptr</a>; index: <a  href="al5Base.html#AL_SIZE_T">AL_SIZE_T</a>): <a  href="al5Base.html#AL_STRptr">AL_STRptr</a>; CDECL; EXTERNAL ALLEGRO_NATIVE_DLG_LIB_NAME;</code></td>
+</tr>
+<tr class="list2">
+<td class="itemcode"><code>PROCEDURE <b><a  href="al5nativedlg.html#al_destroy_native_file_dialog">al_destroy_native_file_dialog</a></b> (dialog: <a  href="al5nativedlg.html#ALLEGRO_FILECHOOSERptr">ALLEGRO_FILECHOOSERptr</a>); CDECL; EXTERNAL ALLEGRO_NATIVE_DLG_LIB_NAME;</code></td>
+</tr>
+<tr class="list">
+<td class="itemcode"><code>FUNCTION <b><a  href="al5nativedlg.html#al_show_native_message_box">al_show_native_message_box</a></b> ( display: <a  href="Allegro5.html#ALLEGRO_DISPLAYptr">ALLEGRO_DISPLAYptr</a>; CONST title, heading, str, buttons: <a  href="al5Base.html#AL_STR">AL_STR</a>; flags: <a  href="al5Base.html#AL_INT">AL_INT</a> ): <a  href="al5Base.html#AL_INT">AL_INT</a>; INLINE;</code></td>
+</tr>
+<tr class="list2">
+<td class="itemcode"><code>FUNCTION <b><a  href="al5nativedlg.html#al_open_native_text_log">al_open_native_text_log</a></b> (CONST title: <a  href="al5Base.html#AL_STR">AL_STR</a>; flags: <a  href="al5Base.html#AL_INT">AL_INT</a>): <a  href="al5nativedlg.html#ALLEGRO_TEXTLOGptr">ALLEGRO_TEXTLOGptr</a>; CDECL; EXTERNAL ALLEGRO_NATIVE_DLG_LIB_NAME;</code></td>
+</tr>
+<tr class="list">
+<td class="itemcode"><code>PROCEDURE <b><a  href="al5nativedlg.html#al_close_native_text_log">al_close_native_text_log</a></b> (textlog: <a  href="al5nativedlg.html#ALLEGRO_TEXTLOGptr">ALLEGRO_TEXTLOGptr</a>); CDECL; EXTERNAL ALLEGRO_NATIVE_DLG_LIB_NAME;</code></td>
+</tr>
+<tr class="list2">
+<td class="itemcode"><code>PROCEDURE <b><a  href="al5nativedlg.html#al_append_native_text_log">al_append_native_text_log</a></b> (textlog: <a  href="al5nativedlg.html#ALLEGRO_TEXTLOGptr">ALLEGRO_TEXTLOGptr</a>; CONST str: <a  href="al5Base.html#AL_STR">AL_STR</a>); CDECL; EXTERNAL ALLEGRO_NATIVE_DLG_LIB_NAME;</code></td>
+</tr>
+<tr class="list">
+<td class="itemcode"><code>FUNCTION <b><a  href="al5nativedlg.html#al_get_native_text_log_event_source">al_get_native_text_log_event_source</a></b> (textlog: <a  href="al5nativedlg.html#ALLEGRO_TEXTLOGptr">ALLEGRO_TEXTLOGptr</a>) : <a  href="Allegro5.html#ALLEGRO_EVENT_SOURCEptr">ALLEGRO_EVENT_SOURCEptr</a>; CDECL; EXTERNAL ALLEGRO_NATIVE_DLG_LIB_NAME;</code></td>
+</tr>
+<tr class="list2">
+<td class="itemcode"><code>FUNCTION <b><a  href="al5nativedlg.html#al_create_menu">al_create_menu</a></b>: <a  href="al5nativedlg.html#ALLEGRO_MENUptr">ALLEGRO_MENUptr</a>; CDECL; EXTERNAL ALLEGRO_NATIVE_DLG_LIB_NAME;</code></td>
+</tr>
+<tr class="list">
+<td class="itemcode"><code>FUNCTION <b><a  href="al5nativedlg.html#al_create_popup_menu">al_create_popup_menu</a></b>: <a  href="al5nativedlg.html#ALLEGRO_MENUptr">ALLEGRO_MENUptr</a>; CDECL; EXTERNAL ALLEGRO_NATIVE_DLG_LIB_NAME;</code></td>
+</tr>
+<tr class="list2">
+<td class="itemcode"><code>FUNCTION <b><a  href="al5nativedlg.html#al_build_menu">al_build_menu</a></b> (VAR info: ARRAY OF <a  href="al5nativedlg.ALLEGRO_MENU_INFO.html">ALLEGRO_MENU_INFO</a>): <a  href="al5nativedlg.html#ALLEGRO_MENUptr">ALLEGRO_MENUptr</a>; CDECL; EXTERNAL ALLEGRO_NATIVE_DLG_LIB_NAME;</code></td>
+</tr>
+<tr class="list">
+<td class="itemcode"><code>FUNCTION <b><a  href="al5nativedlg.html#al_append_menu_item">al_append_menu_item</a></b> ( parent: <a  href="al5nativedlg.html#ALLEGRO_MENUptr">ALLEGRO_MENUptr</a>; CONST title: <a  href="al5Base.html#AL_STRptr">AL_STRptr</a>; id: <a  href="al5Base.html#AL_UINT16">AL_UINT16</a>; flags: <a  href="al5Base.html#AL_INT">AL_INT</a>; icon: <a  href="Allegro5.html#ALLEGRO_BITMAPptr">ALLEGRO_BITMAPptr</a>; submenu: <a  href="al5nativedlg.html#ALLEGRO_MENUptr">ALLEGRO_MENUptr</a> ): <a  href="al5Base.html#AL_INT">AL_INT</a>; CDECL; EXTERNAL ALLEGRO_NATIVE_DLG_LIB_NAME;</code></td>
+</tr>
+<tr class="list2">
+<td class="itemcode"><code>FUNCTION <b><a  href="al5nativedlg.html#al_insert_menu_item">al_insert_menu_item</a></b> ( parent: <a  href="al5nativedlg.html#ALLEGRO_MENUptr">ALLEGRO_MENUptr</a>; pos: <a  href="al5Base.html#AL_INT">AL_INT</a>; CONST title: <a  href="al5Base.html#AL_STRptr">AL_STRptr</a>; id: <a  href="al5Base.html#AL_UINT16">AL_UINT16</a>; flags: <a  href="al5Base.html#AL_INT">AL_INT</a>; icon: <a  href="Allegro5.html#ALLEGRO_BITMAPptr">ALLEGRO_BITMAPptr</a>; submenu: <a  href="al5nativedlg.html#ALLEGRO_MENUptr">ALLEGRO_MENUptr</a> ): <a  href="al5Base.html#AL_BOOL">AL_BOOL</a>; CDECL; EXTERNAL ALLEGRO_NATIVE_DLG_LIB_NAME;</code></td>
+</tr>
+<tr class="list">
+<td class="itemcode"><code>FUNCTION <b><a  href="al5nativedlg.html#al_remove_menu_item">al_remove_menu_item</a></b> (menu: <a  href="al5nativedlg.html#ALLEGRO_MENUptr">ALLEGRO_MENUptr</a>; pos: <a  href="al5Base.html#AL_INT">AL_INT</a>): <a  href="al5Base.html#AL_BOOL">AL_BOOL</a>; CDECL; EXTERNAL ALLEGRO_NATIVE_DLG_LIB_NAME;</code></td>
+</tr>
+<tr class="list2">
+<td class="itemcode"><code>FUNCTION <b><a  href="al5nativedlg.html#al_clone_menu">al_clone_menu</a></b> (menu: <a  href="al5nativedlg.html#ALLEGRO_MENUptr">ALLEGRO_MENUptr</a>): <a  href="al5nativedlg.html#ALLEGRO_MENUptr">ALLEGRO_MENUptr</a>; CDECL; EXTERNAL ALLEGRO_NATIVE_DLG_LIB_NAME;</code></td>
+</tr>
+<tr class="list">
+<td class="itemcode"><code>FUNCTION <b><a  href="al5nativedlg.html#al_clone_menu_for_popup">al_clone_menu_for_popup</a></b> (menu: <a  href="al5nativedlg.html#ALLEGRO_MENUptr">ALLEGRO_MENUptr</a>): <a  href="al5nativedlg.html#ALLEGRO_MENUptr">ALLEGRO_MENUptr</a>; CDECL; EXTERNAL ALLEGRO_NATIVE_DLG_LIB_NAME;</code></td>
+</tr>
+<tr class="list2">
+<td class="itemcode"><code>PROCEDURE <b><a  href="al5nativedlg.html#al_destroy_menu">al_destroy_menu</a></b> (menu: <a  href="al5nativedlg.html#ALLEGRO_MENUptr">ALLEGRO_MENUptr</a>); CDECL; EXTERNAL ALLEGRO_NATIVE_DLG_LIB_NAME;</code></td>
+</tr>
+<tr class="list">
+<td class="itemcode"><code>FUNCTION <b><a  href="al5nativedlg.html#al_get_menu_item_caption">al_get_menu_item_caption</a></b> (menu: <a  href="al5nativedlg.html#ALLEGRO_MENUptr">ALLEGRO_MENUptr</a>; pos: <a  href="al5Base.html#AL_INT">AL_INT</a>) : <a  href="al5Base.html#AL_STRptr">AL_STRptr</a>; CDECL; EXTERNAL ALLEGRO_NATIVE_DLG_LIB_NAME;</code></td>
+</tr>
+<tr class="list2">
+<td class="itemcode"><code>PROCEDURE <b><a  href="al5nativedlg.html#al_set_menu_item_caption">al_set_menu_item_caption</a></b> (menu: <a  href="al5nativedlg.html#ALLEGRO_MENUptr">ALLEGRO_MENUptr</a>; pos: <a  href="al5Base.html#AL_INT">AL_INT</a>; CONST caption: <a  href="al5Base.html#AL_STR">AL_STR</a>); CDECL; EXTERNAL ALLEGRO_NATIVE_DLG_LIB_NAME;</code></td>
+</tr>
+<tr class="list">
+<td class="itemcode"><code>FUNCTION <b><a  href="al5nativedlg.html#al_get_menu_item_flags">al_get_menu_item_flags</a></b> (menu: <a  href="al5nativedlg.html#ALLEGRO_MENUptr">ALLEGRO_MENUptr</a>; pos: <a  href="al5Base.html#AL_INT">AL_INT</a>): <a  href="al5Base.html#AL_INT">AL_INT</a>; CDECL; EXTERNAL ALLEGRO_NATIVE_DLG_LIB_NAME;</code></td>
+</tr>
+<tr class="list2">
+<td class="itemcode"><code>PROCEDURE <b><a  href="al5nativedlg.html#al_set_menu_item_flags">al_set_menu_item_flags</a></b> (menu: <a  href="al5nativedlg.html#ALLEGRO_MENUptr">ALLEGRO_MENUptr</a>; pos, flags: <a  href="al5Base.html#AL_INT">AL_INT</a>); CDECL; EXTERNAL ALLEGRO_NATIVE_DLG_LIB_NAME;</code></td>
+</tr>
+<tr class="list">
+<td class="itemcode"><code>FUNCTION <b><a  href="al5nativedlg.html#al_get_menu_item_icon">al_get_menu_item_icon</a></b> (menu: <a  href="al5nativedlg.html#ALLEGRO_MENUptr">ALLEGRO_MENUptr</a>; pos: <a  href="al5Base.html#AL_INT">AL_INT</a>) : <a  href="Allegro5.html#ALLEGRO_BITMAPptr">ALLEGRO_BITMAPptr</a>; CDECL; EXTERNAL ALLEGRO_NATIVE_DLG_LIB_NAME;</code></td>
+</tr>
+<tr class="list2">
+<td class="itemcode"><code>PROCEDURE <b><a  href="al5nativedlg.html#al_set_menu_item_icon">al_set_menu_item_icon</a></b> (menu: <a  href="al5nativedlg.html#ALLEGRO_MENUptr">ALLEGRO_MENUptr</a>; pos: <a  href="al5Base.html#AL_INT">AL_INT</a>; icon: <a  href="Allegro5.html#ALLEGRO_BITMAPptr">ALLEGRO_BITMAPptr</a>); CDECL; EXTERNAL ALLEGRO_NATIVE_DLG_LIB_NAME;</code></td>
+</tr>
+<tr class="list">
+<td class="itemcode"><code>FUNCTION <b><a  href="al5nativedlg.html#al_toggle_menu_item_flags">al_toggle_menu_item_flags</a></b> (menu: <a  href="al5nativedlg.html#ALLEGRO_MENUptr">ALLEGRO_MENUptr</a>; pos, flags: <a  href="al5Base.html#AL_INT">AL_INT</a>): <a  href="al5Base.html#AL_INT">AL_INT</a>; CDECL; EXTERNAL ALLEGRO_NATIVE_DLG_LIB_NAME;</code></td>
+</tr>
+<tr class="list2">
+<td class="itemcode"><code>FUNCTION <b><a  href="al5nativedlg.html#al_find_menu">al_find_menu</a></b> (haystack: <a  href="al5nativedlg.html#ALLEGRO_MENUptr">ALLEGRO_MENUptr</a>; id: <a  href="al5Base.html#AL_UINT16">AL_UINT16</a>) : <a  href="al5nativedlg.html#ALLEGRO_MENUptr">ALLEGRO_MENUptr</a>; CDECL; EXTERNAL ALLEGRO_NATIVE_DLG_LIB_NAME;</code></td>
+</tr>
+<tr class="list">
+<td class="itemcode"><code>FUNCTION <b><a  href="al5nativedlg.html#al_find_menu_item">al_find_menu_item</a></b> ( haystack: <a  href="al5nativedlg.html#ALLEGRO_MENUptr">ALLEGRO_MENUptr</a>; id: <a  href="al5Base.html#AL_INT16">AL_INT16</a>; menu: <a  href="al5nativedlg.html#ALLEGRO_MENUptrptr">ALLEGRO_MENUptrptr</a>; index: <a  href="al5Base.html#AL_INTptr">AL_INTptr</a> ): <a  href="al5Base.html#AL_BOOL">AL_BOOL</a>; CDECL; EXTERNAL ALLEGRO_NATIVE_DLG_LIB_NAME;</code></td>
+</tr>
+<tr class="list2">
+<td class="itemcode"><code>FUNCTION <b><a  href="al5nativedlg.html#al_get_default_menu_event_source">al_get_default_menu_event_source</a></b>: <a  href="Allegro5.html#ALLEGRO_EVENT_SOURCEptr">ALLEGRO_EVENT_SOURCEptr</a>; CDECL; EXTERNAL ALLEGRO_NATIVE_DLG_LIB_NAME;</code></td>
+</tr>
+<tr class="list">
+<td class="itemcode"><code>FUNCTION <b><a  href="al5nativedlg.html#al_enable_menu_event_source">al_enable_menu_event_source</a></b> (menu: <a  href="al5nativedlg.html#ALLEGRO_MENUptr">ALLEGRO_MENUptr</a>) : <a  href="Allegro5.html#ALLEGRO_EVENT_SOURCEptr">ALLEGRO_EVENT_SOURCEptr</a>; CDECL; EXTERNAL ALLEGRO_NATIVE_DLG_LIB_NAME;</code></td>
+</tr>
+<tr class="list2">
+<td class="itemcode"><code>PROCEDURE <b><a  href="al5nativedlg.html#al_disable_menu_event_source">al_disable_menu_event_source</a></b> (menu: <a  href="al5nativedlg.html#ALLEGRO_MENUptr">ALLEGRO_MENUptr</a>); CDECL; EXTERNAL ALLEGRO_NATIVE_DLG_LIB_NAME;</code></td>
+</tr>
+<tr class="list">
+<td class="itemcode"><code>FUNCTION <b><a  href="al5nativedlg.html#al_get_display_menu">al_get_display_menu</a></b> (display: <a  href="Allegro5.html#ALLEGRO_DISPLAYptr">ALLEGRO_DISPLAYptr</a>): <a  href="al5nativedlg.html#ALLEGRO_MENUptr">ALLEGRO_MENUptr</a>; CDECL; EXTERNAL ALLEGRO_NATIVE_DLG_LIB_NAME;</code></td>
+</tr>
+<tr class="list2">
+<td class="itemcode"><code>FUNCTION <b><a  href="al5nativedlg.html#al_set_display_menu">al_set_display_menu</a></b> (display: <a  href="Allegro5.html#ALLEGRO_DISPLAYptr">ALLEGRO_DISPLAYptr</a>; menu: <a  href="al5nativedlg.html#ALLEGRO_MENUptr">ALLEGRO_MENUptr</a>): <a  href="al5Base.html#AL_BOOL">AL_BOOL</a>; CDECL; EXTERNAL ALLEGRO_NATIVE_DLG_LIB_NAME;</code></td>
+</tr>
+<tr class="list">
+<td class="itemcode"><code>FUNCTION <b><a  href="al5nativedlg.html#al_popup_menu">al_popup_menu</a></b> (popup: <a  href="al5nativedlg.html#ALLEGRO_MENUptr">ALLEGRO_MENUptr</a>; display: <a  href="Allegro5.html#ALLEGRO_DISPLAYptr">ALLEGRO_DISPLAYptr</a>): <a  href="al5Base.html#AL_BOOL">AL_BOOL</a>; CDECL; EXTERNAL ALLEGRO_NATIVE_DLG_LIB_NAME;</code></td>
+</tr>
+<tr class="list2">
+<td class="itemcode"><code>FUNCTION <b><a  href="al5nativedlg.html#al_remove_display_menu">al_remove_display_menu</a></b> (display: <a  href="Allegro5.html#ALLEGRO_DISPLAYptr">ALLEGRO_DISPLAYptr</a>): <a  href="al5nativedlg.html#ALLEGRO_MENUptr">ALLEGRO_MENUptr</a>; CDECL; EXTERNAL ALLEGRO_NATIVE_DLG_LIB_NAME;</code></td>
+</tr>
+<tr class="list">
+<td class="itemcode"><code>FUNCTION <b><a  href="al5nativedlg.html#al_get_allegro_native_dialog_version">al_get_allegro_native_dialog_version</a></b>: <a  href="al5Base.html#AL_UINT32">AL_UINT32</a>; CDECL; EXTERNAL ALLEGRO_NATIVE_DLG_LIB_NAME;</code></td>
+</tr>
+</table>
+<span id="PasDoc-Types"></span><h3 class="summary">Types</h3>
+<table class="summary wide_list">
+<tr class="list">
+<td class="itemcode"><code><b><a  href="al5nativedlg.html#ALLEGRO_FILECHOOSERptr">ALLEGRO_FILECHOOSERptr</a></b> = <a  href="al5Base.html#AL_POINTER">AL_POINTER</a>;</code></td>
+</tr>
+<tr class="list2">
+<td class="itemcode"><code><b><a  href="al5nativedlg.html#ALLEGRO_TEXTLOGptr">ALLEGRO_TEXTLOGptr</a></b> = <a  href="al5Base.html#AL_POINTER">AL_POINTER</a>;</code></td>
+</tr>
+<tr class="list">
+<td class="itemcode"><code><b><a  href="al5nativedlg.html#ALLEGRO_MENUptr">ALLEGRO_MENUptr</a></b> = <a  href="al5Base.html#AL_POINTER">AL_POINTER</a>;</code></td>
+</tr>
+<tr class="list2">
+<td class="itemcode"><code><b><a  href="al5nativedlg.html#ALLEGRO_MENUptrptr">ALLEGRO_MENUptrptr</a></b> = &circ;<a  href="al5nativedlg.html#ALLEGRO_MENUptr">ALLEGRO_MENUptr</a>;</code></td>
+</tr>
+</table>
+<h2 class="description">Description</h2>
+<h3 class="detail">Functions and Procedures</h3>
+<table class="detail wide_list">
+<tr class="list">
+<td class="itemcode"><span id="ALLEGRO_ITEM_OF_MENU"></span><code>FUNCTION <b>ALLEGRO_ITEM_OF_MENU</b> ( CONST caption: <a  href="al5Base.html#AL_STRptr">AL_STRptr</a>; id, flags: <a  href="al5Base.html#AL_INT">AL_INT</a>; icon: <a  href="Allegro5.html#ALLEGRO_BITMAPptr">ALLEGRO_BITMAPptr</a> ): <a  href="al5nativedlg.ALLEGRO_MENU_INFO.html">ALLEGRO_MENU_INFO</a>; INLINE;</code></td>
+</tr>
+<tr><td colspan="1">
+<p>
+Helper to build native menus. </p>
+<h6 class="description_section">See also</h6>
+<dl class="see_also">
+  <dt><a class="normal" href="al5nativedlg.ALLEGRO_MENU_INFO.html">ALLEGRO_MENU_INFO</a></dt>
+  <dd>A structure that defines how to create a complete menu system.</dd>
+</dl>
+</td></tr>
+</table>
+<table class="detail wide_list">
+<tr class="list">
+<td class="itemcode"><span id="ALLEGRO_MENU_SEPARATOR"></span><code>FUNCTION <b>ALLEGRO_MENU_SEPARATOR</b>: <a  href="al5nativedlg.ALLEGRO_MENU_INFO.html">ALLEGRO_MENU_INFO</a>; INLINE;</code></td>
+</tr>
+<tr><td colspan="1">
+<p>
+Helper to build native menus. </p>
+<h6 class="description_section">See also</h6>
+<dl class="see_also">
+  <dt><a class="normal" href="al5nativedlg.ALLEGRO_MENU_INFO.html">ALLEGRO_MENU_INFO</a></dt>
+  <dd>A structure that defines how to create a complete menu system.</dd>
+</dl>
+</td></tr>
+</table>
+<table class="detail wide_list">
+<tr class="list">
+<td class="itemcode"><span id="ALLEGRO_END_OF_MENU"></span><code>FUNCTION <b>ALLEGRO_END_OF_MENU</b>: <a  href="al5nativedlg.ALLEGRO_MENU_INFO.html">ALLEGRO_MENU_INFO</a>;</code></td>
+</tr>
+<tr><td colspan="1">
+<p>
+Helper to build native menus. </p>
+<h6 class="description_section">See also</h6>
+<dl class="see_also">
+  <dt><a class="normal" href="al5nativedlg.ALLEGRO_MENU_INFO.html">ALLEGRO_MENU_INFO</a></dt>
+  <dd>A structure that defines how to create a complete menu system.</dd>
+</dl>
+</td></tr>
+</table>
+<table class="detail wide_list">
+<tr class="list">
+<td class="itemcode"><span id="al_init_native_dialog_addon"></span><code>FUNCTION <b>al_init_native_dialog_addon</b>: <a  href="al5Base.html#AL_BOOL">AL_BOOL</a>; CDECL; EXTERNAL ALLEGRO_NATIVE_DLG_LIB_NAME;</code></td>
+</tr>
+<tr><td colspan="1">
+<p>
+Initializes the native dialog addon.
+
+<p><b>Note</b>
+
+<p>Prior to Allegro 5.1.0 native dialog functions could be called without explicit initialisation, but that is now deprecated. Future functionality may require explicit initialisation. An exception is <a class="normal" href="al5nativedlg.html#al_show_native_message_box">al_show_native_message_box</a>, which may be useful to show an error message if Allegro fails to initialise.  </p>
+<h6 class="description_section">Returns</h6>
+<p class="return"><code>True</code> on success, <code>False</code> on error.</p><h6 class="description_section">See also</h6>
+<dl class="see_also">
+  <dt><a class="normal" href="al5nativedlg.html#al_shutdown_native_dialog_addon">al_shutdown_native_dialog_addon</a></dt>
+  <dd>Shuts down the native dialog addon.</dd>
+</dl>
+</td></tr>
+</table>
+<table class="detail wide_list">
+<tr class="list">
+<td class="itemcode"><span id="al_shutdown_native_dialog_addon"></span><code>PROCEDURE <b>al_shutdown_native_dialog_addon</b>; CDECL; EXTERNAL ALLEGRO_NATIVE_DLG_LIB_NAME;</code></td>
+</tr>
+<tr><td colspan="1">
+<p>
+Shuts down the native dialog addon. </p>
+<h6 class="description_section">See also</h6>
+<dl class="see_also">
+  <dt><a class="normal" href="al5nativedlg.html#al_init_native_dialog_addon">al_init_native_dialog_addon</a></dt>
+  <dd>Initializes the native dialog addon.</dd>
+</dl>
+</td></tr>
+</table>
+<table class="detail wide_list">
+<tr class="list">
+<td class="itemcode"><span id="al_create_native_file_dialog"></span><code>FUNCTION <b>al_create_native_file_dialog</b> (CONST initial_path, title, patterns: <a  href="al5Base.html#AL_STR">AL_STR</a>; Mode: <a  href="al5Base.html#AL_INT">AL_INT</a>) : <a  href="al5nativedlg.html#ALLEGRO_FILECHOOSERptr">ALLEGRO_FILECHOOSERptr</a>; CDECL; EXTERNAL ALLEGRO_NATIVE_DLG_LIB_NAME;</code></td>
+</tr>
+<tr><td colspan="1">
+<p>
+Creates a new native file dialog. You should only have one such dialog opened at a time.     </p>
+<h6 class="description_section">Parameters</h6>
+<dl class="parameters">
+<dt>initial_path</dt>
+<dd>The initial search path and filename. To start with a blank file name the string should end with a directory separator (this should be the common case).</dd>
+<dt>title</dt>
+<dd>Title of the dialog.</dd>
+<dt>patterns</dt>
+<dd>A list of semi-colon separated patterns to match. This should not contain any whitespace characters. If a pattern contains the '/' character, then it is treated as a MIME type (e.g. <code>'image/png'</code>). Not all platforms support file patterns. If the native dialog does not provide support, this parameter is ignored.</dd>
+<dt>mode</dt>
+<dd>0, or a combination (<code>OR</code>) of the following flags: </p>
+
+<dl class="paragraph_spacing">
+  <dt><b><code>ALLEGRO_FILECHOOSER_FILE_MUST_EXIST</code></b></dt>
+  <dd><p>If supported by the native dialog, it will not allow entering new names, but just allow existing files to be selected. Else it is ignored.</p></dd>
+  <dt><b><code>ALLEGRO_FILECHOOSER_SAVE</code></b></dt>
+  <dd><p>If the native dialog system has a different dialog for saving (for example one which allows creating new directories), it is used. Else it is ignored.</p></dd>
+  <dt><b><code>ALLEGRO_FILECHOOSER_FOLDER</code></b></dt>
+  <dd><p>If there is support for a separate dialog to select a folder instead of a file, it will be used.</p></dd>
+  <dt><b><code>ALLEGRO_FILECHOOSER_PICTURES</code></b></dt>
+  <dd><p>If a different dialog is available for selecting pictures, it is used. Else it is ignored.</p></dd>
+  <dt><b><code>ALLEGRO_FILECHOOSER_SHOW_HIDDEN</code></b></dt>
+  <dd><p>If the platform supports it, also hidden files will be shown.</p></dd>
+  <dt><b><code>ALLEGRO_FILECHOOSER_MULTIPLE</code></b></dt>
+  <dd><p>If supported, allow selectingmultiple files.</p></dd>
+</dl>
+
+<p></dd>
+</dl>
+<h6 class="description_section">Returns</h6>
+<p class="return">A handle to the dialog which you can pass to <a class="normal" href="al5nativedlg.html#al_show_native_file_dialog">al_show_native_file_dialog</a> to display it, and from which youthen can query the results using <a class="normal" href="al5nativedlg.html#al_get_native_file_dialog_count">al_get_native_file_dialog_count</a> and <a class="normal" href="al5nativedlg.html#al_get_native_file_dialog_path">al_get_native_file_dialog_path</a>. When you are done, call <a class="normal" href="al5nativedlg.html#al_destroy_native_file_dialog">al_destroy_native_file_dialog</a> on it.
+
+<p>If a dialog window could not be created then this function returns <code>Nil</code>.</p></td></tr>
+</table>
+<table class="detail wide_list">
+<tr class="list">
+<td class="itemcode"><span id="al_show_native_file_dialog"></span><code>FUNCTION <b>al_show_native_file_dialog</b> (display: <a  href="Allegro5.html#ALLEGRO_DISPLAYptr">ALLEGRO_DISPLAYptr</a>; dialog: <a  href="al5nativedlg.html#ALLEGRO_FILECHOOSERptr">ALLEGRO_FILECHOOSERptr</a>): <a  href="al5Base.html#AL_BOOL">AL_BOOL</a>; CDECL; EXTERNAL ALLEGRO_NATIVE_DLG_LIB_NAME;</code></td>
+</tr>
+<tr><td colspan="1">
+<p>
+Shows the dialog window. The display may be <code>Nil</code>, otherwise the given display is treated as the parent if possible.
+
+<p>This function blocks the calling thread until it returns, so you may want to spawn a thread and call it from inside that thread.  </p>
+<h6 class="description_section">Returns</h6>
+<p class="return"><code>True</code> on success, <code>False</code> on failure.</p><h6 class="description_section">See also</h6>
+<dl class="see_also">
+  <dt><a class="normal" href="al5nativedlg.html#al_create_native_file_dialog">al_create_native_file_dialog</a></dt>
+  <dd>Creates a new native file dialog.</dd>
+</dl>
+</td></tr>
+</table>
+<table class="detail wide_list">
+<tr class="list">
+<td class="itemcode"><span id="al_get_native_file_dialog_count"></span><code>FUNCTION <b>al_get_native_file_dialog_count</b> (CONST dialog: <a  href="al5nativedlg.html#ALLEGRO_FILECHOOSERptr">ALLEGRO_FILECHOOSERptr</a>): <a  href="al5Base.html#AL_INT">AL_INT</a>; CDECL; EXTERNAL ALLEGRO_NATIVE_DLG_LIB_NAME;</code></td>
+</tr>
+<tr><td colspan="1">
+<p>
+Returns the number of files selected, or <code>0</code> if the dialog was cancelled.  </p>
+<h6 class="description_section">See also</h6>
+<dl class="see_also">
+  <dt><a class="normal" href="al5nativedlg.html#al_create_native_file_dialog">al_create_native_file_dialog</a></dt>
+  <dd>Creates a new native file dialog.</dd>
+  <dt><a class="normal" href="al5nativedlg.html#al_show_native_file_dialog">al_show_native_file_dialog</a></dt>
+  <dd>Shows the dialog window.</dd>
+</dl>
+</td></tr>
+</table>
+<table class="detail wide_list">
+<tr class="list">
+<td class="itemcode"><span id="al_get_native_file_dialog_path"></span><code>FUNCTION <b>al_get_native_file_dialog_path</b> (CONST dialog: <a  href="al5nativedlg.html#ALLEGRO_FILECHOOSERptr">ALLEGRO_FILECHOOSERptr</a>; index: <a  href="al5Base.html#AL_SIZE_T">AL_SIZE_T</a>): <a  href="al5Base.html#AL_STRptr">AL_STRptr</a>; CDECL; EXTERNAL ALLEGRO_NATIVE_DLG_LIB_NAME;</code></td>
+</tr>
+<tr><td colspan="1">
+<p>
+Returns one of the selected paths with index <code>i</code>. The index should range from <code>0</code> to the return value of <code><a class="normal" href="al5nativedlg.html#al_get_native_file_dialog_count">al_get_native_file_dialog_count</a> (d) - 1</code>.  </p>
+<h6 class="description_section">See also</h6>
+<dl class="see_also">
+  <dt><a class="normal" href="al5nativedlg.html#al_create_native_file_dialog">al_create_native_file_dialog</a></dt>
+  <dd>Creates a new native file dialog.</dd>
+  <dt><a class="normal" href="al5nativedlg.html#al_show_native_file_dialog">al_show_native_file_dialog</a></dt>
+  <dd>Shows the dialog window.</dd>
+</dl>
+</td></tr>
+</table>
+<table class="detail wide_list">
+<tr class="list">
+<td class="itemcode"><span id="al_destroy_native_file_dialog"></span><code>PROCEDURE <b>al_destroy_native_file_dialog</b> (dialog: <a  href="al5nativedlg.html#ALLEGRO_FILECHOOSERptr">ALLEGRO_FILECHOOSERptr</a>); CDECL; EXTERNAL ALLEGRO_NATIVE_DLG_LIB_NAME;</code></td>
+</tr>
+<tr><td colspan="1">
+<p>
+Frees up all resources used by the file dialog.</p>
+</td></tr>
+</table>
+<table class="detail wide_list">
+<tr class="list">
+<td class="itemcode"><span id="al_show_native_message_box"></span><code>FUNCTION <b>al_show_native_message_box</b> ( display: <a  href="Allegro5.html#ALLEGRO_DISPLAYptr">ALLEGRO_DISPLAYptr</a>; CONST title, heading, str, buttons: <a  href="al5Base.html#AL_STR">AL_STR</a>; flags: <a  href="al5Base.html#AL_INT">AL_INT</a> ): <a  href="al5Base.html#AL_INT">AL_INT</a>; INLINE;</code></td>
+</tr>
+<tr><td colspan="1">
+<p>
+Shows a native GUI message box. This can be used for example to display an error message if creation of an initial display fails. The display may be <code>Nil</code>, otherwise the given display is treated as the parent if possible.
+
+<p>The message box will have a single &quot;OK&quot; button and use the style informative dialog boxes usually have on the native system. If the <code>buttons</code> parameter is not an empty string, you can instead specify the button text in a string, with buttons separated by a vertical bar (|).
+
+<p><b>Note</b> <code>buttons</code> parameter is currently unimplemented on Windows.
+
+<p>The flags available are: </p>
+
+<dl class="paragraph_spacing">
+  <dt><b><code>ALLEGRO_MESSAGEBOX_WARN</code></b></dt>
+  <dd><p>The message is a warning. This may cause a different icon (or other effects).</p></dd>
+  <dt><b><code>ALLEGRO_MESSAGEBOX_ERROR</code></b></dt>
+  <dd><p>The message is an error.</p></dd>
+  <dt><b><code>ALLEGRO_MESSAGEBOX_QUESTION</code></b></dt>
+  <dd><p>The message is a question.</p></dd>
+  <dt><b><code>ALLEGRO_MESSAGEBOX_OK_CANCEL</code></b></dt>
+  <dd><p>Display a cancel button alongside the &quot;OK&quot; button. Ignored if <code>buttons</code> is not an empty string.</p></dd>
+  <dt><b><code>ALLEGRO_MESSAGEBOX_YES_NO</code></b></dt>
+  <dd><p>Display Yes/No buttons instead of the &quot;OK&quot; button. Ignored if <code>buttons</code> is not an empty string.</p></dd>
+</dl>
+
+<p> <code>al_show_native_message_box</code> may be called without Allegro being installed. This is useful to report an error during initialisation of Allegro itself.
+
+<p><b>Example</b> </p>
+
+<pre class="longcode">
+Button := al_show_native_message_box (
+  Display,
+  <span class="pascal_string">'Warning'</span>,
+  <span class="pascal_string">'Are you sure?'</span>,
+  <span class="pascal_string">'If you click yes then you are confirming that &quot;Yes&quot; '</span>+
+  <span class="pascal_string">'is your response to the query which you have '</span>+
+  <span class="pascal_string">'generated by the action you took to open this '</span>+
+  <span class="pascal_string">'message box.'</span>,
+  <span class="pascal_string">''</span>,
+  ALLEGRO_MESSAGEBOX_YES_NO
+);
+<span class="pascal_keyword">CASE</span> Button <span class="pascal_keyword">OF</span>
+<span class="pascal_numeric">1</span>: <span class="pascal_comment">{ &quot;Yes&quot; pressed }</span>
+ <span class="pascal_numeric"></span>...
+2: <span class="pascal_comment">{ &quot;No&quot; pressed }</span>
+ <span class="pascal_numeric"></span>...
+<span class="pascal_keyword">ELSE</span> <span class="pascal_comment">{ Error }</span>
+ <span class="pascal_numeric"></span>...
+<span class="pascal_keyword">END</span>;</pre>
+
+<p> </p>
+<h6 class="description_section">Returns</h6>
+<p class="return"> </p>
+
+<ul class="paragraph_spacing">
+  <li><p><code><b>0</b></code> if the dialog window was closed without activating a button.</p></li>
+  <li><p><code><b>1</b></code> if the OK or Yes button was pressed.</p></li>
+  <li><p><code><b>2</b></code> if the Cancel or No button was pressed</p></li>
+</ul>
+
+<p> If <code>buttons</code> is not an empty string, the number of the pressed button is returned, starting with 1.
+
+<p>If a message box could not be created then this returns 0, as if the window was dismissed without activating a button. </p></td></tr>
+</table>
+<table class="detail wide_list">
+<tr class="list">
+<td class="itemcode"><span id="al_open_native_text_log"></span><code>FUNCTION <b>al_open_native_text_log</b> (CONST title: <a  href="al5Base.html#AL_STR">AL_STR</a>; flags: <a  href="al5Base.html#AL_INT">AL_INT</a>): <a  href="al5nativedlg.html#ALLEGRO_TEXTLOGptr">ALLEGRO_TEXTLOGptr</a>; CDECL; EXTERNAL ALLEGRO_NATIVE_DLG_LIB_NAME;</code></td>
+</tr>
+<tr><td colspan="1">
+<p>
+Opens a window to which you can append log messages with <a class="normal" href="al5nativedlg.html#al_append_native_text_log">al_append_native_text_log</a>. This can be useful for debugging if you don't want to depend on a console being available.
+
+<p>Use <a class="normal" href="al5nativedlg.html#al_close_native_text_log">al_close_native_text_log</a> to close the window again.     </p>
+<h6 class="description_section">Parameters</h6>
+<dl class="parameters">
+<dt>title</dt>
+<dd>Title of the dialog.</dd>
+<dt>flags</dt>
+<dd>One of: </p>
+
+<dl class="paragraph_spacing">
+  <dt><b><code>ALLEGRO_TEXTLOG_NO_CLOSE</code></b></dt>
+  <dd><p>Prevent the window from having a close button. Otherwise, if the close button is pressed, an event is generated; see <a class="normal" href="al5nativedlg.html#al_get_native_text_log_event_source">al_get_native_text_log_event_source</a>.</p></dd>
+  <dt><b><code>ALLEGRO_TEXTLOG_MONOSPACE</code></b></dt>
+  <dd><p>Use a monospace font to display the text.</p></dd>
+</dl>
+
+<p></dd>
+</dl>
+<h6 class="description_section">Returns</h6>
+<p class="return"><code>Nil</code> if there was an error opening the window, or if text log windows are not implemented on the platform.</p><h6 class="description_section">See also</h6>
+<dl class="see_also">
+  <dt><a class="normal" href="al5nativedlg.html#al_append_native_text_log">al_append_native_text_log</a></dt>
+  <dd>Appends a line of text to the message log window and scrolls to the bottom (if the line would not be visible otherwise).</dd>
+  <dt><a class="normal" href="al5nativedlg.html#al_close_native_text_log">al_close_native_text_log</a></dt>
+  <dd>Closes a message log window opened with <code>al_open_native_text_log</code> earlier.</dd>
+</dl>
+</td></tr>
+</table>
+<table class="detail wide_list">
+<tr class="list">
+<td class="itemcode"><span id="al_close_native_text_log"></span><code>PROCEDURE <b>al_close_native_text_log</b> (textlog: <a  href="al5nativedlg.html#ALLEGRO_TEXTLOGptr">ALLEGRO_TEXTLOGptr</a>); CDECL; EXTERNAL ALLEGRO_NATIVE_DLG_LIB_NAME;</code></td>
+</tr>
+<tr><td colspan="1">
+<p>
+Closes a message log window opened with <code>al_open_native_text_log</code> earlier.
+
+<p>Does nothing if passed <code>Nil</code>. </p>
+<h6 class="description_section">See also</h6>
+<dl class="see_also">
+  <dt><a class="normal" href="al5nativedlg.html#al_open_native_text_log">al_open_native_text_log</a></dt>
+  <dd>Opens a window to which you can append log messages with <a class="normal" href="al5nativedlg.html#al_append_native_text_log">al_append_native_text_log</a>.</dd>
+</dl>
+</td></tr>
+</table>
+<table class="detail wide_list">
+<tr class="list">
+<td class="itemcode"><span id="al_append_native_text_log"></span><code>PROCEDURE <b>al_append_native_text_log</b> (textlog: <a  href="al5nativedlg.html#ALLEGRO_TEXTLOGptr">ALLEGRO_TEXTLOGptr</a>; CONST str: <a  href="al5Base.html#AL_STR">AL_STR</a>); CDECL; EXTERNAL ALLEGRO_NATIVE_DLG_LIB_NAME;</code></td>
+</tr>
+<tr><td colspan="1">
+<p>
+Appends a line of text to the message log window and scrolls to the bottom (if the line would not be visible otherwise). A line is continued until you add a newline character.
+
+<p>If the window is <code>Nil</code> then this function will fall back to calling <code>Write</code>. This makes it convenient to support logging to a window or a terminal.</p>
+</td></tr>
+</table>
+<table class="detail wide_list">
+<tr class="list">
+<td class="itemcode"><span id="al_get_native_text_log_event_source"></span><code>FUNCTION <b>al_get_native_text_log_event_source</b> (textlog: <a  href="al5nativedlg.html#ALLEGRO_TEXTLOGptr">ALLEGRO_TEXTLOGptr</a>) : <a  href="Allegro5.html#ALLEGRO_EVENT_SOURCEptr">ALLEGRO_EVENT_SOURCEptr</a>; CDECL; EXTERNAL ALLEGRO_NATIVE_DLG_LIB_NAME;</code></td>
+</tr>
+<tr><td colspan="1">
+<p>
+Get an event source for a text log window. The possible events are: </p>
+
+<dl class="paragraph_spacing">
+  <dt><b><code>ALLEGRO_EVENT_NATIVE_DIALOG_CLOSE</code></b></dt>
+  <dd><p>The window was requested to be closed, either by pressing the close button or pressing Escape on the keyboard. The <code>user.data1</code> field will hold a pointer to the <code>ALLEGRO_TEXTLOG</code> which generated the event. The <code>user.data2</code> field will be <code>1</code> if the event was generated as a result of a key press; otherwise it will be zero.</p></dd>
+</dl>
+
+<p></p>
+</td></tr>
+</table>
+<table class="detail wide_list">
+<tr class="list">
+<td class="itemcode"><span id="al_create_menu"></span><code>FUNCTION <b>al_create_menu</b>: <a  href="al5nativedlg.html#ALLEGRO_MENUptr">ALLEGRO_MENUptr</a>; CDECL; EXTERNAL ALLEGRO_NATIVE_DLG_LIB_NAME;</code></td>
+</tr>
+<tr><td colspan="1">
+<p>
+Creates a menu container that can hold menu items.    </p>
+<h6 class="description_section">Returns</h6>
+<p class="return">Pointer to the menu struct or <code>Nil</code> on failure.</p><h6 class="description_section">See also</h6>
+<dl class="see_also">
+  <dt><a class="normal" href="al5nativedlg.html#al_create_popup_menu">al_create_popup_menu</a></dt>
+  <dd>Creates a menu container for popup menus.</dd>
+  <dt><a class="normal" href="al5nativedlg.html#al_build_menu">al_build_menu</a></dt>
+  <dd>Builds a menu based on the specifications of a sequence of <code>ALLEGRO_MENU_INFO</code> elements.</dd>
+  <dt><a class="normal" href="al5nativedlg.html#al_set_display_menu">al_set_display_menu</a></dt>
+  <dd>Associates the <code>menu</code> with the <code>display</code> and shows it.</dd>
+</dl>
+</td></tr>
+</table>
+<table class="detail wide_list">
+<tr class="list">
+<td class="itemcode"><span id="al_create_popup_menu"></span><code>FUNCTION <b>al_create_popup_menu</b>: <a  href="al5nativedlg.html#ALLEGRO_MENUptr">ALLEGRO_MENUptr</a>; CDECL; EXTERNAL ALLEGRO_NATIVE_DLG_LIB_NAME;</code></td>
+</tr>
+<tr><td colspan="1">
+<p>
+Creates a menu container for popup menus. Only the root (outermost) menu should be created with this function. Sub menus of popups should be created with <a class="normal" href="al5nativedlg.html#al_create_menu">al_create_menu</a>.    </p>
+<h6 class="description_section">Returns</h6>
+<p class="return">Pointer to the menu struct or <code>Nil</code> on failure.</p><h6 class="description_section">See also</h6>
+<dl class="see_also">
+  <dt><a class="normal" href="al5nativedlg.html#al_create_menu">al_create_menu</a></dt>
+  <dd>Creates a menu container that can hold menu items.</dd>
+  <dt><a class="normal" href="al5nativedlg.html#al_build_menu">al_build_menu</a></dt>
+  <dd>Builds a menu based on the specifications of a sequence of <code>ALLEGRO_MENU_INFO</code> elements.</dd>
+  <dt><a class="normal" href="al5nativedlg.html#al_popup_menu">al_popup_menu</a></dt>
+  <dd>Displays a context menu next to the mouse cursor.</dd>
+</dl>
+</td></tr>
+</table>
+<table class="detail wide_list">
+<tr class="list">
+<td class="itemcode"><span id="al_build_menu"></span><code>FUNCTION <b>al_build_menu</b> (VAR info: ARRAY OF <a  href="al5nativedlg.ALLEGRO_MENU_INFO.html">ALLEGRO_MENU_INFO</a>): <a  href="al5nativedlg.html#ALLEGRO_MENUptr">ALLEGRO_MENUptr</a>; CDECL; EXTERNAL ALLEGRO_NATIVE_DLG_LIB_NAME;</code></td>
+</tr>
+<tr><td colspan="1">
+<p>
+Builds a menu based on the specifications of a sequence of <code>ALLEGRO_MENU_INFO</code> elements.    </p>
+<h6 class="description_section">Returns</h6>
+<p class="return">A pointer to the root <code>ALLEGRO_MENU</code>, or <code>Nil</code> on failure. To gain access to the other menus and items, you will need to search for them using <a class="normal" href="al5nativedlg.html#al_find_menu_item">al_find_menu_item</a>.</p><h6 class="description_section">See also</h6>
+<dl class="see_also">
+  <dt><a class="normal" href="al5nativedlg.ALLEGRO_MENU_INFO.html">ALLEGRO_MENU_INFO</a></dt>
+  <dd>A structure that defines how to create a complete menu system.</dd>
+  <dt><a class="normal" href="al5nativedlg.html#al_create_menu">al_create_menu</a></dt>
+  <dd>Creates a menu container that can hold menu items.</dd>
+  <dt><a class="normal" href="al5nativedlg.html#al_create_popup_menu">al_create_popup_menu</a></dt>
+  <dd>Creates a menu container for popup menus.</dd>
+</dl>
+</td></tr>
+</table>
+<table class="detail wide_list">
+<tr class="list">
+<td class="itemcode"><span id="al_append_menu_item"></span><code>FUNCTION <b>al_append_menu_item</b> ( parent: <a  href="al5nativedlg.html#ALLEGRO_MENUptr">ALLEGRO_MENUptr</a>; CONST title: <a  href="al5Base.html#AL_STRptr">AL_STRptr</a>; id: <a  href="al5Base.html#AL_UINT16">AL_UINT16</a>; flags: <a  href="al5Base.html#AL_INT">AL_INT</a>; icon: <a  href="Allegro5.html#ALLEGRO_BITMAPptr">ALLEGRO_BITMAPptr</a>; submenu: <a  href="al5nativedlg.html#ALLEGRO_MENUptr">ALLEGRO_MENUptr</a> ): <a  href="al5Base.html#AL_INT">AL_INT</a>; CDECL; EXTERNAL ALLEGRO_NATIVE_DLG_LIB_NAME;</code></td>
+</tr>
+<tr><td colspan="1">
+<p>
+Appends a menu item to the end of the menu. See <a class="normal" href="al5nativedlg.html#al_insert_menu_item">al_insert_menu_item</a> for more information.  </p>
+<h6 class="description_section">See also</h6>
+<dl class="see_also">
+  <dt><a class="normal" href="al5nativedlg.html#al_insert_menu_item">al_insert_menu_item</a></dt>
+  <dd>Inserts a menu item at the spot specified.</dd>
+  <dt><a class="normal" href="al5nativedlg.html#al_remove_menu_item">al_remove_menu_item</a></dt>
+  <dd>Removes the specified item from the menu and destroys it.</dd>
+</dl>
+</td></tr>
+</table>
+<table class="detail wide_list">
+<tr class="list">
+<td class="itemcode"><span id="al_insert_menu_item"></span><code>FUNCTION <b>al_insert_menu_item</b> ( parent: <a  href="al5nativedlg.html#ALLEGRO_MENUptr">ALLEGRO_MENUptr</a>; pos: <a  href="al5Base.html#AL_INT">AL_INT</a>; CONST title: <a  href="al5Base.html#AL_STRptr">AL_STRptr</a>; id: <a  href="al5Base.html#AL_UINT16">AL_UINT16</a>; flags: <a  href="al5Base.html#AL_INT">AL_INT</a>; icon: <a  href="Allegro5.html#ALLEGRO_BITMAPptr">ALLEGRO_BITMAPptr</a>; submenu: <a  href="al5nativedlg.html#ALLEGRO_MENUptr">ALLEGRO_MENUptr</a> ): <a  href="al5Base.html#AL_BOOL">AL_BOOL</a>; CDECL; EXTERNAL ALLEGRO_NATIVE_DLG_LIB_NAME;</code></td>
+</tr>
+<tr><td colspan="1">
+<p>
+Inserts a menu item at the spot specified. See the introductory text for a detailed explanation of how the <code>pos</code> parameter is interpreted.       </p>
+<h6 class="description_section">Parameters</h6>
+<dl class="parameters">
+<dt>parent</dt>
+<dd>Can be a popup menu or a regular menu. To underline one character in the title, prefix it with an ampersand.</dd>
+<dt>flags</dt>
+<dd>Can be any combination (<code>OR</code>) of: </p>
+
+<dl class="paragraph_spacing">
+  <dt><code><b>ALLEGRO_MENU_ITEM_DISABLED</b></code></dt>
+  <dd><p>The item is <i>&quot;grayed out&quot;</i> and cannot be selected.</p></dd>
+  <dt><code><b>ALLEGRO_MENU_ITEM_CHECKBOX</b></code></dt>
+  <dd><p>The item is a check box. This flag can only be set at the time the menu is created. If a check box is clicked, it will automatically be toggled.</p></dd>
+  <dt><code><b>ALLEGRO_MENU_ITEM_CHECKED</b></code></dt>
+  <dd><p>The item is checked. If set, <code>ALLEGRO_MENU_ITEM_CHECKBOX</code> will automatically be set as well.</p></dd>
+</dl>
+
+<p></dd>
+<dt>icon</dt>
+<dd>Not yet supported.</dd>
+<dt>submenu</dt>
+<dd>Indicates that this item contains a child menu. The child menu must have previously been created with <a class="normal" href="al5nativedlg.html#al_create_menu">al_create_menu</a>, and not be associated with any other menu.</dd>
+</dl>
+<h6 class="description_section">Returns</h6>
+<p class="return"><code>True</code> on success.</p><h6 class="description_section">See also</h6>
+<dl class="see_also">
+  <dt><a class="normal" href="al5nativedlg.html#al_append_menu_item">al_append_menu_item</a></dt>
+  <dd>Appends a menu item to the end of the menu.</dd>
+  <dt><a class="normal" href="al5nativedlg.html#al_remove_menu_item">al_remove_menu_item</a></dt>
+  <dd>Removes the specified item from the menu and destroys it.</dd>
+</dl>
+</td></tr>
+</table>
+<table class="detail wide_list">
+<tr class="list">
+<td class="itemcode"><span id="al_remove_menu_item"></span><code>FUNCTION <b>al_remove_menu_item</b> (menu: <a  href="al5nativedlg.html#ALLEGRO_MENUptr">ALLEGRO_MENUptr</a>; pos: <a  href="al5Base.html#AL_INT">AL_INT</a>): <a  href="al5Base.html#AL_BOOL">AL_BOOL</a>; CDECL; EXTERNAL ALLEGRO_NATIVE_DLG_LIB_NAME;</code></td>
+</tr>
+<tr><td colspan="1">
+<p>
+Removes the specified item from the menu and destroys it. If the item contains a sub-menu, it too is destroyed. Any references to it are invalidated. If you want to preserve that sub-menu, you should first make a copy with <a class="normal" href="al5nativedlg.html#al_clone_menu">al_clone_menu</a>.
+
+<p>This is safe to call on a menu that is currently being displayed.    </p>
+<h6 class="description_section">Returns</h6>
+<p class="return"><code>True</code> if an item was removed.</p><h6 class="description_section">See also</h6>
+<dl class="see_also">
+  <dt><a class="normal" href="al5nativedlg.html#al_append_menu_item">al_append_menu_item</a></dt>
+  <dd>Appends a menu item to the end of the menu.</dd>
+  <dt><a class="normal" href="al5nativedlg.html#al_insert_menu_item">al_insert_menu_item</a></dt>
+  <dd>Inserts a menu item at the spot specified.</dd>
+  <dt><a class="normal" href="al5nativedlg.html#al_destroy_menu">al_destroy_menu</a></dt>
+  <dd>Destroys an entire menu, including its sub-menus.</dd>
+</dl>
+</td></tr>
+</table>
+<table class="detail wide_list">
+<tr class="list">
+<td class="itemcode"><span id="al_clone_menu"></span><code>FUNCTION <b>al_clone_menu</b> (menu: <a  href="al5nativedlg.html#ALLEGRO_MENUptr">ALLEGRO_MENUptr</a>): <a  href="al5nativedlg.html#ALLEGRO_MENUptr">ALLEGRO_MENUptr</a>; CDECL; EXTERNAL ALLEGRO_NATIVE_DLG_LIB_NAME;</code></td>
+</tr>
+<tr><td colspan="1">
+<p>
+Makes a copy of a menu so that it can be reused on another display. The menu being cloned can be anything: a regular menu, a popup menu, or a sub-menu.  </p>
+<h6 class="description_section">Returns</h6>
+<p class="return">The cloned menu.</p><h6 class="description_section">See also</h6>
+<dl class="see_also">
+  <dt><a class="normal" href="al5nativedlg.html#al_clone_menu_for_popup">al_clone_menu_for_popup</a></dt>
+  <dd>Exactly like <a class="normal" href="al5nativedlg.html#al_clone_menu">al_clone_menu</a>, except that the copy is for a popup menu.</dd>
+</dl>
+</td></tr>
+</table>
+<table class="detail wide_list">
+<tr class="list">
+<td class="itemcode"><span id="al_clone_menu_for_popup"></span><code>FUNCTION <b>al_clone_menu_for_popup</b> (menu: <a  href="al5nativedlg.html#ALLEGRO_MENUptr">ALLEGRO_MENUptr</a>): <a  href="al5nativedlg.html#ALLEGRO_MENUptr">ALLEGRO_MENUptr</a>; CDECL; EXTERNAL ALLEGRO_NATIVE_DLG_LIB_NAME;</code></td>
+</tr>
+<tr><td colspan="1">
+<p>
+Exactly like <a class="normal" href="al5nativedlg.html#al_clone_menu">al_clone_menu</a>, except that the copy is for a popup menu.</p>
+</td></tr>
+</table>
+<table class="detail wide_list">
+<tr class="list">
+<td class="itemcode"><span id="al_destroy_menu"></span><code>PROCEDURE <b>al_destroy_menu</b> (menu: <a  href="al5nativedlg.html#ALLEGRO_MENUptr">ALLEGRO_MENUptr</a>); CDECL; EXTERNAL ALLEGRO_NATIVE_DLG_LIB_NAME;</code></td>
+</tr>
+<tr><td colspan="1">
+<p>
+Destroys an entire menu, including its sub-menus. Any references to it or a sub-menu are no longer valid. It is safe to call this on a menu that is currently being displayed. </p>
+<h6 class="description_section">See also</h6>
+<dl class="see_also">
+  <dt><a class="normal" href="al5nativedlg.html#al_remove_menu_item">al_remove_menu_item</a></dt>
+  <dd>Removes the specified item from the menu and destroys it.</dd>
+</dl>
+</td></tr>
+</table>
+<table class="detail wide_list">
+<tr class="list">
+<td class="itemcode"><span id="al_get_menu_item_caption"></span><code>FUNCTION <b>al_get_menu_item_caption</b> (menu: <a  href="al5nativedlg.html#ALLEGRO_MENUptr">ALLEGRO_MENUptr</a>; pos: <a  href="al5Base.html#AL_INT">AL_INT</a>) : <a  href="al5Base.html#AL_STRptr">AL_STRptr</a>; CDECL; EXTERNAL ALLEGRO_NATIVE_DLG_LIB_NAME;</code></td>
+</tr>
+<tr><td colspan="1">
+<p>
+Returns the caption associated with the menu item. It is valid as long as the caption is not modified.
+
+<p>Returns <code>Nil</code> if the item was not found. </p>
+<h6 class="description_section">See also</h6>
+<dl class="see_also">
+  <dt><a class="normal" href="al5nativedlg.html#al_set_menu_item_caption">al_set_menu_item_caption</a></dt>
+  <dd>Updates the menu item caption with the new caption.</dd>
+</dl>
+</td></tr>
+</table>
+<table class="detail wide_list">
+<tr class="list">
+<td class="itemcode"><span id="al_set_menu_item_caption"></span><code>PROCEDURE <b>al_set_menu_item_caption</b> (menu: <a  href="al5nativedlg.html#ALLEGRO_MENUptr">ALLEGRO_MENUptr</a>; pos: <a  href="al5Base.html#AL_INT">AL_INT</a>; CONST caption: <a  href="al5Base.html#AL_STR">AL_STR</a>); CDECL; EXTERNAL ALLEGRO_NATIVE_DLG_LIB_NAME;</code></td>
+</tr>
+<tr><td colspan="1">
+<p>
+Updates the menu item caption with the new caption. This will invalidate any previous calls to <a class="normal" href="al5nativedlg.html#al_get_menu_item_caption">al_get_menu_item_caption</a>. </p>
+<h6 class="description_section">See also</h6>
+<dl class="see_also">
+  <dt><a class="normal" href="al5nativedlg.html#al_get_menu_item_caption">al_get_menu_item_caption</a></dt>
+  <dd>Returns the caption associated with the menu item.</dd>
+</dl>
+</td></tr>
+</table>
+<table class="detail wide_list">
+<tr class="list">
+<td class="itemcode"><span id="al_get_menu_item_flags"></span><code>FUNCTION <b>al_get_menu_item_flags</b> (menu: <a  href="al5nativedlg.html#ALLEGRO_MENUptr">ALLEGRO_MENUptr</a>; pos: <a  href="al5Base.html#AL_INT">AL_INT</a>): <a  href="al5Base.html#AL_INT">AL_INT</a>; CDECL; EXTERNAL ALLEGRO_NATIVE_DLG_LIB_NAME;</code></td>
+</tr>
+<tr><td colspan="1">
+<p>
+Returns the currently set flags. See <a class="normal" href="al5nativedlg.html#al_insert_menu_item">al_insert_menu_item</a> for a description of the available flags.
+
+<p>Returns <code>-1</code> if the item was not found. </p>
+<h6 class="description_section">See also</h6>
+<dl class="see_also">
+  <dt><a class="normal" href="al5nativedlg.html#al_set_menu_item_flags">al_set_menu_item_flags</a></dt>
+  <dd>Updates the menu item's flags.</dd>
+</dl>
+</td></tr>
+</table>
+<table class="detail wide_list">
+<tr class="list">
+<td class="itemcode"><span id="al_set_menu_item_flags"></span><code>PROCEDURE <b>al_set_menu_item_flags</b> (menu: <a  href="al5nativedlg.html#ALLEGRO_MENUptr">ALLEGRO_MENUptr</a>; pos, flags: <a  href="al5Base.html#AL_INT">AL_INT</a>); CDECL; EXTERNAL ALLEGRO_NATIVE_DLG_LIB_NAME;</code></td>
+</tr>
+<tr><td colspan="1">
+<p>
+Updates the menu item's flags. See <a class="normal" href="al5nativedlg.html#al_insert_menu_item">al_insert_menu_item</a> for a description of the available flags. </p>
+<h6 class="description_section">See also</h6>
+<dl class="see_also">
+  <dt><a class="normal" href="al5nativedlg.html#al_get_menu_item_flags">al_get_menu_item_flags</a></dt>
+  <dd>Returns the currently set flags.</dd>
+</dl>
+</td></tr>
+</table>
+<table class="detail wide_list">
+<tr class="list">
+<td class="itemcode"><span id="al_get_menu_item_icon"></span><code>FUNCTION <b>al_get_menu_item_icon</b> (menu: <a  href="al5nativedlg.html#ALLEGRO_MENUptr">ALLEGRO_MENUptr</a>; pos: <a  href="al5Base.html#AL_INT">AL_INT</a>) : <a  href="Allegro5.html#ALLEGRO_BITMAPptr">ALLEGRO_BITMAPptr</a>; CDECL; EXTERNAL ALLEGRO_NATIVE_DLG_LIB_NAME;</code></td>
+</tr>
+<tr><td colspan="1">
+<p>
+Returns the icon associated with the menu. It is safe to draw to the returned bitmap, but you must call <a class="normal" href="al5nativedlg.html#al_set_menu_item_icon">al_set_menu_item_icon</a> in order for the changes to be applied.
+
+<p>Returns <code>Nil</code> if the item was not found or if it has no icon. </p>
+<h6 class="description_section">See also</h6>
+<dl class="see_also">
+  <dt><a class="normal" href="al5nativedlg.html#al_set_menu_item_icon">al_set_menu_item_icon</a></dt>
+  <dd>Sets the icon for the specified menu item.</dd>
+</dl>
+</td></tr>
+</table>
+<table class="detail wide_list">
+<tr class="list">
+<td class="itemcode"><span id="al_set_menu_item_icon"></span><code>PROCEDURE <b>al_set_menu_item_icon</b> (menu: <a  href="al5nativedlg.html#ALLEGRO_MENUptr">ALLEGRO_MENUptr</a>; pos: <a  href="al5Base.html#AL_INT">AL_INT</a>; icon: <a  href="Allegro5.html#ALLEGRO_BITMAPptr">ALLEGRO_BITMAPptr</a>); CDECL; EXTERNAL ALLEGRO_NATIVE_DLG_LIB_NAME;</code></td>
+</tr>
+<tr><td colspan="1">
+<p>
+Sets the icon for the specified menu item. The menu assumes ownership of the <code>ALLEGRO_BITMAP</code> and may invalidate the pointer, so you must clone it if you wish to continue using it.
+
+<p>If a video bitmap is passed, it will automatically be converted to a memory bitmap, so it is preferrable to pass a memory bitmap.  </p>
+<h6 class="description_section">See also</h6>
+<dl class="see_also">
+  <dt><a class="normal" href="al5nativedlg.html#al_get_menu_item_icon">al_get_menu_item_icon</a></dt>
+  <dd>Returns the icon associated with the menu.</dd>
+  <dt><a class="normal" href="Allegro5.html#al_clone_bitmap">al_clone_bitmap</a></dt>
+  <dd>Creates a new bitmap with <code>al_create_bitmap</code>, and copyes the pixel data from the old bitmap across.</dd>
+</dl>
+</td></tr>
+</table>
+<table class="detail wide_list">
+<tr class="list">
+<td class="itemcode"><span id="al_toggle_menu_item_flags"></span><code>FUNCTION <b>al_toggle_menu_item_flags</b> (menu: <a  href="al5nativedlg.html#ALLEGRO_MENUptr">ALLEGRO_MENUptr</a>; pos, flags: <a  href="al5Base.html#AL_INT">AL_INT</a>): <a  href="al5Base.html#AL_INT">AL_INT</a>; CDECL; EXTERNAL ALLEGRO_NATIVE_DLG_LIB_NAME;</code></td>
+</tr>
+<tr><td colspan="1">
+<p>
+Toggles the specified menu item's flags. See <a class="normal" href="al5nativedlg.html#al_insert_menu_item">al_insert_menu_item</a> for a description of the available flags. 
+
+<p><b>Unstable API:</b> Redundant with <code>al_get/set_menu_item_flags</code>.  </p>
+<h6 class="description_section">Returns</h6>
+<p class="return">A bitfield of only the specified flags that are set after the toggle. A flag that was not toggled will not be returned, even if it is set. Returns <code>-1</code> if the <code>id</code> is invalid.</p><h6 class="description_section">See also</h6>
+<dl class="see_also">
+  <dt><a class="normal" href="al5nativedlg.html#al_get_menu_item_flags">al_get_menu_item_flags</a></dt>
+  <dd>Returns the currently set flags.</dd>
+  <dt><a class="normal" href="al5nativedlg.html#al_set_menu_item_flags">al_set_menu_item_flags</a></dt>
+  <dd>Updates the menu item's flags.</dd>
+</dl>
+</td></tr>
+</table>
+<table class="detail wide_list">
+<tr class="list">
+<td class="itemcode"><span id="al_find_menu"></span><code>FUNCTION <b>al_find_menu</b> (haystack: <a  href="al5nativedlg.html#ALLEGRO_MENUptr">ALLEGRO_MENUptr</a>; id: <a  href="al5Base.html#AL_UINT16">AL_UINT16</a>) : <a  href="al5nativedlg.html#ALLEGRO_MENUptr">ALLEGRO_MENUptr</a>; CDECL; EXTERNAL ALLEGRO_NATIVE_DLG_LIB_NAME;</code></td>
+</tr>
+<tr><td colspan="1">
+<p>
+Searches in the <code>haystack</code> menu for any submenu with the given <code>id</code>. (Note that this only represents a literal ID, and cannot be used as an index.)  </p>
+<h6 class="description_section">Returns</h6>
+<p class="return">The menu, if found. Otherwise returns <code>Nil</code>.</p><h6 class="description_section">See also</h6>
+<dl class="see_also">
+  <dt><a class="normal" href="al5nativedlg.html#al_find_menu_item">al_find_menu_item</a></dt>
+  <dd>Searches in the <code>haystack</code> menu for an item with the given <code>id</code>.</dd>
+</dl>
+</td></tr>
+</table>
+<table class="detail wide_list">
+<tr class="list">
+<td class="itemcode"><span id="al_find_menu_item"></span><code>FUNCTION <b>al_find_menu_item</b> ( haystack: <a  href="al5nativedlg.html#ALLEGRO_MENUptr">ALLEGRO_MENUptr</a>; id: <a  href="al5Base.html#AL_INT16">AL_INT16</a>; menu: <a  href="al5nativedlg.html#ALLEGRO_MENUptrptr">ALLEGRO_MENUptrptr</a>; index: <a  href="al5Base.html#AL_INTptr">AL_INTptr</a> ): <a  href="al5Base.html#AL_BOOL">AL_BOOL</a>; CDECL; EXTERNAL ALLEGRO_NATIVE_DLG_LIB_NAME;</code></td>
+</tr>
+<tr><td colspan="1">
+<p>
+Searches in the <code>haystack</code> menu for an item with the given <code>id</code>. (Note that this only represents a literal ID, and cannot be used as an index.)
+
+<p>If <code>menu</code> and <code>index</code> are not <code>Nil</code>, they will be set as the parent menu containing the item and the zero-based (positive) index of the item. (If the menu item was not found, then their values are undefined.)  </p>
+<h6 class="description_section">Returns</h6>
+<p class="return"><code>True</code> if the menu item was found.</p><h6 class="description_section">See also</h6>
+<dl class="see_also">
+  <dt><a class="normal" href="al5nativedlg.html#al_find_menu">al_find_menu</a></dt>
+  <dd>Searches in the <code>haystack</code> menu for any submenu with the given <code>id</code>.</dd>
+</dl>
+</td></tr>
+</table>
+<table class="detail wide_list">
+<tr class="list">
+<td class="itemcode"><span id="al_get_default_menu_event_source"></span><code>FUNCTION <b>al_get_default_menu_event_source</b>: <a  href="Allegro5.html#ALLEGRO_EVENT_SOURCEptr">ALLEGRO_EVENT_SOURCEptr</a>; CDECL; EXTERNAL ALLEGRO_NATIVE_DLG_LIB_NAME;</code></td>
+</tr>
+<tr><td colspan="1">
+<p>
+Returns the default event source used for menu clicks. If a menu was not given its own event source via <a class="normal" href="al5nativedlg.html#al_enable_menu_event_source">al_enable_menu_event_source</a>, then it will use this default source.   </p>
+<h6 class="description_section">See also</h6>
+<dl class="see_also">
+  <dt><a class="normal" href="Allegro5.html#al_register_event_source">al_register_event_source</a></dt>
+  <dd>Register the event source with the event queue specified.</dd>
+  <dt><a class="normal" href="al5nativedlg.html#al_enable_menu_event_source">al_enable_menu_event_source</a></dt>
+  <dd>Enables a unique event source for this <code>menu</code>.</dd>
+  <dt><a class="normal" href="al5nativedlg.html#al_disable_menu_event_source">al_disable_menu_event_source</a></dt>
+  <dd>Disables a unique event source for the <code>menu</code>, causing it to use the default event source.</dd>
+</dl>
+</td></tr>
+</table>
+<table class="detail wide_list">
+<tr class="list">
+<td class="itemcode"><span id="al_enable_menu_event_source"></span><code>FUNCTION <b>al_enable_menu_event_source</b> (menu: <a  href="al5nativedlg.html#ALLEGRO_MENUptr">ALLEGRO_MENUptr</a>) : <a  href="Allegro5.html#ALLEGRO_EVENT_SOURCEptr">ALLEGRO_EVENT_SOURCEptr</a>; CDECL; EXTERNAL ALLEGRO_NATIVE_DLG_LIB_NAME;</code></td>
+</tr>
+<tr><td colspan="1">
+<p>
+Enables a unique event source for this <code>menu</code>. It and all of its sub-menus will use this event source. (It is safe to call this multiple times on the same menu.)    </p>
+<h6 class="description_section">Returns</h6>
+<p class="return">The event source.</p><h6 class="description_section">See also</h6>
+<dl class="see_also">
+  <dt><a class="normal" href="Allegro5.html#al_register_event_source">al_register_event_source</a></dt>
+  <dd>Register the event source with the event queue specified.</dd>
+  <dt><a class="normal" href="al5nativedlg.html#al_get_default_menu_event_source">al_get_default_menu_event_source</a></dt>
+  <dd>Returns the default event source used for menu clicks.</dd>
+  <dt><a class="normal" href="al5nativedlg.html#al_disable_menu_event_source">al_disable_menu_event_source</a></dt>
+  <dd>Disables a unique event source for the <code>menu</code>, causing it to use the default event source.</dd>
+</dl>
+</td></tr>
+</table>
+<table class="detail wide_list">
+<tr class="list">
+<td class="itemcode"><span id="al_disable_menu_event_source"></span><code>PROCEDURE <b>al_disable_menu_event_source</b> (menu: <a  href="al5nativedlg.html#ALLEGRO_MENUptr">ALLEGRO_MENUptr</a>); CDECL; EXTERNAL ALLEGRO_NATIVE_DLG_LIB_NAME;</code></td>
+</tr>
+<tr><td colspan="1">
+<p>
+Disables a unique event source for the <code>menu</code>, causing it to use the default event source.  </p>
+<h6 class="description_section">See also</h6>
+<dl class="see_also">
+  <dt><a class="normal" href="al5nativedlg.html#al_get_default_menu_event_source">al_get_default_menu_event_source</a></dt>
+  <dd>Returns the default event source used for menu clicks.</dd>
+  <dt><a class="normal" href="al5nativedlg.html#al_enable_menu_event_source">al_enable_menu_event_source</a></dt>
+  <dd>Enables a unique event source for this <code>menu</code>.</dd>
+</dl>
+</td></tr>
+</table>
+<table class="detail wide_list">
+<tr class="list">
+<td class="itemcode"><span id="al_get_display_menu"></span><code>FUNCTION <b>al_get_display_menu</b> (display: <a  href="Allegro5.html#ALLEGRO_DISPLAYptr">ALLEGRO_DISPLAYptr</a>): <a  href="al5nativedlg.html#ALLEGRO_MENUptr">ALLEGRO_MENUptr</a>; CDECL; EXTERNAL ALLEGRO_NATIVE_DLG_LIB_NAME;</code></td>
+</tr>
+<tr><td colspan="1">
+<p>
+Returns the menu associated with the <code>display</code>, or <code>Nil</code> if it does not have a menu. </p>
+<h6 class="description_section">See also</h6>
+<dl class="see_also">
+  <dt><a class="normal" href="al5nativedlg.html#al_set_display_menu">al_set_display_menu</a></dt>
+  <dd>Associates the <code>menu</code> with the <code>display</code> and shows it.</dd>
+</dl>
+</td></tr>
+</table>
+<table class="detail wide_list">
+<tr class="list">
+<td class="itemcode"><span id="al_set_display_menu"></span><code>FUNCTION <b>al_set_display_menu</b> (display: <a  href="Allegro5.html#ALLEGRO_DISPLAYptr">ALLEGRO_DISPLAYptr</a>; menu: <a  href="al5nativedlg.html#ALLEGRO_MENUptr">ALLEGRO_MENUptr</a>): <a  href="al5Base.html#AL_BOOL">AL_BOOL</a>; CDECL; EXTERNAL ALLEGRO_NATIVE_DLG_LIB_NAME;</code></td>
+</tr>
+<tr><td colspan="1">
+<p>
+Associates the <code>menu</code> with the <code>display</code> and shows it. If there was a previous menu associated with the display, it will be destroyed. If you don't want that to happen, you should first remove the menu with <a class="normal" href="al5nativedlg.html#al_remove_display_menu">al_remove_display_menu</a>.
+
+<p>If the menu is already attached to a display, it will not be attached to the new display. If <code>menu</code> is <code>Nil</code>, the current menu will still be destroyed.
+
+<p><b>Note</b>
+
+<p>Attaching a menu may cause the window as available to your application to be resized! You should listen for a resize event, check how much space was lost, and resize the window accordingly if you want to maintain your window's prior size.   </p>
+<h6 class="description_section">Returns</h6>
+<p class="return"><code>True</code> if successful.</p><h6 class="description_section">See also</h6>
+<dl class="see_also">
+  <dt><a class="normal" href="al5nativedlg.html#al_create_menu">al_create_menu</a></dt>
+  <dd>Creates a menu container that can hold menu items.</dd>
+  <dt><a class="normal" href="al5nativedlg.html#al_remove_display_menu">al_remove_display_menu</a></dt>
+  <dd>Detaches the menu associated with the display and returns it.</dd>
+</dl>
+</td></tr>
+</table>
+<table class="detail wide_list">
+<tr class="list">
+<td class="itemcode"><span id="al_popup_menu"></span><code>FUNCTION <b>al_popup_menu</b> (popup: <a  href="al5nativedlg.html#ALLEGRO_MENUptr">ALLEGRO_MENUptr</a>; display: <a  href="Allegro5.html#ALLEGRO_DISPLAYptr">ALLEGRO_DISPLAYptr</a>): <a  href="al5Base.html#AL_BOOL">AL_BOOL</a>; CDECL; EXTERNAL ALLEGRO_NATIVE_DLG_LIB_NAME;</code></td>
+</tr>
+<tr><td colspan="1">
+<p>
+Displays a context menu next to the mouse cursor. The menu must have been created with <a class="normal" href="al5nativedlg.html#al_create_popup_menu">al_create_popup_menu</a>. It generates events just like a regular display menu does. It is possible that the menu will be canceled without any selection being made.   </p>
+<h6 class="description_section">Parameters</h6>
+<dl class="parameters">
+<dt>display</dt>
+<dd>Indicates which window the menu is associated with (when you process the menu click event), but does not actually affect where the menu is located on the screen.</dd>
+</dl>
+<h6 class="description_section">Returns</h6>
+<p class="return"><code>True</code> if the context menu was displayed.</p><h6 class="description_section">See also</h6>
+<dl class="see_also">
+  <dt><a class="normal" href="al5nativedlg.html#al_create_popup_menu">al_create_popup_menu</a></dt>
+  <dd>Creates a menu container for popup menus.</dd>
+</dl>
+</td></tr>
+</table>
+<table class="detail wide_list">
+<tr class="list">
+<td class="itemcode"><span id="al_remove_display_menu"></span><code>FUNCTION <b>al_remove_display_menu</b> (display: <a  href="Allegro5.html#ALLEGRO_DISPLAYptr">ALLEGRO_DISPLAYptr</a>): <a  href="al5nativedlg.html#ALLEGRO_MENUptr">ALLEGRO_MENUptr</a>; CDECL; EXTERNAL ALLEGRO_NATIVE_DLG_LIB_NAME;</code></td>
+</tr>
+<tr><td colspan="1">
+<p>
+Detaches the menu associated with the display and returns it. The menu can then be used on a different display.
+
+<p>If you simply want to destroy the active menu, you can call <a class="normal" href="al5nativedlg.html#al_set_display_menu">al_set_display_menu</a> with a <code>Nil</code> menu. </p>
+<h6 class="description_section">See also</h6>
+<dl class="see_also">
+  <dt><a class="normal" href="al5nativedlg.html#al_set_display_menu">al_set_display_menu</a></dt>
+  <dd>Associates the <code>menu</code> with the <code>display</code> and shows it.</dd>
+</dl>
+</td></tr>
+</table>
+<table class="detail wide_list">
+<tr class="list">
+<td class="itemcode"><span id="al_get_allegro_native_dialog_version"></span><code>FUNCTION <b>al_get_allegro_native_dialog_version</b>: <a  href="al5Base.html#AL_UINT32">AL_UINT32</a>; CDECL; EXTERNAL ALLEGRO_NATIVE_DLG_LIB_NAME;</code></td>
+</tr>
+<tr><td colspan="1">
+<p>
+Returns the (compiled) version of the addon, in the same format as <a class="normal" href="Allegro5.html#al_get_allegro_version">al_get_allegro_version</a>.</p>
+</td></tr>
+</table>
+<h3 class="detail">Types</h3>
+<table class="detail wide_list">
+<tr class="list">
+<td class="itemcode"><span id="ALLEGRO_FILECHOOSERptr"></span><code><b>ALLEGRO_FILECHOOSERptr</b> = <a  href="al5Base.html#AL_POINTER">AL_POINTER</a>;</code></td>
+</tr>
+<tr><td colspan="1">
+<p>
+Opaque handle to a native file dialog. </p>
+<h6 class="description_section">See also</h6>
+<dl class="see_also">
+  <dt><a class="normal" href="al5nativedlg.html#al_create_native_file_dialog">al_create_native_file_dialog</a></dt>
+  <dd>Creates a new native file dialog.</dd>
+</dl>
+</td></tr>
+</table>
+<table class="detail wide_list">
+<tr class="list">
+<td class="itemcode"><span id="ALLEGRO_TEXTLOGptr"></span><code><b>ALLEGRO_TEXTLOGptr</b> = <a  href="al5Base.html#AL_POINTER">AL_POINTER</a>;</code></td>
+</tr>
+<tr><td colspan="1">
+<p>
+Opaque handle to a text log window. </p>
+<h6 class="description_section">See also</h6>
+<dl class="see_also">
+  <dt><a class="normal" href="al5nativedlg.html#al_open_native_text_log">al_open_native_text_log</a></dt>
+  <dd>Opens a window to which you can append log messages with <a class="normal" href="al5nativedlg.html#al_append_native_text_log">al_append_native_text_log</a>.</dd>
+</dl>
+</td></tr>
+</table>
+<table class="detail wide_list">
+<tr class="list">
+<td class="itemcode"><span id="ALLEGRO_MENUptr"></span><code><b>ALLEGRO_MENUptr</b> = <a  href="al5Base.html#AL_POINTER">AL_POINTER</a>;</code></td>
+</tr>
+<tr><td colspan="1">
+<p>
+An opaque data type that represents a menu that contains menu items. Each of the menu items may optionally include a sub-menu.</p>
+</td></tr>
+</table>
+<table class="detail wide_list">
+<tr class="list">
+<td class="itemcode"><span id="ALLEGRO_MENUptrptr"></span><code><b>ALLEGRO_MENUptrptr</b> = &circ;<a  href="al5nativedlg.html#ALLEGRO_MENUptr">ALLEGRO_MENUptr</a>;</code></td>
+</tr>
+<tr><td colspan="1">
+<p>
+Pointer to a <a class="normal" href="al5nativedlg.html#ALLEGRO_MENUptr">ALLEGRO_MENUptr</a> variable. </p>
+<h6 class="description_section">See also</h6>
+<dl class="see_also">
+  <dt><a class="normal" href="al5nativedlg.html#al_find_menu_item">al_find_menu_item</a></dt>
+  <dd>Searches in the <code>haystack</code> menu for an item with the given <code>id</code>.</dd>
+</dl>
+</td></tr>
+</table>
+<hr><span class="appinfo"><em>Generated by <a  href="https://github.com/pasdoc/pasdoc/wiki">PasDoc 0.15.0</a>. Generated on 2020-04-16 11:56:29.</em>
+</span>
+</td></tr></table></body></html>
