@@ -1,0 +1,36 @@
+# Makefile - Sources
+
+#
+# Builds the list of source files and object files for each bynary type.
+#
+
+# Allegro sources
+LIBFILES = $(wildcard $(LIBSRC)*$(LIBSUF))
+
+# For the examples.
+TEXM = $(wildcard $(EXMSRC)ex_*$(MAINSUF))
+EXMFILES = $(addprefix $(EXMBIN),$(addsuffix $(BINSUF), $(basename $(notdir $(TEXM) ) ) ) )
+
+# For the demonstration games.
+TDEMfp = $(wildcard $(FPSRC)*.pas)
+FURIOUSPALADIN = $(FPBIN)furiouspaladin$(BINSUF)
+
+TDEMpa = $(wildcard $(PASRC)*.pas)
+PASCALEROIDS =  $(PABIN)pascaleroids$(BINSUF)
+
+DEMFILES = $(FURIOUSPALADIN)
+
+ALLFILES = $(LIBFILES) $(TEXM) $(TDEMfp)
+
+# Documentation files.
+DOCMAIN = $(DOCSRC)allegro5.pds
+DOCINTRO = $(DOCSRC)introduction.pds
+DOCFILES = $(wildcard $(DOCSRC)*.pds)
+
+# Object and other temporal files.
+DOCTMPFILES = $(addprefix $(OBJDIR), $(addsuffix .pduc, $(basename $(notdir $(LIBFILES) ) ) ) )
+
+OBJFILES = $(addprefix $(OBJDIR), $(addsuffix .o, $(basename $(notdir $(ALLFILES) ) ) ) )
+OBJFILES += $(addprefix $(OBJDIR), $(addsuffix .ppu, $(basename $(notdir $(ALLFILES) ) ) ) )
+OBJFILES += $(addprefix $(OBJDIR), $(addsuffix .a, $(basename $(notdir $(ALLFILES) ) ) ) )
+
