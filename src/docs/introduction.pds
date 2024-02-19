@@ -1,0 +1,14 @@
+@title(Introduction)
+  Welcome to Allegro 5!
+
+  Before to start, be sure you have read the @code(README) file.  Then you can read the @link(getst Getting Started) section and go to the @html(<a href="./AllUnits.html">All units</a>) list to start using Allegro.pas.
+
+@tableOfContents
+
+@include(src/docs/gettingstarted.pds)
+@include(src/docs/configfiles.pds)
+@include(src/docs/displays.pds)
+@include(src/docs/events.pds)
+@include(src/docs/fileio.pds)
+@include(src/docs/keyboard.pds)
+@include(src/docs/transformations.pds)
